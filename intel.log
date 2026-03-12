@@ -1,0 +1,60 @@
+2026-03-12 21:19:04,183 | [INFO] | Intel | [SNIFFER] Active | iface=auto | filter=tcp or udp
+2026-03-12 21:19:23,870 | [INFO] | Intel | [21:19:23] 10.15.155.124      [DNS-QUERY     ] {'domain': 'fp.msedge.net'}
+2026-03-12 21:19:27,161 | [INFO] | Intel | [21:19:27] 10.15.155.124      [DNS-QUERY     ] {'domain': 'mr-prod-t.msedge.net'}
+2026-03-12 21:19:27,254 | [INFO] | Intel | [21:19:27] 10.15.155.124      [DNS-QUERY     ] {'domain': 'mr-prod-t.msedge.net'}
+2026-03-12 21:19:29,672 | [INFO] | Intel | [21:19:29] 10.15.155.124      [DNS-QUERY     ] {'domain': 'l-ring.msedge.net'}
+2026-03-12 21:19:30,244 | [INFO] | Intel | [21:19:30] 10.15.155.124      [DNS-QUERY     ] {'domain': 'c73a1e298366e3659b766e31fa8a9501.clo.footprintdns.com'}
+2026-03-12 21:19:30,345 | [INFO] | Intel | [21:19:30] 10.15.155.124      [DNS-QUERY     ] {'domain': 'c73a1e298366e3659b766e31fa8a9501.clo.footprintdns.com'}
+2026-03-12 21:19:31,492 | [INFO] | Intel | [21:19:31] 10.15.155.124      [DNS-QUERY     ] {'domain': 'licensing.mp.microsoft.com'}
+2026-03-12 21:19:34,293 | [INFO] | Intel | [21:19:34] 10.15.155.124      [DNS-QUERY     ] {'domain': 'displaycatalog.mp.microsoft.com'}
+2026-03-12 21:19:34,401 | [INFO] | Intel | [21:19:34] 10.15.155.124      [DNS-QUERY     ] {'domain': 'displaycatalog.mp.microsoft.com'}
+2026-03-12 21:19:35,604 | [INFO] | Intel | [21:19:35] 10.15.155.124      [DNS-QUERY     ] {'domain': 'cloud.vectorunit.com'}
+2026-03-12 21:19:36,276 | [INFO] | Intel | [21:19:36] 10.15.155.124      [DNS-QUERY     ] {'domain': 'collections.mp.microsoft.com'}
+2026-03-12 21:19:36,370 | [INFO] | Intel | [21:19:36] 10.15.155.124      [DNS-QUERY     ] {'domain': 'collections.mp.microsoft.com'}
+2026-03-12 21:19:44,029 | [INFO] | Intel | [21:19:44] 10.15.155.124      [DNS-QUERY     ] {'domain': 'www.instagram.com'}
+2026-03-12 21:19:44,033 | [INFO] | Intel | [21:19:44] 10.15.155.124      [DNS-QUERY     ] {'domain': 'www.instagram.com'}
+2026-03-12 21:19:56,838 | [INFO] | Intel | [21:19:56] 10.15.155.124      [DNS-QUERY     ] {'domain': 'instagram.fnbo18-1.fna.fbcdn.net'}
+2026-03-12 21:19:56,840 | [INFO] | Intel | [21:19:56] 10.15.155.124      [DNS-QUERY     ] {'domain': 'instagram.fnbo18-1.fna.fbcdn.net'}
+2026-03-12 21:19:59,589 | [INFO] | Intel | [21:19:59] 10.15.155.124      [DNS-QUERY     ] {'domain': 'us.i.posthog.com'}
+2026-03-12 21:20:04,076 | [INFO] | Intel | [21:20:04] 10.15.155.124      [DNS-QUERY     ] {'domain': 'graph.instagram.com'}
+2026-03-12 21:20:04,077 | [INFO] | Intel | [21:20:04] 10.15.155.124      [DNS-QUERY     ] {'domain': 'graph.instagram.com'}
+2026-03-12 21:20:21,662 | [INFO] | Intel | [21:20:21] 10.15.155.124      [DNS-QUERY     ] {'domain': 'ctldl.windowsupdate.com'}
+2026-03-12 21:20:21,990 | [INFO] | Intel | [21:20:21] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://ctldl.windowsupdate.com/msdownload/update/v3/static/trustedr/en/pinrulesstl.cab?5903c23
+2026-03-12 21:20:22,663 | [INFO] | Intel | [21:20:22] 10.15.155.124      [DNS-QUERY     ] {'domain': 'accounts.google.com'}
+2026-03-12 21:20:22,667 | [INFO] | Intel | [21:20:22] 10.15.155.124      [DNS-QUERY     ] {'domain': 'accounts.google.com'}
+2026-03-12 21:20:23,755 | [INFO] | Intel | [21:20:23] 10.15.155.124      [DNS-QUERY     ] {'domain': 'us.i.posthog.com'}
+2026-03-12 21:20:23,757 | [INFO] | Intel | [21:20:23] 10.15.155.124      [DNS-QUERY     ] {'domain': 'us.i.posthog.com'}
+2026-03-12 21:20:24,458 | [INFO] | Intel | [21:20:24] 10.15.155.124      [DNS-QUERY     ] {'domain': 'self.events.data.microsoft.com'}
+2026-03-12 21:20:38,502 | [INFO] | Intel | [21:20:38] 10.15.155.124      [DNS-QUERY     ] {'domain': 'x1.c.lencr.org'}
+2026-03-12 21:20:38,600 | [INFO] | Intel | [21:20:38] 10.15.155.124      [DNS-QUERY     ] {'domain': 'x1.c.lencr.org'}
+2026-03-12 21:20:38,701 | [INFO] | Intel | [21:20:38] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://x1.c.lencr.org/', 'ua': 'Microsoft-CryptoAPI/10.0'}
+2026-03-12 21:20:38,798 | [INFO] | Intel | [21:20:38] 10.15.155.124      [DNS-QUERY     ] {'domain': 'x2.c.lencr.org'}
+2026-03-12 21:20:38,886 | [INFO] | Intel | [21:20:38] 10.15.155.124      [DNS-QUERY     ] {'domain': 'x2.c.lencr.org'}
+2026-03-12 21:20:38,978 | [INFO] | Intel | [21:20:38] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://x2.c.lencr.org/', 'ua': 'Microsoft-CryptoAPI/10.0'}
+2026-03-12 21:20:39,066 | [INFO] | Intel | [21:20:39] 10.15.155.124      [DNS-QUERY     ] {'domain': 'crl3.digicert.com'}
+2026-03-12 21:20:39,263 | [INFO] | Intel | [21:20:39] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://crl3.digicert.com/DigiCertGlobalRootG2.crl', 'ua': 'Microsoft-CryptoAPI/10.0'}
+2026-03-12 21:20:39,809 | [INFO] | Intel | [21:20:39] 10.15.155.124      [DNS-QUERY     ] {'domain': 'c.pki.goog'}
+2026-03-12 21:20:39,878 | [INFO] | Intel | [21:20:39] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://c.pki.goog/r/gsr1.crl', 'ua': 'Microsoft-CryptoAPI/10.0'}
+2026-03-12 21:20:39,925 | [INFO] | Intel | [21:20:39] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://c.pki.goog/r/r4.crl', 'ua': 'Microsoft-CryptoAPI/10.0'}
+2026-03-12 21:20:40,053 | [INFO] | Intel | [21:20:40] 10.15.155.124      [DNS-QUERY     ] {'domain': 'oneocsp.microsoft.com'}
+2026-03-12 21:20:40,186 | [INFO] | Intel | [21:20:40] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://oneocsp.microsoft.com/ocsp/MFQwUjBQME4wTDAJBgUrDgMCGgUABBR0TBEVYklX7A9yLoLD9hqmCWDxFgQU
+2026-03-12 21:20:46,919 | [INFO] | Intel | [21:20:46] 10.15.155.124      [DNS-QUERY     ] {'domain': 'g.live.com'}
+2026-03-12 21:20:47,787 | [INFO] | Intel | [21:20:47] 10.15.155.124      [DNS-QUERY     ] {'domain': 'oneclient.sfx.ms'}
+2026-03-12 21:20:47,893 | [INFO] | Intel | [21:20:47] 10.15.155.124      [DNS-QUERY     ] {'domain': 'oneclient.sfx.ms'}
+2026-03-12 21:20:59,837 | [INFO] | Intel | [21:20:59] 10.15.155.124      [DNS-QUERY     ] {'domain': 'self.events.data.microsoft.com'}
+2026-03-12 21:21:11,958 | [INFO] | Intel | [21:21:11] 10.15.155.124      [DNS-QUERY     ] {'domain': 'x1.c.lencr.org'}
+2026-03-12 21:21:12,110 | [INFO] | Intel | [21:21:12] 10.15.155.124      [HTTP-REQUEST  ] {'method': 'GET', 'url': 'http://x1.c.lencr.org/', 'ua': 'Microsoft-CryptoAPI/10.0'}
+2026-03-12 21:21:14,886 | [INFO] | Intel | [21:21:14] 10.15.155.124      [DNS-QUERY     ] {'domain': 'signaler-pa.clients6.google.com'}
+2026-03-12 21:21:14,887 | [INFO] | Intel | [21:21:14] 10.15.155.124      [DNS-QUERY     ] {'domain': 'signaler-pa.clients6.google.com'}
+2026-03-12 21:21:19,136 | [INFO] | Intel | [21:21:19] 10.15.155.124      [DNS-QUERY     ] {'domain': 'www.google.com'}
+2026-03-12 21:21:19,139 | [INFO] | Intel | [21:21:19] 10.15.155.124      [DNS-QUERY     ] {'domain': 'www.google.com'}
+2026-03-12 21:21:19,141 | [INFO] | Intel | [21:21:19] 10.15.155.124      [DNS-QUERY     ] {'domain': 'www.instagram.com'}
+2026-03-12 21:21:19,144 | [INFO] | Intel | [21:21:19] 10.15.155.124      [DNS-QUERY     ] {'domain': 'www.instagram.com'}
+2026-03-12 21:21:25,180 | [INFO] | Intel | [21:21:25] 10.15.155.124      [DNS-QUERY     ] {'domain': 'accounts.google.com'}
+2026-03-12 21:21:25,181 | [INFO] | Intel | [21:21:25] 10.15.155.124      [DNS-QUERY     ] {'domain': 'accounts.google.com'}
+2026-03-12 21:21:25,557 | [INFO] | Intel | [21:21:25] 10.15.155.124      [DNS-QUERY     ] {'domain': 'us.i.posthog.com'}
+2026-03-12 21:21:25,901 | [INFO] | Intel | [21:21:25] 10.15.155.124      [DNS-QUERY     ] {'domain': 'us.i.posthog.com'}
+2026-03-12 21:21:30,131 | [INFO] | Intel | [21:21:30] 10.15.155.124      [DNS-QUERY     ] {'domain': 'graph.instagram.com'}
+2026-03-12 21:21:30,132 | [INFO] | Intel | [21:21:30] 10.15.155.124      [DNS-QUERY     ] {'domain': 'graph.instagram.com'}
+2026-03-12 21:21:40,822 | [INFO] | Intel | [21:21:40] 10.15.155.124      [DNS-QUERY     ] {'domain': 'edge.microsoft.com'}
+2026-03-12 21:21:40,824 | [INFO] | Intel | [21:21:40] 10.15.155.124      [DNS-QUERY     ] {'domain': 'edge.microsoft.com'}

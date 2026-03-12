@@ -1,0 +1,544 @@
+2026-03-12 10:42:16,765 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 10:42:16,839 | [WARNING] | Omniscience | Class 'TrafficIntelligence' not found in 2.py
+2026-03-12 10:42:16,887 | [WARNING] | Omniscience | Scapy not available — ARP spoofing disabled.
+2026-03-12 10:42:16,900 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 10:43:43,635 | [ERROR] | Omniscience | Scapy required for ARP scan.
+2026-03-12 10:47:55,097 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 10:47:55,106 | [WARNING] | Omniscience | Class 'TrafficIntelligence' not found in 2.py
+2026-03-12 10:47:57,071 | [WARNING] | Omniscience | Class 'NetworkRecon' not found in 3.py
+2026-03-12 10:47:57,107 | [WARNING] | Omniscience | Scapy not available — ARP spoofing disabled.
+2026-03-12 10:47:57,116 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 10:48:32,921 | [ERROR] | Omniscience | Scapy required for ARP scan.
+2026-03-12 10:59:13,065 | [ERROR] | Omniscience | Scapy required for ARP scan.
+2026-03-12 11:58:24,374 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 11:58:24,376 | [WARNING] | Omniscience | Scapy not available — ARP spoofing disabled.
+2026-03-12 11:58:24,379 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 11:58:24,380 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 11:58:24,381 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 11:58:24,381 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 12:53:36,283 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 12:53:36,285 | [WARNING] | Omniscience | Scapy not available — ARP spoofing disabled.
+2026-03-12 12:53:36,289 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 12:53:36,290 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 12:53:36,290 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 12:53:36,291 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 12:54:29,643 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 12:54:29,644 | [WARNING] | Omniscience | Scapy not available — ARP spoofing disabled.
+2026-03-12 12:54:29,645 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 12:54:29,645 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 12:54:29,645 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 12:54:29,645 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 12:59:00,962 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 12:59:00,963 | [WARNING] | Omniscience | Scapy not available — ARP spoofing disabled.
+2026-03-12 12:59:00,964 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 12:59:00,965 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 12:59:00,965 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 12:59:00,965 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 12:59:00,969 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 192.168.1.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 12:59:00,969 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 192.168.1.0/24
+2026-03-12 12:59:04,489 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 192.168.1.0/24
+2026-03-12 12:59:16,607 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 0 hosts found. Enriching...
+2026-03-12 12:59:16,608 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 0 hosts | 15.6s
+2026-03-12 12:59:29,881 | [ERROR] | Omniscience | Scapy required for ARP scan.
+2026-03-12 13:07:05,842 | [ERROR] | Omniscience | Scapy required for ARP scan.
+2026-03-12 13:20:18,768 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 13:20:18,812 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:20:18,812 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:20:18,812 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:20:18,813 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:20:40,223 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 13:20:40,253 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:20:40,253 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:20:40,253 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:20:40,253 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:20:40,255 | [INFO] | Omniscience.Discovery | [FULL-SCAN] status | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:20:40,255 | [INFO] | Omniscience.Discovery | [ARP] Scanning status
+2026-03-12 13:20:40,256 | [ERROR] | Omniscience.Discovery | ARP scan error: Sniffing and sending packets is not available at layer 2: winpcap is not installed. You may use conf.L3socket or conf.L3socket6 to access layer 3
+2026-03-12 13:20:40,256 | [INFO] | Omniscience.Discovery | [ICMP] Sweep status
+2026-03-12 13:20:42,545 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep status
+2026-03-12 13:20:44,814 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 0 hosts found. Enriching...
+2026-03-12 13:20:44,814 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 0 hosts | 4.6s
+2026-03-12 13:20:58,728 | [ERROR] | Omniscience | Scapy required for ARP scan.
+2026-03-12 13:23:56,379 | [WARNING] | Omniscience | Class 'C2Server' not found in 1.py
+2026-03-12 13:23:56,396 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:23:56,397 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:23:56,397 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:23:56,398 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:23:56,411 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:23:56,411 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 13:23:56,412 | [ERROR] | Omniscience.Discovery | ARP scan error: Sniffing and sending packets is not available at layer 2: winpcap is not installed. You may use conf.L3socket or conf.L3socket6 to access layer 3
+2026-03-12 13:23:56,413 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 13:23:57,494 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 13:24:09,569 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 0 hosts found. Enriching...
+2026-03-12 13:24:09,571 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 0 hosts | 13.2s
+2026-03-12 13:24:37,195 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:24:37,197 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 13:24:37,199 | [ERROR] | Omniscience.Discovery | ARP scan error: Sniffing and sending packets is not available at layer 2: winpcap is not installed. You may use conf.L3socket or conf.L3socket6 to access layer 3
+2026-03-12 13:24:37,200 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 13:24:38,003 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 13:24:50,080 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 0 hosts found. Enriching...
+2026-03-12 13:24:50,082 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 0 hosts | 12.9s
+2026-03-12 13:34:55,605 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:34:55,607 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:34:55,608 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:34:55,608 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 13:34:55,609 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:34:55,614 | [INFO] | Omniscience.Discovery | [FULL-SCAN] status | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:34:55,615 | [INFO] | Omniscience.Discovery | [ARP] Scanning status
+2026-03-12 13:34:55,653 | [ERROR] | Omniscience.Discovery | ARP scan error: Error opening adapter: Network interface was not found.  (2150891563)
+2026-03-12 13:34:55,653 | [INFO] | Omniscience.Discovery | [ICMP] Sweep status
+2026-03-12 13:34:58,305 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep status
+2026-03-12 13:35:00,590 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 0 hosts found. Enriching...
+2026-03-12 13:35:00,591 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 0 hosts | 5.0s
+2026-03-12 13:37:26,887 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:37:26,887 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:37:26,888 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:37:26,888 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 13:37:26,888 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:37:26,889 | [INFO] | Omniscience.Discovery | [FULL-SCAN] auto | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:37:26,889 | [INFO] | Omniscience.Discovery | [ARP] Scanning auto
+2026-03-12 13:37:33,014 | [INFO] | Omniscience.Discovery | [ICMP] Sweep auto
+2026-03-12 13:37:35,308 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep auto
+2026-03-12 13:37:37,680 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 0 hosts found. Enriching...
+2026-03-12 13:37:37,681 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 0 hosts | 10.8s
+2026-03-12 13:48:08,277 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:48:08,278 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:48:08,279 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:48:08,279 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 13:48:08,280 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:52:14,340 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:52:14,340 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:52:14,340 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:52:14,340 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 13:52:14,340 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:52:14,341 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:52:14,341 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 13:52:32,652 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 13:52:32,652 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 13:52:32,653 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 13:53:12,307 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 13:53:12,750 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.124 is alive
+2026-03-12 13:53:22,491 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 13:53:34,600 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 2 hosts found. Enriching...
+2026-03-12 13:53:34,867 | [INFO] | Omniscience.Discovery | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 13:53:35,337 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.124: open ports [135, 139, 445]
+2026-03-12 13:53:42,078 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.1: open ports [22]
+2026-03-12 13:53:42,081 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 2 hosts | 87.7s
+2026-03-12 13:53:59,355 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:53:59,356 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 13:53:59,357 | [ERROR] | Omniscience.Discovery | ARP scan error: Sniffing and sending packets is not available at layer 2: winpcap is not installed. You may use conf.L3socket or conf.L3socket6 to access layer 3
+2026-03-12 13:53:59,358 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 13:54:00,500 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 13:54:12,577 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 0 hosts found. Enriching...
+2026-03-12 13:54:12,581 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 0 hosts | 13.2s
+2026-03-12 13:54:33,353 | [INFO] | Omniscience | MITM engine cleaned up.
+2026-03-12 13:54:51,995 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 13:54:51,996 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 13:54:51,997 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 13:54:51,998 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 13:54:51,999 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 13:54:52,024 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 13:54:52,033 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 13:55:03,028 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 13:55:03,030 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 13:55:03,034 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 13:55:15,585 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 13:55:16,461 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.124 is alive
+2026-03-12 13:55:25,342 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.189 is alive
+2026-03-12 14:17:33,239 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 14:17:33,240 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 14:17:33,241 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 14:17:33,243 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 14:17:33,243 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 14:17:33,260 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 14:17:33,264 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 14:17:42,318 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 14:17:42,320 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 14:17:42,325 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 14:18:01,982 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.80 is alive
+2026-03-12 14:18:08,543 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 14:18:14,420 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 14:18:26,531 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 3 hosts found. Enriching...
+2026-03-12 14:18:26,652 | [INFO] | Omniscience.Discovery | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 14:18:27,104 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.124: open ports [135, 139, 445]
+2026-03-12 14:18:33,820 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.1: open ports [22]
+2026-03-12 14:18:33,824 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 3 hosts | 60.6s
+2026-03-12 14:19:11,263 | [INFO] | Omniscience | MITM engine cleaned up.
+2026-03-12 14:19:11,263 | [INFO] | Omniscience.Discovery | [C2] Server stopped
+2026-03-12 14:47:17,264 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 14:47:17,266 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 14:47:17,267 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 14:47:17,269 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 14:47:17,269 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 14:47:17,299 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http']
+2026-03-12 14:47:17,300 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 14:47:24,431 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 14:47:24,432 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 14:47:24,438 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 14:47:37,950 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 14:47:38,042 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.124 is alive
+2026-03-12 14:47:38,641 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.80 is alive
+2026-03-12 14:47:42,862 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.189 is alive
+2026-03-12 14:47:45,564 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 14:47:57,642 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 4 hosts found. Enriching...
+2026-03-12 14:47:57,650 | [INFO] | Omniscience.Discovery | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 14:47:58,098 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.124: open ports [135, 139, 445]
+2026-03-12 14:48:04,754 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.1: open ports [22]
+2026-03-12 14:48:04,758 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 4 hosts | 47.5s
+2026-03-12 14:50:49,162 | [INFO] | Omniscience.Discovery | [AUTO] Detecting network configuration...
+2026-03-12 14:50:49,162 | [INFO] | Omniscience.Discovery | [AUTO] Local IP: 10.15.155.124
+2026-03-12 14:50:49,163 | [INFO] | Omniscience.Discovery | [AUTO] Network Range: 10.15.155.0/24
+2026-03-12 14:50:49,163 | [INFO] | Omniscience.Discovery | [AUTO] Gateway: 10.15.155.1
+2026-03-12 14:50:49,171 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'ssdp', 'tcp', 'dns', 'snmp', 'http']
+2026-03-12 14:50:49,172 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 14:50:56,503 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 14:50:56,504 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 14:50:56,506 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 14:51:11,098 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.124 is alive
+2026-03-12 14:51:11,548 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 14:51:20,756 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 14:51:32,846 | [INFO] | Omniscience.Discovery | [SSDP] UPnP M-SEARCH broadcast
+2026-03-12 14:51:36,884 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 4 hosts found. Enriching...
+2026-03-12 14:51:36,893 | [INFO] | Omniscience.Discovery | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 14:51:37,361 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.124: open ports [135, 139, 445]
+2026-03-12 14:51:43,977 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.1: open ports [22]
+2026-03-12 14:51:43,979 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 4 hosts | 54.8s
+2026-03-12 14:51:43,992 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.1
+2026-03-12 14:52:16,116 | [INFO] | Omniscience.Control | [SSH-BRUTE] 10.15.155.1:22 | 23 credential pairs
+2026-03-12 14:52:16,180 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:17,752 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:17,763 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:17,765 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:17,990 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:18,742 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:18,754 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:18,756 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:18,980 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:19,604 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:19,615 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:19,618 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:19,845 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:20,469 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:20,481 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:20,482 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:20,710 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:21,333 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:21,344 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:21,347 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:21,578 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:22,201 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:22,213 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:22,214 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:22,440 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:23,065 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:23,078 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:23,079 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:23,308 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:23,935 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:23,946 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:23,951 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:24,174 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:24,801 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:24,812 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:24,814 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:25,066 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:25,691 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:25,702 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:25,704 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:25,932 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:26,559 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:26,571 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:26,573 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:26,801 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:27,426 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:27,434 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:27,436 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:27,664 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:28,285 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:28,297 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:28,299 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:28,527 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:29,148 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:29,160 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:29,162 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:29,386 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:30,012 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:30,027 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:30,028 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:30,253 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:30,878 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:30,891 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:30,892 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:31,119 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:31,865 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:31,883 | [ERROR] | paramiko.transport | Socket exception: An existing connection was forcibly closed by the remote host (10054)
+2026-03-12 14:52:32,103 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:32,844 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:32,970 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:32,974 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:33,198 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:33,944 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:33,955 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:33,959 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:34,185 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:34,804 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:34,815 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:34,817 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:35,045 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:35,663 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:35,675 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:35,676 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:35,902 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:36,536 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:36,547 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:36,550 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:36,782 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 14:52:37,534 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 14:52:37,654 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 14:52:37,655 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 14:52:37,810 | [INFO] | Omniscience.Control | [SSH-BRUTE] No default creds matched 10.15.155.1
+2026-03-12 14:52:37,811 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.1: No exploit worked yet
+2026-03-12 14:52:37,822 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.80
+2026-03-12 14:53:11,928 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.80: No exploit worked yet
+2026-03-12 14:53:19,344 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.124
+2026-03-12 14:53:47,456 | [INFO] | Omniscience.Control | [SMB-VULN] Checking 10.15.155.124
+2026-03-12 14:53:50,874 | [INFO] | Omniscience.Control | [SMB-VULN] 10.15.155.124: []
+2026-03-12 14:53:50,875 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.124: No exploit worked yet
+2026-03-12 14:53:50,883 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.189
+2026-03-12 14:54:25,009 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.189: No exploit worked yet
+2026-03-12 15:01:13,884 | [INFO] | Omniscience.Discovery | [AUTO] Detecting network configuration...
+2026-03-12 15:01:13,885 | [INFO] | Omniscience.Discovery | [AUTO] Local IP: 10.15.155.124
+2026-03-12 15:01:13,885 | [INFO] | Omniscience.Discovery | [AUTO] Network Range: 10.15.155.0/24
+2026-03-12 15:01:13,886 | [INFO] | Omniscience.Discovery | [AUTO] Gateway: 10.15.155.1
+2026-03-12 15:01:13,890 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'ssdp', 'tcp', 'dns', 'snmp', 'http']
+2026-03-12 15:01:13,890 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 15:01:21,930 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 15:01:21,931 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 15:01:21,936 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 15:01:34,844 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.124 is alive
+2026-03-12 15:01:35,789 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.80 is alive
+2026-03-12 15:01:36,126 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 15:01:48,596 | [INFO] | Omniscience.Discovery | [NETBIOS] Sweep 10.15.155.0/24
+2026-03-12 15:02:00,670 | [INFO] | Omniscience.Discovery | [SSDP] UPnP M-SEARCH broadcast
+2026-03-12 15:02:04,693 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 4 hosts found. Enriching...
+2026-03-12 15:02:04,699 | [INFO] | Omniscience.Discovery | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 15:02:05,155 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.124: open ports [135, 139, 445]
+2026-03-12 15:02:11,863 | [INFO] | Omniscience.Discovery | [TCP] 10.15.155.1: open ports [22]
+2026-03-12 15:02:11,878 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 4 hosts | 58.0s
+2026-03-12 15:02:11,893 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.1
+2026-03-12 15:02:44,014 | [INFO] | Omniscience.Control | [SSH-BRUTE] 10.15.155.1:22 | 23 credential pairs
+2026-03-12 15:02:44,125 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:44,750 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:44,761 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:44,763 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:44,989 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:45,616 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:45,627 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:45,629 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:45,855 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:46,490 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:46,501 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:46,504 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:46,727 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:47,353 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:47,364 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:47,366 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:47,621 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:48,246 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:48,260 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:48,263 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:48,496 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:49,119 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:49,130 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:49,131 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:49,361 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:49,988 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:50,005 | [ERROR] | paramiko.transport | Socket exception: An existing connection was forcibly closed by the remote host (10054)
+2026-03-12 15:02:50,223 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:50,848 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:50,859 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:50,861 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:51,088 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:52,248 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:52,259 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:52,261 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:52,486 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:53,228 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:53,240 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:53,242 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:53,469 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:54,088 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:54,220 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:54,222 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:54,447 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:55,208 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:55,340 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:55,343 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:55,570 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:56,207 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:56,217 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:56,219 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:56,487 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:57,172 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:57,184 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:57,189 | [ERROR] | paramiko.transport | Socket exception: An existing connection was forcibly closed by the remote host (10054)
+2026-03-12 15:02:57,410 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:58,033 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:58,045 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:58,047 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:58,277 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:58,900 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:58,912 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:58,914 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:02:59,144 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:02:59,766 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:02:59,778 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:02:59,780 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:03:00,006 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:03:00,635 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:03:00,646 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:03:00,650 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:03:00,878 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:03:01,503 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:03:01,515 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:03:01,516 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:03:01,746 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:03:02,369 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:03:02,381 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:03:02,383 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:03:02,609 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:03:03,234 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:03:03,246 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:03:03,249 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:03:03,477 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:03:04,101 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:03:04,233 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:03:04,235 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:03:04,463 | [INFO] | paramiko.transport | Connected (version 2.0, client HUAWEI-1.5)
+2026-03-12 15:03:05,198 | [INFO] | paramiko.transport | Authentication continues...
+2026-03-12 15:03:05,210 | [INFO] | paramiko.transport | Auth banner: b'\r\nError: Authentication failed.'
+2026-03-12 15:03:05,212 | [INFO] | paramiko.transport | Disconnect (code 2): The connection is closed by SSH Server
+Current FSM is SSH Process
+2026-03-12 15:03:05,374 | [INFO] | Omniscience.Control | [SSH-BRUTE] No default creds matched 10.15.155.1
+2026-03-12 15:03:05,379 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.1: No exploit worked yet
+2026-03-12 15:03:05,414 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.80
+2026-03-12 15:03:39,564 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.80: No exploit worked yet
+2026-03-12 15:03:39,573 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.124
+2026-03-12 15:04:07,696 | [INFO] | Omniscience.Control | [SMB-VULN] Checking 10.15.155.124
+2026-03-12 15:04:10,725 | [INFO] | Omniscience.Control | [SMB-VULN] 10.15.155.124: []
+2026-03-12 15:04:10,726 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.124: No exploit worked yet
+2026-03-12 15:04:10,727 | [INFO] | Omniscience.Control | [EXPLOIT] Starting on 10.15.155.189
+2026-03-12 15:04:44,845 | [INFO] | Omniscience.Control | [EXPLOIT] 10.15.155.189: No exploit worked yet
+2026-03-12 15:37:39,503 | [INFO] | Omniscience.Discovery | [WAN] External IP: 154.68.72.234 (Unknown)
+2026-03-12 15:37:39,504 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 15:37:39,505 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 15:37:39,506 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 15:37:39,506 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 15:37:39,507 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed (netsh / registry).
+2026-03-12 16:38:04,619 | [ERROR] | Omniscience | Shell error: EOF when reading a line
+2026-03-12 16:38:04,949 | [ERROR] | Omniscience | Shell error: EOF when reading a line
+2026-03-12 16:39:33,414 | [INFO] | Omniscience.Discovery | [AUTO] Detecting network configuration...
+2026-03-12 16:39:34,976 | [INFO] | Omniscience.Discovery | [AUTO] Local IP: 10.15.155.124
+2026-03-12 16:39:34,976 | [INFO] | Omniscience.Discovery | [AUTO] Network Range: 10.15.155.0/24
+2026-03-12 16:39:34,978 | [INFO] | Omniscience.Discovery | [AUTO] Gateway: 10.15.155.1
+2026-03-12 16:39:35,659 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'ssdp', 'tcp', 'dns', 'snmp', 'http']
+2026-03-12 16:39:35,856 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 16:40:19,115 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 17:44:05,965 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 17:44:05,972 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 17:44:11,924 | [INFO] | Omniscience.Discovery | [AUTO] Detecting network configuration...
+2026-03-12 17:44:11,924 | [INFO] | Omniscience.Discovery | [AUTO] Local IP: 10.15.155.124
+2026-03-12 17:44:11,925 | [INFO] | Omniscience.Discovery | [AUTO] Network Range: 10.15.155.0/24
+2026-03-12 17:44:11,925 | [INFO] | Omniscience.Discovery | [AUTO] Gateway: 10.15.155.1
+2026-03-12 17:44:11,929 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'ssdp', 'tcp', 'dns', 'snmp', 'http']
+2026-03-12 17:44:11,930 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 17:44:59,439 | [INFO] | Omniscience.Discovery | [WAN] External IP: 154.68.72.234 (Unknown)
+2026-03-12 17:44:59,440 | [INFO] | Omniscience | NetworkDiscovery module loaded
+2026-03-12 17:44:59,441 | [INFO] | Omniscience | AgentlessIntelligence module loaded
+2026-03-12 17:44:59,442 | [INFO] | Omniscience | AgentlessControl module loaded
+2026-03-12 17:44:59,443 | [INFO] | Omniscience | C2Server module loaded
+2026-03-12 17:44:59,501 | [INFO] | Omniscience | AdvancedScanner module loaded
+2026-03-12 17:44:59,502 | [INFO] | Omniscience | CommandCenter module loaded
+2026-03-12 17:44:59,526 | [INFO] | Omniscience | UniversalAccess module loaded
+2026-03-12 17:44:59,526 | [INFO] | Omniscience | Windows: Enable IP routing manually if needed.
+2026-03-12 17:44:59,536 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http'] | Global Mode: Auto
+2026-03-12 17:44:59,536 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 17:45:08,796 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 17:45:08,796 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 17:45:08,798 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 17:45:31,328 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 17:45:32,468 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.124 is alive
+2026-03-12 17:45:37,153 | [INFO] | Omniscience.Discovery | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 17:45:41,994 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 2 hosts | 42.5s
+2026-03-12 18:00:49,790 | [INFO] | Omniscience.Discovery | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'snmp', 'dns', 'tcp', 'http'] | Global Mode: Auto
+2026-03-12 18:00:49,791 | [INFO] | Omniscience.Discovery | [ARP] Scanning 10.15.155.0/24
+2026-03-12 18:00:57,133 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 18:00:57,134 | [INFO] | Omniscience.Discovery | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 18:00:57,136 | [INFO] | Omniscience.Discovery | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 18:01:21,682 | [INFO] | Omniscience.Discovery | [ICMP] 10.15.155.1 is alive
+2026-03-12 18:01:30,695 | [INFO] | Omniscience.Discovery | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 18:01:35,252 | [INFO] | Omniscience.Discovery | [FULL-SCAN] Complete. 2 hosts | 45.5s
+2026-03-12 18:08:04,713 | [ERROR] | OmniShell | Failed to load 1.py: module 'importlib' has no attribute 'util'
+2026-03-12 18:08:04,713 | [ERROR] | OmniShell | Failed to load 2.py: module 'importlib' has no attribute 'util'
+2026-03-12 18:08:04,713 | [ERROR] | OmniShell | Failed to load 3.py: module 'importlib' has no attribute 'util'
+2026-03-12 18:08:04,714 | [ERROR] | OmniShell | Failed to load 5.py: module 'importlib' has no attribute 'util'
+2026-03-12 18:08:04,714 | [ERROR] | OmniShell | Failed to load 6.py: module 'importlib' has no attribute 'util'
+2026-03-12 18:08:04,714 | [ERROR] | OmniShell | Failed to load 7.py: module 'importlib' has no attribute 'util'
+2026-03-12 18:56:35,747 | [INFO] | OmniShell | [WAN] External IP: 154.68.72.234 (Unknown)
+2026-03-12 18:56:35,833 | [INFO] | OmniShell | [AUTO] Detecting network configuration...
+2026-03-12 18:56:35,833 | [INFO] | OmniShell | [AUTO] Local IP: 10.15.155.124
+2026-03-12 18:56:35,833 | [INFO] | OmniShell | [AUTO] Network Range: 10.15.155.0/24
+2026-03-12 18:56:35,833 | [INFO] | OmniShell | [AUTO] Gateway: 10.15.155.1
+2026-03-12 18:56:35,836 | [INFO] | OmniShell | [FULL-SCAN] 10.15.155.0/24 | Methods: ['arp', 'icmp', 'netbios', 'ssdp', 'tcp', 'dns', 'snmp', 'http'] | Global Mode: Auto
+2026-03-12 18:56:35,836 | [INFO] | OmniShell | [ARP] Scanning 10.15.155.0/24
+2026-03-12 18:56:43,365 | [INFO] | OmniShell | [ARP] 10.15.155.1        b4:14:e6:14:ae:37  
+2026-03-12 18:56:43,365 | [INFO] | OmniShell | [ARP] 10.15.155.124      ac:fd:ce:c8:45:7e  
+2026-03-12 18:56:43,366 | [INFO] | OmniShell | [ICMP] Sweep 10.15.155.0/24
+2026-03-12 18:57:24,566 | [INFO] | OmniShell | [ICMP] 10.15.155.124 is alive
+2026-03-12 18:57:32,800 | [INFO] | OmniShell | [DNS-PTR] 10.15.155.124 -> DESKTOP-USV864B
+2026-03-12 18:57:37,393 | [INFO] | OmniShell | [FULL-SCAN] Complete. 2 hosts | 61.6s
+2026-03-12 18:57:38,053 | [INFO] | OmniShell | [FINGERPRINT] Running advanced fingerprinting on all devices...
+2026-03-12 18:57:49,159 | [INFO] | OmniShell | [FINGERPRINT] Complete
+2026-03-12 18:59:02,975 | [INFO] | OmniShell | [PWN] Starting exploitation of 0 devices
