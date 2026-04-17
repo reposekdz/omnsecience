@@ -1312,25 +1312,25 @@ class OmniShell:
                     for i, hop in enumerate(hops):
                         print(f"  {i+1}: {hop.get('ip', '*')} {hop.get('latency', '')}ms")
 
-            elif cmd == "topology":
-                if self.adv_scan:
-                    topo = self.adv_scan.get_topology_map() if hasattr(self.adv_scan, 'get_topology_map') else {}
-                    print(f"{json.dumps(topo, indent=2)}")
+                elif cmd == "topology":
+                    if self.adv_scan:
+                        topo = self.adv_scan.get_topology_map() if hasattr(self.adv_scan, 'get_topology_map') else {}
+                        print(f"{json.dumps(topo, indent=2)}")
 
-            elif cmd == "network":
-                if self.discovery:
-                    info = self.discovery.get_network_info() if hasattr(self.discovery, 'get_network_info') else {}
-                    print(f"{json.dumps(info, indent=2)}")
+                elif cmd == "network":
+                    if self.discovery:
+                        info = self.discovery.get_network_info() if hasattr(self.discovery, 'get_network_info') else {}
+                        print(f"{json.dumps(info, indent=2)}")
 
-            elif cmd == "interfaces":
-                if self.discovery:
-                    info = self.discovery.get_interface_info() if hasattr(self.discovery, 'get_interface_info') else {}
-                    print(f"{json.dumps(info, indent=2)}")
+                elif cmd == "interfaces":
+                    if self.discovery:
+                        info = self.discovery.get_interface_info() if hasattr(self.discovery, 'get_interface_info') else {}
+                        print(f"{json.dumps(info, indent=2)}")
 
-            elif cmd == "gateway":
-                if self.discovery:
-                    gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
-                    print(f"Gateway: {gw}")
+                elif cmd == "gateway":
+                    if self.discovery:
+                        gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
+                        print(f"Gateway: {gw}")
 
             elif cmd == "external-ip":
                 if self.discovery:
