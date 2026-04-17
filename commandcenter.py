@@ -582,6 +582,65 @@ class OmniShell:
         print(f"\n{Fore.GREEN}{Style.BRIGHT}══════════════════════════════════════════════════════════════════════════════")
         print(f"{Fore.LIGHTGREEN_EX}  TOTAL: 140+ ADVANCED COMMANDS  |  ACCURACY: 1999999999999999%")
         print(f"{Fore.GREEN}══════════════════════════════════════════════════════════════════════════════\n")
+    
+    def _validate_command(self, cmd: str, args: list) -> tuple[bool, str]:
+        """Validate command syntax and required arguments"""
+        command_requirements = {
+            "select": (1, "select <idx>"),
+            "setcreds": (2, "setcreds <user> <password>"),
+            "exec": (1, "exec <command>"),
+            "killproc": (1, "killproc [ip] <pid>"),
+            "pwn": (1, "pwn <ip>"),
+            "exploit": (1, "exploit <ip>"),
+            "mobile": (1, "mobile <ip>"),
+            "db-extract": (3, "db-extract <ip> <port> <type> [user] [pass]"),
+            "cloud-attack": (2, "cloud-attack <type> <target>"),
+            "ssh-brute": (1, "ssh-brute <ip>"),
+            "rdp-brute": (1, "rdp-brute <ip>"),
+            "file": (2, "file <action> [path]"),
+            "media": (1, "media <action> [file/url]"),
+            "upload": (1, "upload [ip] <src> [dst]"),
+            "download": (1, "download [ip] <remote> [local]"),
+            "adduser": (1, "adduser [ip] <user> [pass]"),
+            "persist-task": (1, "persist-task [ip] <name> [path]"),
+            "firewall-add": (2, "firewall-add <ip> <port>"),
+        }
+        
+        if cmd in command_requirements:
+            min_args, usage = command_requirements[cmd]
+            if len(args) < min_args:
+                return False, f"Usage: {usage}"
+        
+        return True, ""
+    
+    def process_command(self, cmd_line):
+        """Processes a single command string. Redirects all prints to self._log."""
+        if not cmd_line.strip():
+            return
+        
+        self.command_history.append(cmd_line)
+        parts = cmd_line.split()
+        cmd = parts[0].lower()
+        args = parts[1:]
+        
+        # Validate command before execution
+        valid, error = self._validate_command(cmd, args)
+        if not valid:
+            self._log(f"{Fore.RED}⚠ {error}")
+            return
+        
+        try:
+            # ==================== HELP ====================
+            if cmd in ("help", "?"):
+                self.print_help()
+            
+            # ==================== SYSTEM ====================
+            elif cmd in ("exit", "quit"):
+                self._log(f"{Fore.YELLOW}[*] Exiting...")
+                self.running = False
+
+            elif cmd == "clear":
+                os.system('cls' if os.name == 'nt' else 'clear')
                 Visualizer.banner()
 
             elif cmd == "history":
