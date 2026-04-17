@@ -32,14 +32,25 @@ except:
         BRIGHT = ""
 
 # Import framework modules
+_MODULE_MAP = {
+    "1": "network_discovery",
+    "2": "passive_intel",
+    "3": "remote_control",
+    "5": "advanced_scanner",
+    "6": "lateral_movement",
+    "7": "exploit_engine",
+}
+
 def get_module(name):
     try:
         import importlib.util
-        if os.path.exists(f"{name}.py"):
-            spec = importlib.util.spec_from_file_location(f"mod_{name}", f"{name}.py")
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            return module
+        filename = _MODULE_MAP.get(str(name), name)
+        for candidate in [filename, name]:
+            if os.path.exists(f"{candidate}.py"):
+                spec = importlib.util.spec_from_file_location(f"mod_{candidate}", f"{candidate}.py")
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                return module
     except:
         pass
     return None
