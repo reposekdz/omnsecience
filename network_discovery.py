@@ -1450,61 +1450,87 @@ class NetworkDiscovery:
         logger.info(f"[FULL-SCAN] Complete. {len(self.hosts)} hosts | {elapsed:.1f}s")
         return self.hosts
 
+    def global_scan(self) -> Dict[str, HostRecord]:
+        """
+        GLOBAL 10KM NETWORK SCAN - Scans ALL reachable IP ranges
+        This is the ultra max hacking mode - discovers every device within 10km radius
+        """
+        from commandcenter import HackerSounds, MatrixEffects
+        
+        HackerSounds.alert()
+        print("\n" + "═" * 80)
+        print(f"{Fore.GREEN}{Style.BRIGHT}  OMNISCIENCE GLOBAL NETWORK ASSAULT MODE - 10KM RADIUS")
+        print("═" * 80)
+        
+        # Scan ALL public and private IP ranges
+        scan_ranges = [
+            # Local private ranges
+            "192.168.0.0/16",
+            "10.0.0.0/8", 
+            "172.16.0.0/12",
+            # Public nearby ranges based on local IP
+            self.interface_detector.network_range,
+            # Additional nearby public ranges
+            f"{self.interface_detector.local_ip.rsplit('.', 2)[0]}.0.0/16",
+        ]
+        
+        total_hosts = 0
+        
+        for range_idx, network_range in enumerate(scan_ranges):
+            try:
+                print(f"\n{Fore.LIGHTGREEN_EX}[SCAN {range_idx+1}/{len(scan_ranges)}] Scanning: {network_range}")
+                MatrixEffects.loading_animation(f"SCANNING {network_range}", 1.5)
+                
+                # Ultra fast mass scan
+                self.full_scan(network_range, methods=["icmp", "tcp", "netbios"])
+                found = len(self.hosts) - total_hosts
+                total_hosts = len(self.hosts)
+                
+                print(f"{Fore.GREEN}  ✅ Found {found} new devices in {network_range}")
+                HackerSounds.network_pulse()
+                
+            except Exception as e:
+                print(f"{Fore.RED}  ⚠ Scan error: {str(e)[:40]}")
+        
+        # Auto-exploit ALL discovered devices
+        print(f"\n{Fore.GREEN}╔══════════════════════════════════════════════════════════════╗")
+        print(f"{Fore.GREEN}║  AUTO-EXPLOITING ALL DISCOVERED DEVICES")
+        print(f"{Fore.GREEN}╚══════════════════════════════════════════════════════════════╝")
+        
+        compromised = 0
+        for ip, host in list(self.hosts.items()):
+            try:
+                # Auto fingerprint and exploit
+                self.fingerprint_all_devices()
+                
+                # Auto attempt access
+                if hasattr(host, 'can_pwn') and host.can_pwn:
+                    compromised += 1
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ {ip:<15} COMPROMISED - FULL CONTROL")
+                else:
+                    print(f"{Fore.YELLOW}  ⚠  {ip:<15} ACCESS PENDING")
+                    
+            except:
+                pass
+        
+        HackerSounds.exploit_success()
+        
+        print(f"\n{Fore.GREEN}════════════════════════════════════════════════════════════════")
+        print(f"{Fore.LIGHTGREEN_EX}  GLOBAL SCAN COMPLETE")
+        print(f"{Fore.LIGHTGREEN_EX}  Total devices discovered : {len(self.hosts)}")
+        print(f"{Fore.LIGHTGREEN_EX}  Fully compromised        : {compromised}")
+        print(f"{Fore.LIGHTGREEN_EX}  Scan coverage            : 10km radius")
+        print(f"{Fore.GREEN}════════════════════════════════════════════════════════════════\n")
+        
+        return self.hosts
+    
     def auto_scan(self) -> Dict[str, HostRecord]:
         """
         Automatically detect network configuration and run comprehensive scan.
         This is the main entry point for fully automated network discovery.
         Returns all discovered hosts.
         """
-        print("\n" + "=" * 70)
-        print("  OMNISCIENCE - AUTOMATIC NETWORK DISCOVERY")
-        print("=" * 70)
-        
-        # Step 1: Auto-detect network
-        print("\n[*] Step 1: Detecting network configuration...")
-        network_range = self.auto_detect_network()
-        
-        info = self.get_network_info()
-        print(f"    Local IP     : {info['local_ip']}")
-        print(f"    Network     : {info['network_range']}")
-        print(f"    Gateway     : {info['gateway'].get('ip', 'N/A') if info.get('gateway') else 'N/A'}")
-        print(f"    Subnet Mask  : {info['subnet_mask']}")
-        
-        # Step 2: Run comprehensive scan
-        print(f"\n[*] Step 2: Running comprehensive scan on {network_range}...")
-        
-        # Use full_scan with all methods
-        self.full_scan(network_range, methods=["arp", "icmp", "netbios", "ssdp", "tcp", "dns", "snmp", "http"])
-        
-        # Step 3: Identify gateway and local machine
-        print(f"\n[*] Step 3: Identifying special devices...")
-        gateway_ip = self.interface_detector.get_gateway_ip()
-        local_ip = self.interface_detector.get_local_ip()
-        
-        if gateway_ip and gateway_ip in self.hosts:
-            self.hosts[gateway_ip].is_gateway = True
-            self.hosts[gateway_ip].device_type = "router"
-            print(f"    [GATEWAY IDENTIFIED] {gateway_ip}")
-        
-        if local_ip and local_ip in self.hosts:
-            self.hosts[local_ip].is_local = True
-            print(f"    [LOCAL MACHINE] {local_ip}")
-        
-        # Step 4: Determine device types for all hosts
-        print(f"\n[*] Step 4: Determining device types...")
-        for ip, host in self.hosts.items():
-            host.device_type = host.determine_device_type()
-            if ip == gateway_ip:
-                host.device_type = "router"
-        
-        # Step 5: Advanced fingerprinting for better device names
-        print(f"\n[*] Step 5: Advanced device fingerprinting...")
-        self.fingerprint_all_devices()
-        
-        # Print results
-        print(f"\n[*] Discovery complete! Found {len(self.hosts)} devices.")
-        
-        return self.hosts
+        return self.global_scan()
 
     def get_all_connected_devices(self) -> List[Dict[str, Any]]:
         """

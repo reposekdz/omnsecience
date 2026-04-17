@@ -56,20 +56,28 @@ class AdvancedOmniGUI:
         self.root.geometry("1600x1000")
         self.root.minsize(1200, 800)
         
-        # Theme colors
+        # ULTRA MAX HACKER WORLD THEME - GREEN CYCLING EFFECT
         self.theme = {
-            'bg_dark': '#0d1117',
-            'bg_medium': '#161b22',
-            'bg_light': '#21262d',
-            'accent': '#58a6ff',
-            'accent_green': '#3fb950',
-            'accent_red': '#f85149',
-            'accent_yellow': '#d29922',
-            'accent_purple': '#a371f7',
-            'text': '#c9d1d9',
-            'text_dim': '#8b949e',
-            'border': '#30363d'
+            'bg_dark': '#000000',
+            'bg_medium': '#030803',
+            'bg_light': '#071207',
+            'accent': '#00ff00',
+            'accent_green': '#00ff00',
+            'accent_red': '#00ff00',
+            'accent_yellow': '#00ff00',
+            'accent_purple': '#00ff00',
+            'text': '#00ff00',
+            'text_dim': '#007700',
+            'border': '#002200'
         }
+        
+        # Green color cycling animation values
+        self.green_shades = [
+            '#003300', '#004400', '#005500', '#006600', '#007700',
+            '#008800', '#009900', '#00aa00', '#00bb00', '#00cc00',
+            '#00dd00', '#00ee00', '#00ff00', '#22ff22', '#44ff44'
+        ]
+        self.cycle_index = 0
         
         self.root.configure(bg=self.theme['bg_dark'])
         
@@ -907,9 +915,28 @@ class AdvancedOmniGUI:
                 self.cmd_entry.delete(0, 'end')
                 self.cmd_entry.insert(0, self.command_history[self.history_index])
     
+    def start_green_cycle_animation(self):
+        """Start green color cycling hacker effect"""
+        def cycle_colors():
+            while True:
+                self.cycle_index = (self.cycle_index + 1) % len(self.green_shades)
+                current_green = self.green_shades[self.cycle_index]
+                
+                # Cycle terminal text color
+                self.terminal.config(fg=current_green, insertbackground=current_green)
+                self.cmd_entry.config(fg=current_green, insertbackground=current_green)
+                
+                # Cycle network canvas border
+                self.network_canvas.config(highlightbackground=current_green)
+                
+                time.sleep(0.15)
+        
+        threading.Thread(target=cycle_colors, daemon=True).start()
+    
     def start_services(self):
         """Start background services"""
-        self.log_to_all("Initializing services...", "blue")
+        self.log_to_all("Initializing hacker services...", "green")
+        self.start_green_cycle_animation()
 
 def main():
     """Main entry point"""

