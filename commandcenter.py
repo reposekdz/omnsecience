@@ -24,9 +24,9 @@ if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8')
     sys.stderr.reconfigure(encoding='utf-8')
 import winsound
-import random
+import msvcrt
 
-    # Initialize Colorama
+# Initialize Colorama
 init(autoreset=True)
 
 # ULTRA MAX HACKER TERMINAL CONFIGURATION
@@ -186,25 +186,163 @@ class MatrixEffects:
                 print(f"\033[{y};{x}H{color}{char}", end="", flush=True)
                 time.sleep(0.01)
 
-        # Function for rotating earth on left side
+        # Function for giant rotating earth with continents in center
         def rotating_earth():
             earth_frames = [
-                "   🌍   ",
-                "  🌍🌎  ",
-                " 🌍🌎🌏 ",
-                "🌍🌎🌏🌍",
-                " 🌏🌍🌎 ",
-                "  🌏🌍  ",
-                "   🌏   "
+                """\
+     _______
+    /       \\
+   /  NORTH  \\
+  /  AMERICA \\
+ /   ATLANTIC \\
+|    PACIFIC   |
+ \\   ATLANTIC /
+  \\  SOUTH   /
+   \\ AMERICA /
+    \\_______/
+""",
+                """\
+     _______
+    /       \\
+   /  EUROPE \\
+  /   AFRICA \\
+ /   ATLANTIC \\
+|    PACIFIC   |
+ \\   ATLANTIC /
+  \\  SOUTH   /
+   \\ AMERICA /
+    \\_______/
+""",
+                """\
+     _______
+    /       \\
+   /  AFRICA \\
+  /   ASIA    \\
+ /   INDIAN   \\
+|    PACIFIC   |
+ \\   ATLANTIC /
+  \\  SOUTH   /
+   \\ AMERICA /
+    \\_______/
+""",
+                """\
+     _______
+    /       \\
+   /   ASIA   \\
+  /   AUSTRALIA\\
+ /   PACIFIC   \\
+|    ATLANTIC   |
+ \\   INDIAN   /
+  \\  AFRICA  /
+   \\         /
+    \\_______/
+""",
+                """\
+     _______
+    /       \\
+   / AUSTRALIA\\
+  /   PACIFIC  \\
+ /   ATLANTIC  \\
+|    INDIAN     |
+ \\   ASIA     /
+  \\         /
+   \\ NORTH  /
+    \\_______/
+""",
+                """\
+     _______
+    /       \\
+   /  PACIFIC \\
+  /   ATLANTIC \\
+ /   NORTH     \\
+|    AMERICA    |
+ \\   ATLANTIC /
+  \\  EUROPE  /
+   \\ AFRICA /
+    \\_______/
+""",
+                """\
+     _______
+    /       \\
+   /  ATLANTIC\\
+  /   NORTH    \\
+ /   AMERICA   \\
+|    PACIFIC    |
+ \\   EUROPE   /
+  \\ AFRICA   /
+   \\ ASIA    /
+    \\_______/
+""",
+                """\
+     _______
+    /       \\
+   /   PACIFIC\\
+  /   ASIA     \\
+ /   AUSTRALIA \\
+|    INDIAN     |
+ \\   AFRICA   /
+  \\ EUROPE   /
+   \\ NORTH   /
+    \\_______/
+"""
             ]
             width = os.get_terminal_size().columns
             height = os.get_terminal_size().lines
-            x = 5  # Left side
-            y = height // 2
-            for i in range(50):
-                frame = earth_frames[i % len(earth_frames)]
-                print(f"\033[{y};{x}H{Fore.BLUE}{frame}", end="", flush=True)
-                time.sleep(0.1)
+            y_center = height // 2
+            title = "GIGANTIC REAL-TIME ROTATING EARTH WITH CONTINENTS"
+            title_x = (width - len(title)) // 2
+            print(f"\033[{y_center-8};{title_x}H{Fore.CYAN}{Style.BRIGHT}{title}", end="", flush=True)
+            speed = 0.15
+            i = 0
+            controls = "Controls: Q=Quit, F=Faster, S=Slower, P=Pause, R=Reverse"
+            controls_x = (width - len(controls)) // 2
+            print(f"\033[{y_center+6};{controls_x}H{Fore.YELLOW}{controls}", end="", flush=True)
+            paused = False
+            reverse = False
+            while True:
+                frame_lines = earth_frames[i % len(earth_frames)].split('\n')
+                lines = len(frame_lines)
+                y_start = y_center - lines // 2
+                for j, line in enumerate(frame_lines):
+                    x_line = (width - len(line)) // 2
+                    # Color continents green, oceans blue
+                    colored_line = ""
+                    for char in line:
+                        if char in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                            colored_line += Fore.GREEN + char
+                        elif char in ' ~':
+                            colored_line += Fore.BLUE + char
+                        else:
+                            colored_line += Fore.WHITE + char
+                    print(f"\033[{y_start + j};{x_line}H{colored_line}", end="", flush=True)
+                utc = datetime.utcnow().strftime("%H:%M:%S UTC")
+                utc_x = (width - len(utc)) // 2
+                print(f"\033[{y_center+3};{utc_x}H{Fore.WHITE}{utc}", end="", flush=True)
+                rotations = i // len(earth_frames)
+                rot_text = f"Rotations: {rotations}"
+                rot_x = (width - len(rot_text)) // 2
+                print(f"\033[{y_center+4};{rot_x}H{Fore.GREEN}{rot_text}", end="", flush=True)
+                status = "PAUSED" if paused else "ROTATING"
+                status_x = (width - len(status)) // 2
+                print(f"\033[{y_center+5};{status_x}H{Fore.RED if paused else Fore.GREEN}{status}", end="", flush=True)
+                if not paused:
+                    time.sleep(speed)
+                    i += 1 if not reverse else -1
+                else:
+                    time.sleep(0.1)
+                if msvcrt.kbhit():
+                    key = msvcrt.getch().lower()
+                    if key == b'q':
+                        break
+                    elif key == b'f':
+                        speed = max(0.01, speed - 0.03)
+                    elif key == b's':
+                        speed = min(0.5, speed + 0.03)
+                    elif key == b'p':
+                        paused = not paused
+                    elif key == b'r':
+                        reverse = not reverse
+                HackerSounds.beep_hack(200 + (i % 50), 5)
 
         # Function for network features on right side
         def network_panel():
