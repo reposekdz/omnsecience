@@ -86,20 +86,39 @@ DEFAULT_CREDENTIALS = [
     ("ubuntu", "ubuntu"),
 ]
 
-# Vulnerability database for exploitation
+# Vulnerability database for exploitation (Windows 7 through Windows 11)
 VULNERABILITIES = {
     "smb": {
-        "ms17-010": {"cve": "CVE-2017-0143", "description": "EternalBlue", "port": 445},
-        "smb-signing": {"cve": "CVE-2005-1111", "description": "SMB signing not required", "port": 445},
+        "ms17-010":      {"cve": "CVE-2017-0143", "description": "EternalBlue - Win7/Server 2008",      "port": 445, "os": ["Windows 7", "Server 2008 R2"]},
+        "cve-2017-0144": {"cve": "CVE-2017-0144", "description": "EternalRomance - Win7/Server 2008",   "port": 445, "os": ["Windows 7", "Server 2008 R2"]},
+        "smb-signing":   {"cve": "N/A",            "description": "SMB signing not required",            "port": 445, "os": ["All Windows"]},
+        "smb-null":      {"cve": "N/A",            "description": "SMB null/guest session",              "port": 445, "os": ["All Windows"]},
+        "smbghost":      {"cve": "CVE-2020-0796",  "description": "SMBGhost RCE - Win10 1903/1909",     "port": 445, "os": ["Windows 10 1903", "Windows 10 1909"]},
+        "printnightmare":{"cve": "CVE-2021-34527", "description": "PrintNightmare RCE - Win10/11",      "port": 445, "os": ["Windows 10", "Windows 11", "Server 2016+"]},
+        "petitpotam":    {"cve": "CVE-2021-36942", "description": "PetitPotam NTLM Relay - All Win",    "port": 445, "os": ["Windows 10", "Windows 11", "Server 2012+"]},
+        "nopac":         {"cve": "CVE-2021-42278", "description": "NoPac sAMAccountName - Win10/11 AD", "port": 445, "os": ["Windows 10", "Windows 11", "Server 2016+"]},
+        "certifried":    {"cve": "CVE-2022-26923", "description": "Certifried AD CS privesc",           "port": 445, "os": ["Windows 10", "Windows 11", "Server 2016+"]},
     },
     "rdp": {
-        "cve-2019-0708": {"cve": "CVE-2019-0708", "description": "BlueKeep", "port": 3389},
+        "cve-2019-0708": {"cve": "CVE-2019-0708", "description": "BlueKeep pre-auth RCE - Win7",       "port": 3389, "os": ["Windows 7", "Server 2008 R2"]},
+        "rdp-default":   {"cve": "N/A",            "description": "RDP weak/default credentials",       "port": 3389, "os": ["All Windows"]},
+    },
+    "winrm": {
+        "winrm-access":  {"cve": "N/A",            "description": "WinRM lateral movement - Win10/11",  "port": 5985, "os": ["Windows 10", "Windows 11", "Server 2012+"]},
+        "winrm-tls":     {"cve": "N/A",            "description": "WinRM over HTTPS - Win10/11",        "port": 5986, "os": ["Windows 10", "Windows 11", "Server 2012+"]},
+    },
+    "netlogon": {
+        "zerologon":     {"cve": "CVE-2020-1472",  "description": "Zerologon DC privesc - Server 2019", "port": 135,  "os": ["Server 2008", "Server 2012", "Server 2016", "Server 2019"]},
     },
     "ssh": {
-        "default-creds": {"cve": "N/A", "description": "Default SSH credentials", "port": 22},
+        "default-creds": {"cve": "N/A",            "description": "Default SSH credentials",            "port": 22,   "os": ["Linux", "macOS"]},
     },
     "ftp": {
-        "anonymous": {"cve": "N/A", "description": "FTP anonymous access", "port": 21},
+        "anonymous":     {"cve": "N/A",            "description": "FTP anonymous access",               "port": 21,   "os": ["All"]},
+    },
+    "databases": {
+        "redis-noauth":  {"cve": "N/A",            "description": "Redis no authentication",            "port": 6379, "os": ["Linux", "Windows"]},
+        "mongodb-noauth":{"cve": "N/A",            "description": "MongoDB no authentication",          "port": 27017,"os": ["Linux", "Windows"]},
     },
 }
 
@@ -622,18 +641,121 @@ class UniversalNetworkAccess:
             pass
     
     def _check_vulnerabilities(self, device: UniversalDevice):
-        """Check for known vulnerabilities."""
-        
-        # SMB vulnerabilities
-        if device.has_smb:
-            if 445 in device.open_ports:
-                device.is_vulnerable.append("smb_exposed")
-        
-        # WMI accessible
-        if device.has_wmi or 135 in device.open_ports:
+        """Check for known vulnerabilities - Windows 7 through Windows 11."""
+        ip = device.ip
+
+        # SMB vulnerabilities (all Windows versions)
+        if device.has_smb and 445 in device.open_ports:
+            device.is_vulnerable.append("smb_exposed")
+
+            # SMBGhost probe (CVE-2020-0796) - Windows 10 1903/1909
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(3)
+                if s.connect_ex((ip, 445)) == 0:
+                    smb2_neg = (
+                        b'\x00\x00\x00\xb5'
+                        b'\xfeSMB\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                        b'\x00\x00\x00\x00'
+                        b'\x24\x00\x01\x00\x01\x00\x00\x00\x7f\x00\x00\x00'
+                        + b'\x00' * 16 +
+                        b'\x78\x00\x00\x00\x02\x00\x00\x00'
+                        b'\x11\x03'
+                        b'\x03\x00\x06\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00'
+                        b'\x01\x00\x26\x00\x00\x00\x00\x00\x01\x00\x20\x00\x01\x00'
+                        + b'\x00' * 32
+                    )
+                    s.send(smb2_neg)
+                    resp = s.recv(1024)
+                    if len(resp) > 70 and resp[4:8] == b'\xfeSMB':
+                        dialect = int.from_bytes(resp[68:70], 'little')
+                        if dialect == 0x0311:
+                            device.is_vulnerable.append("CVE-2020-0796_SMBGHOST")
+                            logger.info(f"[VULN] {ip}: SMBGhost (CVE-2020-0796) detected!")
+                s.close()
+            except:
+                try: s.close()
+                except: pass
+
+            # PrintNightmare check - spoolss pipe accessible
+            try:
+                if IMPACKET_OK:
+                    conn_pn = SMBConnection(ip, ip, timeout=3)
+                    try:
+                        conn_pn.login('', '')
+                        device.is_vulnerable.append("CVE-2021-34527_PRINTNIGHTMARE_POTENTIAL")
+                        conn_pn.logoff()
+                    except:
+                        pass
+            except:
+                pass
+
+            # PetitPotam - lsarpc pipe over null session
+            try:
+                if IMPACKET_OK:
+                    conn_pp = SMBConnection(ip, ip, timeout=3)
+                    try:
+                        conn_pp.login('', '')
+                        device.is_vulnerable.append("CVE-2021-36942_PETITPOTAM_POTENTIAL")
+                        conn_pp.logoff()
+                    except:
+                        pass
+            except:
+                pass
+
+        # WinRM check (Windows 10/11 lateral movement)
+        for winrm_port in [5985, 5986]:
+            try:
+                sw = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sw.settimeout(2)
+                if sw.connect_ex((ip, winrm_port)) == 0:
+                    device.is_vulnerable.append(f"WINRM_PORT_{winrm_port}_OPEN")
+                    device.open_ports[winrm_port] = "winrm" if winrm_port == 5985 else "winrm-ssl"
+                    logger.info(f"[VULN] {ip}: WinRM open on port {winrm_port}")
+                sw.close()
+            except:
+                pass
+
+        # Zerologon check (domain controller detection via Netlogon RPC)
+        if 135 in device.open_ports:
             device.is_vulnerable.append("wmi_exposed")
             device.has_wmi = True
-        
+            try:
+                s135 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s135.settimeout(2)
+                if s135.connect_ex((ip, 389)) == 0:  # LDAP - indicates domain controller
+                    device.is_vulnerable.append("DOMAIN_CONTROLLER_DETECTED")
+                    device.is_vulnerable.append("CVE-2020-1472_ZEROLOGON_CANDIDATE")
+                    logger.info(f"[VULN] {ip}: Domain controller detected - Zerologon candidate!")
+                s135.close()
+            except:
+                pass
+        elif device.has_wmi:
+            device.is_vulnerable.append("wmi_exposed")
+
+        # Redis no-auth (often unprotected)
+        if 6379 in device.open_ports:
+            try:
+                sr = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sr.settimeout(2)
+                if sr.connect_ex((ip, 6379)) == 0:
+                    sr.send(b"PING\r\n")
+                    resp = sr.recv(64)
+                    if b"+PONG" in resp or b"PONG" in resp:
+                        device.is_vulnerable.append("REDIS_NO_AUTH")
+                        device.can_pwn = True
+                sr.close()
+            except:
+                pass
+
+        # MongoDB no-auth
+        if 27017 in device.open_ports:
+            device.is_vulnerable.append("MONGODB_EXPOSED")
+
         # Check if exploitable
         if device.can_pwn:
             self.stats["pwned"] += 1

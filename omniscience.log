@@ -554,3 +554,15 @@ Current FSM is SSH Process
 2026-04-17 08:50:16,178 | [INFO] | OmniShell | [FULL-SCAN] Complete. 0 hosts | 0.1s
 2026-04-17 08:50:16,178 | [INFO] | OmniShell | [FINGERPRINT] Running advanced fingerprinting on all devices...
 2026-04-17 08:50:16,178 | [INFO] | OmniShell | [FINGERPRINT] Complete
+2026-04-17 09:00:42,193 | [INFO] | OmniShell | [WAN] External IP: 34.30.175.161 (161.175.30.34.bc.googleusercontent.com)
+2026-04-17 09:00:42,196 | [INFO] | OmniShell | [AUTO] Detecting network configuration...
+2026-04-17 09:00:42,196 | [INFO] | OmniShell | [AUTO] Local IP: 172.31.89.194
+2026-04-17 09:00:42,196 | [INFO] | OmniShell | [AUTO] Network Range: 172.31.89.0/24
+2026-04-17 09:00:42,196 | [INFO] | OmniShell | [AUTO] Gateway: 172.31.89.1
+2026-04-17 09:00:42,196 | [INFO] | OmniShell | [FULL-SCAN] 172.31.89.0/24 | Methods: ['arp', 'icmp', 'netbios', 'ssdp', 'tcp', 'dns', 'snmp', 'http'] | Global Mode: Auto
+2026-04-17 09:00:42,196 | [INFO] | OmniShell | [ARP] Scanning 172.31.89.0/24
+2026-04-17 09:00:42,196 | [ERROR] | OmniShell | ARP scan error: [Errno 1] Operation not permitted
+2026-04-17 09:00:42,196 | [INFO] | OmniShell | [ICMP] Sweep 172.31.89.0/24
+2026-04-17 09:00:42,344 | [INFO] | OmniShell | [FULL-SCAN] Complete. 0 hosts | 0.1s
+2026-04-17 09:00:42,344 | [INFO] | OmniShell | [FINGERPRINT] Running advanced fingerprinting on all devices...
+2026-04-17 09:00:42,344 | [INFO] | OmniShell | [FINGERPRINT] Complete

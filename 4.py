@@ -46,40 +46,121 @@ class Visualizer:
     """Premium UI Utilities."""
     
     ASCII_CHARS = ['@', '#', 'S', '%', '?', '*', '+', ':', '.', ' ']
-    
+
+    # Gradient palette (dark → bright cyan/blue chain)
+    _GRAD = [Fore.BLUE, Fore.CYAN, Fore.WHITE, Fore.CYAN, Fore.BLUE]
+
+    @staticmethod
+    def _sep(char="═", width=80, color=Fore.CYAN):
+        return f"{color}{Style.BRIGHT}{char * width}"
+
     @staticmethod
     def banner():
-        print(f"{Fore.CYAN}{Style.BRIGHT}" + "="*80)
-        print(f"{Fore.CYAN}{Style.BRIGHT}" + r"   ____  __  ___ _   _ ___  ____   ____ ___ _____ _   _  ____ _____ ")
-        print(f"{Fore.CYAN}{Style.BRIGHT}" + r"  / __ \|  \/  || \ | |_ _ / ___| / ___|_ _| ____| \ | |/ ___| ____|")
-        print(f"{Fore.CYAN}{Style.BRIGHT}" + r" | |  | | |\/| ||  \| || | \___ \| |    | ||  _| |  \| | |   |  _|  ")
-        print(f"{Fore.CYAN}{Style.BRIGHT}" + r" | |__| | |  | || |\  || |  ___) | |___ | || |___| |\  | |___| |___ ")
-        print(f"{Fore.CYAN}{Style.BRIGHT}" + r"  \____/|_|  |_||_| \_|___|____/ \____|___|_____|_| \_|\____|_____|")
-        print(f"{Fore.WHITE}{Style.BRIGHT}             Advanced Network Command Center | Version 5.1")
-        print(f"{Fore.CYAN}{Style.BRIGHT}" + "="*80 + "\n")
+        W = 80
+        lines = [
+            r"  ██████╗ ███╗   ███╗███╗   ██╗██╗███████╗ ██████╗██╗███████╗███╗   ██╗ ██████╗███████╗",
+            r"  ██╔═══██╗████╗ ████║████╗  ██║██║██╔════╝██╔════╝██║██╔════╝████╗  ██║██╔════╝██╔════╝",
+            r"  ██║   ██║██╔████╔██║██╔██╗ ██║██║███████╗██║     ██║█████╗  ██╔██╗ ██║██║     █████╗  ",
+            r"  ██║   ██║██║╚██╔╝██║██║╚██╗██║██║╚════██║██║     ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝  ",
+            r"  ╚██████╔╝██║ ╚═╝ ██║██║ ╚████║██║███████║╚██████╗██║███████╗██║ ╚████║╚██████╗███████╗",
+            r"   ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝╚══════╝ ╚═════╝╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝",
+        ]
+        grad_colors = [Fore.BLUE, Fore.CYAN, Fore.WHITE, Fore.CYAN, Fore.CYAN, Fore.BLUE]
+        print()
+        print(f"{Fore.BLUE}{Style.BRIGHT}{'╔' + '═'*88 + '╗'}")
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*88}║")
+        for i, line in enumerate(lines):
+            color = grad_colors[i % len(grad_colors)]
+            print(f"{Fore.BLUE}{Style.BRIGHT}║ {color}{Style.BRIGHT}{line}{Fore.BLUE} ║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*88}║")
+
+        tagline = "▸ Advanced Network Command & Control Center  ◂  Version 5.1  ◂  Windows 7 → 11"
+        pad = (88 - len(tagline)) // 2
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad}{Fore.YELLOW}{Style.BRIGHT}{tagline}{Fore.BLUE}{' '*(88-pad-len(tagline))}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*88}║")
+
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        info = f"[ Session: {now} ]"
+        pad2 = (88 - len(info)) // 2
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad2}{Fore.GREEN}{Style.BRIGHT}{info}{Fore.BLUE}{' '*(88-pad2-len(info))}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}{'╚' + '═'*88 + '╝'}")
+        print()
+
+    @staticmethod
+    def section_header(title: str, color=Fore.CYAN, icon=""):
+        w = 78
+        line = f"  {icon}  {title}  " if icon else f"  {title}  "
+        pad = w - len(line) - 4
+        print(f"\n{color}{Style.BRIGHT}╔══{line}{'═'*pad}╗")
+
+    @staticmethod
+    def section_footer(color=Fore.CYAN):
+        print(f"{color}{Style.BRIGHT}╚{'═'*78}╝")
+
+    @staticmethod
+    def progress_bar(label: str, pct: float, width: int = 40, color=Fore.GREEN):
+        filled = int(width * pct / 100)
+        bar = "█" * filled + "░" * (width - filled)
+        print(f"  {Fore.WHITE}{label:<22} {color}{Style.BRIGHT}[{bar}] {pct:5.1f}%")
+
+    @staticmethod
+    def loading_sequence(steps: list):
+        """Animate a startup loading sequence."""
+        spinner = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]
+        for i, step in enumerate(steps):
+            for j in range(6):
+                sp = spinner[(i * 6 + j) % len(spinner)]
+                print(f"\r  {Fore.CYAN}{Style.BRIGHT}{sp} {Fore.WHITE}{step}...", end="", flush=True)
+                time.sleep(0.05)
+            print(f"\r  {Fore.GREEN}{Style.BRIGHT}✔ {Fore.WHITE}{step:<50}{Fore.GREEN} [OK]   ")
 
     @staticmethod
     def table(headers, rows, title=None):
         if title:
-            print(f"\n{Fore.YELLOW}{Style.BRIGHT}>> {title}")
+            w = 78
+            t = f"  ◈  {title}  ◈"
+            pad = max(0, w - len(t) - 2)
+            print(f"\n{Fore.YELLOW}{Style.BRIGHT}╔═{t}{'═'*pad}╗")
         if not rows:
-            print(f"  {Fore.RED}[Empty]")
+            print(f"  {Fore.RED}  [No data]")
+            if title:
+                print(f"{Fore.YELLOW}{Style.BRIGHT}╚{'═'*78}╝")
             return
+
         widths = [len(h) for h in headers]
         for row in rows:
             for i, val in enumerate(row):
-                widths[i] = max(widths[i], len(str(val)))
-        header_row = "  ".join(f"{Fore.CYAN}{headers[i]:<{widths[i]}}" for i in range(len(headers)))
-        print(f"{Style.BRIGHT}{header_row}")
-        print(f"{Fore.BLUE}" + "  ".join("-" * w for w in widths))
-        for row in rows:
-            formatted_row = "  ".join(f"{str(row[i]):<{widths[i]}}" for i in range(len(row)))
-            print(f"  {formatted_row}")
+                if i < len(widths):
+                    widths[i] = max(widths[i], len(str(val)))
+
+        sep = "  " + "─┼─".join("─" * w for w in widths)
+        header_row = "  " + "  │  ".join(f"{Fore.CYAN}{Style.BRIGHT}{headers[i]:<{widths[i]}}" for i in range(len(headers)))
+        print(f"{Fore.WHITE}{Style.BRIGHT}{header_row}{Style.RESET_ALL}")
+        print(f"{Fore.BLUE}{sep}")
+
+        for ri, row in enumerate(rows):
+            row_color = Fore.WHITE if ri % 2 == 0 else Fore.LIGHTWHITE_EX
+            cells = []
+            for i in range(len(headers)):
+                val = str(row[i]) if i < len(row) else ""
+                cells.append(f"{row_color}{val:<{widths[i]}}")
+            print(f"  {'  │  '.join(cells)}{Style.RESET_ALL}")
+
+        if title:
+            print(f"{Fore.YELLOW}{Style.BRIGHT}╚{'═'*78}╝")
         print()
 
     @staticmethod
     def status_line(label, value, color=Fore.GREEN):
-        print(f"{Fore.WHITE}{label:<20}: {color}{value}")
+        print(f"  {Fore.WHITE}{Style.BRIGHT}{label:<22}{Fore.BLUE}│  {color}{Style.BRIGHT}{value}{Style.RESET_ALL}")
+
+    @staticmethod
+    def alert(msg: str, level: str = "info"):
+        icons  = {"info": "ℹ", "warn": "⚠", "error": "✘", "ok": "✔", "hack": "☠"}
+        colors = {"info": Fore.CYAN, "warn": Fore.YELLOW, "error": Fore.RED, "ok": Fore.GREEN, "hack": Fore.RED}
+        icon  = icons.get(level, "•")
+        color = colors.get(level, Fore.WHITE)
+        print(f"  {color}{Style.BRIGHT}{icon}  {msg}{Style.RESET_ALL}")
 
     @staticmethod
     def display_screenshot(image_path):
@@ -118,39 +199,63 @@ class OmniShell:
         self.command_history = []
         self.on_output = on_output
         self.hosts = []
-        
-        print(f"[*] {Fore.YELLOW}Loading High-Technology Modules...")
-        
-        # Load modules
-        m1 = get_module("1")
-        m2 = get_module("2")
-        m3 = get_module("3")
-        m5 = get_module("5")
-        m6 = get_module("6")
-        m7 = get_module("7")
-        
-        self.discovery = m1.NetworkDiscovery() if m1 and hasattr(m1, 'NetworkDiscovery') else None
-        self.intel = m2.AgentlessIntelligence() if m2 and hasattr(m2, 'AgentlessIntelligence') else None
-        self.control = m3.AgentlessControl() if m3 and hasattr(m3, 'AgentlessControl') else None
-        self.adv_scan = m5.AdvancedNetworkScanner() if m5 and hasattr(m5, 'AdvancedNetworkScanner') else None
-        self.center = m6.AdvancedCommandCenter() if m6 and hasattr(m6, 'AdvancedCommandCenter') else None
-        self.universal = m7.UniversalNetworkAccess() if m7 and hasattr(m7, 'UniversalNetworkAccess') else None
-        
+        self.interactive_events = []
+        self._start_time = datetime.now()
+
+        print(f"\n  {Fore.CYAN}{Style.BRIGHT}◈  Initializing Omniscience Framework v5.1 ...")
+        print(f"  {Fore.BLUE}{'─'*60}")
+
+        # Animated module loading
+        modules_cfg = [
+            ("1", "NetworkDiscovery",       "Discovery Engine        "),
+            ("2", "AgentlessIntelligence",  "Intelligence Module     "),
+            ("3", "AgentlessControl",       "Control Engine (Win7-11)"),
+            ("5", "AdvancedNetworkScanner", "Advanced Scanner        "),
+            ("6", "AdvancedCommandCenter",  "Command Center          "),
+            ("7", "UniversalNetworkAccess", "Universal Access Engine "),
+        ]
+
+        loaded = {}
+        spinner = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]
+        for idx, (mod_num, class_name, label) in enumerate(modules_cfg):
+            for j in range(8):
+                sp = spinner[(idx * 8 + j) % len(spinner)]
+                print(f"\r  {Fore.CYAN}{Style.BRIGHT}{sp}  {Fore.WHITE}Loading {label}", end="", flush=True)
+                time.sleep(0.04)
+            m = get_module(mod_num)
+            loaded[mod_num] = m
+            if m and hasattr(m, class_name):
+                print(f"\r  {Fore.GREEN}{Style.BRIGHT}✔  {Fore.WHITE}{label}{Fore.GREEN}  LOADED   ")
+            else:
+                print(f"\r  {Fore.YELLOW}{Style.BRIGHT}⚠  {Fore.WHITE}{label}{Fore.YELLOW}  DEGRADED ")
+
+        self.discovery = loaded["1"].NetworkDiscovery()  if loaded.get("1") and hasattr(loaded["1"], 'NetworkDiscovery')       else None
+        self.intel     = loaded["2"].AgentlessIntelligence() if loaded.get("2") and hasattr(loaded["2"], 'AgentlessIntelligence') else None
+        self.control   = loaded["3"].AgentlessControl()  if loaded.get("3") and hasattr(loaded["3"], 'AgentlessControl')       else None
+        self.adv_scan  = loaded["5"].AdvancedNetworkScanner() if loaded.get("5") and hasattr(loaded["5"], 'AdvancedNetworkScanner') else None
+        self.center    = loaded["6"].AdvancedCommandCenter()  if loaded.get("6") and hasattr(loaded["6"], 'AdvancedCommandCenter')  else None
+        self.universal = loaded["7"].UniversalNetworkAccess() if loaded.get("7") and hasattr(loaded["7"], 'UniversalNetworkAccess') else None
+
         if self.center and self.discovery and self.intel and self.control:
             try:
                 self.center.set_modules(discovery=self.discovery, intel=self.intel, control=self.control)
             except:
                 pass
-        
+
         if self.intel:
             try:
                 self.intel.add_activity_callback(self._on_intel_event)
             except:
                 pass
-        
-        self.hosts = []
-        self.interactive_events = []
-        print(f"[+] {Fore.GREEN}Omniscience Framework Ready.")
+
+        # Status summary
+        print(f"\n  {Fore.BLUE}{'─'*60}")
+        mods_ok = sum(1 for x in [self.discovery, self.intel, self.control, self.adv_scan, self.center, self.universal] if x)
+        print(f"  {Fore.GREEN}{Style.BRIGHT}✔  {mods_ok}/6 modules active")
+        print(f"  {Fore.CYAN}{Style.BRIGHT}◈  Win7 + Win10/11 exploit chains: {Fore.GREEN}ENABLED")
+        print(f"  {Fore.CYAN}{Style.BRIGHT}◈  CVE coverage: EternalBlue │ SMBGhost │ PrintNightmare │ Zerologon │ PetitPotam")
+        print(f"  {Fore.BLUE}{'─'*60}")
+        print(f"\n  {Fore.GREEN}{Style.BRIGHT}● Omniscience Framework READY  │  Type 'help' for commands\n")
 
     def _on_intel_event(self, event):
         self.interactive_events.append(event)
@@ -273,29 +378,48 @@ class OmniShell:
         
         # Section 4: Exploit
         print(f"\n{Fore.RED}{Style.BRIGHT}╔══════════════════════════════════════════════════════════════════════════════╗")
-        print(f"{Fore.RED}{Style.BRIGHT}║  💀 SECTION 4: EXPLOITATION (20 Commands)                                     ║")
+        print(f"{Fore.RED}{Style.BRIGHT}║  ☠  SECTION 4: EXPLOITATION — Windows 7 → 11 (28 Commands)                  ║")
+        print(f"{Fore.RED}{Style.BRIGHT}╠══════════════════════════════════════════════════════════════════════════════╣")
+        print(f"{Fore.RED}{Style.BRIGHT}║  ── Windows 7 / Server 2008 R2 ──────────────────────────────────────────── ║")
         print(f"{Fore.RED}{Style.BRIGHT}╚══════════════════════════════════════════════════════════════════════════════╝")
         cmds = """
-  pwn <ip>          - Full exploit chain
-  omnifetch <ip>    - Complete pwn + harvest
-  exploit <ip>     - Try all exploits
-  attack / pwnall  - Attack all hosts
-  stealcreds <ip>  - Harvest browser passwords
-  steal-wifi <ip>  - Extract WiFi passwords
-  vault <ip>       - Harvest vault secrets
-  nethashes <ip>   - Extract NTLM hashes
-  tokens           - Steal tokens
-  lsass-dump <ip>  - Dump LSASS
-  ssh-brute <ip>   - SSH brute force
-  telnet-brute <ip>- Telnet brute force
-  rdp-brute <ip>   - RDP brute force
-  vnc-brute <ip>   - VNC brute force
-  etblue-check <ip>- Check EternalBlue
-  bluekeep-check <ip> - Check BlueKeep
-  smb-vulns <ip>   - Check SMB vulns
-  mysql-root <ip>  - Try MySQL root
-  postgres <ip>    - Try PostgreSQL
-  scan-exploit <r> - Scan and exploit
+  etblue-check <ip>   - Check EternalBlue   (CVE-2017-0143  │ Win7/2008)
+  bluekeep-check <ip> - Check BlueKeep      (CVE-2019-0708  │ Win7/2008 RDP)
+  smb-vulns <ip>      - Full SMB vuln scan  (Win7 → Win11)
+"""
+        print(f"{Fore.LIGHTRED_EX}{cmds}")
+        print(f"{Fore.RED}{Style.BRIGHT}╔══════════════════════════════════════════════════════════════════════════════╗")
+        print(f"{Fore.RED}{Style.BRIGHT}║  ── Windows 10 / 11 / Server 2019-2022 ─────────────────────────────────── ║")
+        print(f"{Fore.RED}{Style.BRIGHT}╚══════════════════════════════════════════════════════════════════════════════╝")
+        cmds = """
+  smbghost <ip>       - SMBGhost RCE check  (CVE-2020-0796  │ Win10 1903/1909)
+  printnightmare <ip> - PrintNightmare RPC  (CVE-2021-34527 │ Win10/11 + Server)
+  petitpotam <ip>     - PetitPotam coerce   (CVE-2021-36942 │ All Windows NTLM)
+  zerologon <ip>      - Zerologon DC pwn    (CVE-2020-1472  │ Domain Controllers)
+  nopac <ip>          - NoPac AD escalation (CVE-2021-42278 │ Win10/11 AD)
+  winrm-exec <ip> <cmd> - WinRM command     (Win10/11 port 5985/5986)
+"""
+        print(f"{Fore.LIGHTRED_EX}{cmds}")
+        print(f"{Fore.RED}{Style.BRIGHT}╔══════════════════════════════════════════════════════════════════════════════╗")
+        print(f"{Fore.RED}{Style.BRIGHT}║  ── Universal / Credential / Post-Exploit ──────────────────────────────── ║")
+        print(f"{Fore.RED}{Style.BRIGHT}╚══════════════════════════════════════════════════════════════════════════════╝")
+        cmds = """
+  pwn <ip>          - Full exploit chain (Win7 → Win11 auto-detect)
+  omnifetch <ip>    - Complete pwn + harvest all data
+  exploit <ip>      - Try all exploits in sequence
+  attack / pwnall   - Attack all hosts on network
+  stealcreds <ip>   - Harvest browser passwords
+  steal-wifi <ip>   - Extract WiFi passwords
+  vault <ip>        - Harvest Windows Credential Vault
+  nethashes <ip>    - Extract NTLM hashes
+  lsass-dump <ip>   - Dump LSASS process memory
+  ssh-brute <ip>    - SSH brute force (Linux/Win)
+  telnet-brute <ip> - Telnet brute force
+  rdp-brute <ip>    - RDP brute force (Windows)
+  vnc-brute <ip>    - VNC brute force
+  mysql-root <ip>   - Try MySQL root access
+  postgres <ip>     - Try PostgreSQL access
+  scan-exploit <r>  - Scan range and exploit all
 """
         print(f"{Fore.WHITE}{cmds}")
         
@@ -423,39 +547,89 @@ class OmniShell:
         Visualizer.table(headers, rows, "DISCOVERED HOSTS")
 
     def _print_dashboard(self):
-        self._log(f"\n{Fore.CYAN}{Style.BRIGHT}== OMNISCIENCE DASHBOARD ==")
-        Visualizer.status_line("System", "READY") # These still print directly, might need update later
-        self._log(f"Hosts Discovered: {len(self.hosts)}")
-        self._log(f"{Fore.CYAN}{'='*40}\n")
+        now  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        up   = str(datetime.now() - self._start_time).split(".")[0]
+        tgt  = self.selected_target or "─ none ─"
+        cred = f"{self.credentials['user']}:{self.credentials['pass'] or '<blank>'}"
+        host_count = len(self.hosts)
+
+        mods_ok = sum(1 for x in [self.discovery, self.intel, self.control,
+                                   self.adv_scan, self.center, self.universal] if x)
+
+        print(f"\n{Fore.BLUE}{Style.BRIGHT}╔{'═'*78}╗")
+        title = "  ◈  OMNISCIENCE DASHBOARD  ◈  v5.1  ◈"
+        pad   = (78 - len(title)) // 2
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad}{Fore.YELLOW}{Style.BRIGHT}{title}{Fore.BLUE}{' '*(78-pad-len(title))}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}╠{'═'*78}╣")
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*78}║")
+
+        def row(label, val, vcolor=Fore.GREEN):
+            line = f"    {Fore.WHITE}{Style.BRIGHT}{label:<22}{Fore.BLUE}│  {vcolor}{Style.BRIGHT}{val}"
+            pad_r = max(0, 76 - len(label) - len(val) - 6)
+            print(f"{Fore.BLUE}{Style.BRIGHT}║{line}{' '*pad_r}{Fore.BLUE}║")
+
+        row("Timestamp",       now,              Fore.CYAN)
+        row("Session Uptime",  up,               Fore.CYAN)
+        row("Modules Active",  f"{mods_ok}/6",   Fore.GREEN if mods_ok == 6 else Fore.YELLOW)
+        row("Hosts Discovered",str(host_count),  Fore.GREEN if host_count else Fore.RED)
+        row("Active Target",   tgt,              Fore.RED   if tgt != "─ none ─" else Fore.WHITE)
+        row("Credentials",     cred,             Fore.YELLOW)
+        row("Domain",          self.credentials.get("domain") or "─ none ─", Fore.WHITE)
+        row("Win10/11 Exploits","SMBGhost │ PrintNightmare │ PetitPotam │ Zerologon │ WinRM", Fore.RED)
+        row("Win7 Exploits",   "EternalBlue │ BlueKeep │ EternalRomance",                   Fore.RED)
+
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*78}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}╠{'═'*78}╣")
+
+        # Mini progress bars
+        disc_pct = min(100, host_count * 10)
+        print(f"{Fore.BLUE}{Style.BRIGHT}║  {Fore.CYAN}{Style.BRIGHT}{'Discovery Coverage':22}{Fore.BLUE}│  {' '*50}║")
+        bar_filled = int(50 * disc_pct / 100)
+        bar = f"{Fore.GREEN}{'█'*bar_filled}{Fore.BLUE}{'░'*(50-bar_filled)}"
+        print(f"{Fore.BLUE}{Style.BRIGHT}║  {' '*22}   {bar}  {Fore.YELLOW}{disc_pct:3d}%{Fore.BLUE}  ║")
+
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*78}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}╚{'═'*78}╝\n")
 
     def run(self):
         Visualizer.banner()
-        print(f"[*] {Fore.MAGENTA}AUTONOMOUS STARTUP INITIATED...")
-        print(f"[*] {Fore.CYAN}Type 'help' for 140+ commands.")
-        
+        print(f"  {Fore.CYAN}{Style.BRIGHT}▸  Type {Fore.YELLOW}'help'{Fore.CYAN} for 140+ commands  │  "
+              f"{Fore.YELLOW}'dashboard'{Fore.CYAN} for status  │  "
+              f"{Fore.YELLOW}'exit'{Fore.CYAN} to quit\n")
+
         # Auto-scan on startup
         if self.discovery:
             try:
-                print(f"[*] Running initial network scan...")
+                print(f"  {Fore.CYAN}{Style.BRIGHT}⠿  Running initial network sweep...")
                 self.hosts = self.discovery.auto_scan()
                 self._show_hosts_table()
             except Exception as e:
-                print(f"{Fore.RED}[!] Scan error: {e}")
-        
+                Visualizer.alert(f"Initial scan error: {e}", "warn")
+
         while self.running:
             try:
-                prompt = f"{Fore.CYAN}omni{Fore.WHITE}@{Fore.RED}shell{Fore.WHITE}> "
+                ts = datetime.now().strftime("%H:%M:%S")
                 if self.selected_target:
-                    prompt = f"{Fore.CYAN}omni{Fore.WHITE}@{Fore.RED}({self.selected_target}){Fore.WHITE}> "
-                
+                    prompt = (f"{Fore.BLUE}{Style.BRIGHT}[{Fore.WHITE}{ts}{Fore.BLUE}]"
+                              f"{Fore.CYAN} omni"
+                              f"{Fore.WHITE}@"
+                              f"{Fore.RED}{Style.BRIGHT}({self.selected_target})"
+                              f"{Fore.WHITE}{Style.RESET_ALL}{Fore.CYAN}❯ {Style.RESET_ALL}")
+                else:
+                    prompt = (f"{Fore.BLUE}{Style.BRIGHT}[{Fore.WHITE}{ts}{Fore.BLUE}]"
+                              f"{Fore.CYAN} omni"
+                              f"{Fore.WHITE}@"
+                              f"{Fore.RED}{Style.BRIGHT}shell"
+                              f"{Fore.WHITE}{Style.RESET_ALL}{Fore.CYAN}❯ {Style.RESET_ALL}")
+
                 cmd_line = input(prompt).strip()
                 if not cmd_line:
                     continue
-                
+
                 self.process_command(cmd_line)
-                
+
             except KeyboardInterrupt:
-                print(f"\n{Fore.YELLOW}[*] Press Ctrl+C again or type 'exit' to quit")
+                print(f"\n  {Fore.YELLOW}{Style.BRIGHT}⚠  Ctrl+C  │  Type 'exit' to quit gracefully")
             except Exception as e:
                 print(f"{Fore.RED}Error: {e}")
 
@@ -862,6 +1036,157 @@ class OmniShell:
                 if self.control and hasattr(self.control, 'rdp_brute_force'):
                     result = self.control.rdp_brute_force(args[0])
                     print(f"{json.dumps(result, indent=2)}")
+
+            # ==================== WIN10/11 EXPLOITS ====================
+
+            elif cmd == "smbghost" and args:
+                target = args[0]
+                Visualizer.alert(f"SMBGhost (CVE-2020-0796) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_smbghost'):
+                    result = self.control.check_smbghost(target)
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2020-0796 (SMBGhost)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd == "printnightmare" and args:
+                target = args[0]
+                Visualizer.alert(f"PrintNightmare (CVE-2021-34527) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_printnightmare'):
+                    result = self.control.check_printnightmare(
+                        target,
+                        self.credentials["user"],
+                        self.credentials["pass"]
+                    )
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2021-34527 (PrintNightmare)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd == "petitpotam" and args:
+                target = args[0]
+                Visualizer.alert(f"PetitPotam (CVE-2021-36942) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_petitpotam'):
+                    result = self.control.check_petitpotam(target)
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "VULNERABLE (unauthenticated NTLM coercion possible)" if vuln else "NOT VULNERABLE"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2021-36942 (PetitPotam)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd == "zerologon" and args:
+                target = args[0]
+                dc_name = args[1] if len(args) > 1 else ""
+                Visualizer.alert(f"Zerologon (CVE-2020-1472) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_zerologon'):
+                    result = self.control.check_zerologon(target, dc_name)
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "NETLOGON REACHABLE — check patch level" if vuln else "NOT REACHABLE"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2020-1472 (Zerologon)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("nopac",) and args:
+                target = args[0]
+                Visualizer.alert(f"NoPac (CVE-2021-42278) AD check on {target} - checking SMB+LDAP...", "hack")
+                if self.control and hasattr(self.control, 'smb_check_vulns'):
+                    sv = self.control.smb_check_vulns(target)
+                    vulns = sv.get("vulns", [])
+                    is_dc = any("DOMAIN_CONTROLLER" in v or "LDAP" in v for v in vulns)
+                    print(f"\n  {Fore.RED if is_dc else Fore.YELLOW}{Style.BRIGHT}  CVE-2021-42278 (NoPac)  │  {'DOMAIN CONTROLLER CANDIDATE' if is_dc else 'Not a detected DC'}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  SMB vulns found: {', '.join(vulns) or 'none'}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("winrm-exec",) and len(args) >= 2:
+                target = args[0]
+                command = " ".join(args[1:])
+                port = self.credentials.get("winrm_port", 5985)
+                Visualizer.alert(f"WinRM exec on {target}:{port} → {command[:60]}", "hack")
+                if self.control and hasattr(self.control, 'winrm_exec'):
+                    result = self.control.winrm_exec(
+                        target, self.credentials["user"], self.credentials["pass"],
+                        command, port=port
+                    )
+                    if result.get("success"):
+                        print(f"\n  {Fore.GREEN}{Style.BRIGHT}✔  WinRM Success on {target}")
+                        print(f"  {Fore.WHITE}Output:\n{result.get('output','')}")
+                    else:
+                        print(f"\n  {Fore.RED}{Style.BRIGHT}✘  WinRM Failed: {result.get('error','unknown')}")
+                    if result.get("error_detail"):
+                        print(f"  {Fore.YELLOW}  Detail: {result['error_detail']}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd == "smb-vulns" and args:
+                target = args[0]
+                Visualizer.alert(f"Full SMB vulnerability scan (Win7→Win11) on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'smb_check_vulns'):
+                    result = self.control.smb_check_vulns(target)
+                    vulns = result.get("vulns", [])
+                    info  = result.get("info", {})
+                    print(f"\n  {Fore.CYAN}{Style.BRIGHT}SMB Vulnerability Scan: {target}")
+                    print(f"  {Fore.BLUE}{'─'*56}")
+                    if vulns:
+                        for v in vulns:
+                            if "VULN" in v or "GHOST" in v or "NIGHTMARE" in v or "POTAM" in v:
+                                print(f"  {Fore.RED}{Style.BRIGHT}  ☠  {v}")
+                            elif "OPEN" in v or "DETECT" in v or "ENABLE" in v:
+                                print(f"  {Fore.YELLOW}{Style.BRIGHT}  ⚠  {v}")
+                            else:
+                                print(f"  {Fore.WHITE}  •  {v}")
+                    else:
+                        print(f"  {Fore.GREEN}  No critical vulnerabilities detected")
+                    print(f"  {Fore.BLUE}{'─'*56}")
+                    print(f"  {Fore.WHITE}  SMB Info: {json.dumps(info, indent=2)}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("etblue-check",) and args:
+                target = args[0]
+                Visualizer.alert(f"EternalBlue (CVE-2017-0143) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'smb_check_vulns'):
+                    result = self.control.smb_check_vulns(target)
+                    vuln = "SMB_VULNERABLE_MS17_010" in result.get("vulns", [])
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "VULNERABLE TO ETERNALBLUE" if vuln else "NOT VULNERABLE / PATCHED"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2017-0143 (EternalBlue)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Vulns   : {', '.join(result.get('vulns', [])) or 'none'}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("bluekeep-check",) and args:
+                target = args[0]
+                Visualizer.alert(f"BlueKeep (CVE-2019-0708) RDP check on {target} ...", "hack")
+                try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.settimeout(3)
+                    rdp_open = s.connect_ex((target, 3389)) == 0
+                    s.close()
+                    if rdp_open:
+                        print(f"\n  {Fore.YELLOW}{Style.BRIGHT}  CVE-2019-0708 (BlueKeep)  │  RDP PORT OPEN (3389)")
+                        print(f"  {Fore.WHITE}  Target: {target}  │  Check Windows version: Win7/Server 2008 = VULNERABLE")
+                    else:
+                        print(f"\n  {Fore.GREEN}{Style.BRIGHT}  CVE-2019-0708 (BlueKeep)  │  RDP PORT CLOSED")
+                        print(f"  {Fore.WHITE}  Target: {target}\n")
+                except Exception as e:
+                    Visualizer.alert(f"BlueKeep check error: {e}", "error")
 
             # ==================== PERSISTENCE ====================
             elif cmd == "adduser" and len(args) >= 1:
