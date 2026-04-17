@@ -7,14 +7,21 @@ import os
 import sys
 import time
 import json
-import logging
-import threading
 import socket
-import re
+import random
+import threading
 import subprocess
 from datetime import datetime
-from collections import defaultdict
 from colorama import Fore, Back, Style, init
+
+# Force UTF-8 encoding for Windows console
+if sys.platform == 'win32':
+    import ctypes
+    kernel32 = ctypes.windll.kernel32
+    kernel32.SetConsoleOutputCP(65001)
+    kernel32.SetConsoleCP(65001)
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 import winsound
 import random
 
