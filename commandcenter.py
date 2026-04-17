@@ -9,6 +9,7 @@ import time
 import json
 import socket
 import random
+import logging
 import threading
 import subprocess
 from datetime import datetime
@@ -137,18 +138,135 @@ class MatrixEffects:
         time.sleep(duration)
     
     @staticmethod
-    def intro_cycle(cycles=8):
+    def intro_cycle(cycles=12):
         os.system('cls' if os.name == 'nt' else 'clear')
+        print(f"{Fore.GREEN}{Style.BRIGHT}INITIALIZING OMNISCIENCE FRAMEWORK v5.1...")
+        MatrixEffects.loading_animation("System Boot", 2.0)
+        MatrixEffects.loading_animation("Loading Modules", 1.5)
+        MatrixEffects.loading_animation("Matrix Engine", 1.0)
+        MatrixEffects.loading_animation("Hacker Interface", 0.8)
+
         for i in range(cycles):
-            print(f"\n" * random.randint(2,8))
-            for _ in range(random.randint(5,20)):
-                MatrixEffects.rain_line(0.01)
+            print(f"\n" * random.randint(3,10))
+            intensity_msg = ["CALCULATING...", "ANALYZING...", "PROCESSING...", "HACKING..."][i % 4]
+            print(f"{Fore.LIGHTGREEN_EX}{Style.BRIGHT}{intensity_msg}")
+            for _ in range(random.randint(8,25)):
+                MatrixEffects.rain_line(0.008)
             HackerSounds.network_pulse()
             os.system('cls' if os.name == 'nt' else 'clear')
-        
-        # Final pulse
+
+        # Final pulse sequence
         HackerSounds.access_granted()
+        time.sleep(0.5)
+        HackerSounds.exploit_success()
         time.sleep(0.3)
+
+    @staticmethod
+    def advanced_welcome():
+        """Ultra advanced hacking welcome with multi-threaded animations."""
+        import threading
+        import time
+
+        # Function for center matrix rain
+        def center_rain():
+            width = os.get_terminal_size().columns
+            height = os.get_terminal_size().lines
+            chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
+            for _ in range(200):  # Run for a while
+                x = random.randint(0, width-1)
+                y = random.randint(0, height-1)
+                char = random.choice(chars)
+                intensity = random.randint(30, 100)
+                if intensity > 80:
+                    color = Fore.LIGHTGREEN_EX
+                elif intensity > 50:
+                    color = Fore.GREEN
+                else:
+                    color = Fore.LIGHTBLACK_EX
+                print(f"\033[{y};{x}H{color}{char}", end="", flush=True)
+                time.sleep(0.01)
+
+        # Function for rotating earth on left side
+        def rotating_earth():
+            earth_frames = [
+                "   🌍   ",
+                "  🌍🌎  ",
+                " 🌍🌎🌏 ",
+                "🌍🌎🌏🌍",
+                " 🌏🌍🌎 ",
+                "  🌏🌍  ",
+                "   🌏   "
+            ]
+            width = os.get_terminal_size().columns
+            height = os.get_terminal_size().lines
+            x = 5  # Left side
+            y = height // 2
+            for i in range(50):
+                frame = earth_frames[i % len(earth_frames)]
+                print(f"\033[{y};{x}H{Fore.BLUE}{frame}", end="", flush=True)
+                time.sleep(0.1)
+
+        # Function for network features on right side
+        def network_panel():
+            width = os.get_terminal_size().columns
+            height = os.get_terminal_size().lines
+            x = width - 30  # Right side
+            y_start = 5
+            networks = [
+                "Scanning 192.168.1.0/24",
+                "Found: 192.168.1.1 (GW)",
+                "Found: 192.168.1.100 (PC)",
+                "Vuln: EternalBlue",
+                "Port 445 OPEN",
+                "SMB Version: 3.0",
+                "Exploiting...",
+                "SUCCESS: Shell obtained"
+            ]
+            for i in range(len(networks) * 2):
+                for j, net in enumerate(networks):
+                    if i >= j:
+                        status = "✓" if i > j else "⟳"
+                        color = Fore.GREEN if i > j else Fore.YELLOW
+                        print(f"\033[{y_start + j};{x}H{color}{status} {net}", end="", flush=True)
+                HackerSounds.beep_hack(random.randint(600, 1000), 10)
+                time.sleep(0.2)
+
+        # Function for middle hacking messages
+        def middle_hack():
+            width = os.get_terminal_size().columns
+            height = os.get_terminal_size().lines
+            messages = [
+                "INITIALIZING HACKER MATRIX...",
+                "LOADING EXPLOIT CHAINS...",
+                "CONNECTING TO DARK WEB...",
+                "BREACHING FIREWALLS...",
+                "GAINING ROOT ACCESS...",
+                "DOMINATING NETWORK...",
+                "OMNISCIENCE ACTIVE!"
+            ]
+            for msg in messages:
+                x = (width - len(msg)) // 2
+                y = height // 2 + 2
+                print(f"\033[{y};{x}H{Fore.RED}{Style.BRIGHT}{msg}", end="", flush=True)
+                HackerSounds.alert()
+                time.sleep(0.5)
+                print(f"\033[{y};{x}H{' ' * len(msg)}", end="", flush=True)  # Clear
+
+        # Start threads
+        threads = []
+        threads.append(threading.Thread(target=center_rain, daemon=True))
+        threads.append(threading.Thread(target=rotating_earth, daemon=True))
+        threads.append(threading.Thread(target=network_panel, daemon=True))
+        threads.append(threading.Thread(target=middle_hack, daemon=True))
+
+        for t in threads:
+            t.start()
+
+        # Wait for animations
+        time.sleep(5)
+
+        # Clear screen
+        os.system('cls' if os.name == 'nt' else 'clear')
     
     @staticmethod
     def loading_animation(text, duration=2.0):
@@ -235,7 +353,7 @@ class Visualizer:
 
     @staticmethod
     def banner():
-        W = 80
+        W = 100
         lines = [
             r"  ██████╗ ███╗   ███╗███╗   ██╗██╗███████╗ ██████╗██╗███████╗███╗   ██╗ ██████╗███████╗",
             r"  ██╔═══██╗████╗ ████║████╗  ██║██║██╔════╝██╔════╝██║██╔════╝████╗  ██║██╔════╝██╔════╝",
@@ -243,44 +361,79 @@ class Visualizer:
             r"  ██║   ██║██║╚██╔╝██║██║╚██╗██║██║╚════██║██║     ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝  ",
             r"  ╚██████╔╝██║ ╚═╝ ██║██║ ╚████║██║███████╗╚██████╗██║███████╗██║ ╚████║╚██████╗███████╗",
             r"   ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝╚══════╝ ╚═════╝╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝",
+            r"",
+            r"  ╔══════════════════════════════════════════════════════════════════════════════════════╗",
+            r"  ║                        ULTRA ADVANCED HACKER COMMAND CENTER                        ║",
+            r"  ║                    NETWORK DOMINATION │ EXPLOIT CHAINS │ TOTAL CONTROL             ║",
+            r"  ╚══════════════════════════════════════════════════════════════════════════════════════╝",
         ]
-        grad_colors = [Fore.GREEN, Fore.LIGHTGREEN_EX, Fore.GREEN, Fore.LIGHTGREEN_EX, Fore.GREEN, Fore.GREEN]
+        grad_colors = [Fore.GREEN, Fore.LIGHTGREEN_EX, Fore.GREEN, Fore.LIGHTGREEN_EX, Fore.GREEN, Fore.GREEN, Fore.WHITE, Fore.CYAN, Fore.CYAN, Fore.CYAN, Fore.WHITE]
         print()
-        print(f"{Fore.GREEN}{Style.BRIGHT}{'╔' + '═'*88 + '╗'}")
-        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*88}║")
+        print(f"{Fore.GREEN}{Style.BRIGHT}{'╔' + '═'*98 + '╗'}")
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*98}║")
         for i, line in enumerate(lines):
             color = grad_colors[i % len(grad_colors)]
-            print(f"{Fore.GREEN}{Style.BRIGHT}║ {color}{Style.BRIGHT}{line}{Fore.GREEN} ║")
-        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*88}║")
+            if line.strip():
+                print(f"{Fore.GREEN}{Style.BRIGHT}║ {color}{Style.BRIGHT}{line}{Fore.GREEN} {' '*(98-len(line))}║")
+            else:
+                print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*98}║")
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*98}║")
 
-        tagline = "▸ HACKER MODE ACTIVE  ◂  REAL NETWORK ATTACK SYSTEM  ◂  VERSION 5.1"
-        pad = (88 - len(tagline)) // 2
-        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*pad}{Fore.LIGHTGREEN_EX}{Style.BRIGHT}{tagline}{Fore.GREEN}{' '*(88-pad-len(tagline))}║")
-        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*88}║")
+        # System Info Section
+        import platform
+        system_info = [
+            f"OS: {platform.system()} {platform.release()}",
+            f"Python: {platform.python_version()}",
+            f"Architecture: {platform.machine()}",
+            f"Hostname: {socket.gethostname()}",
+            f"IP: {socket.gethostbyname(socket.gethostname())}"
+        ]
+
+        for info in system_info:
+            pad = (98 - len(info)) // 2
+            print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*pad}{Fore.LIGHTGREEN_EX}{Style.BRIGHT}{info}{Fore.GREEN}{' '*(98-pad-len(info))}║")
+
+        tagline = "▸ HACKER MODE ACTIVE  ◂  REAL NETWORK ATTACK SYSTEM  ◂  VERSION 5.1  ◂  ULTRA MAX POWER"
+        pad = (98 - len(tagline)) // 2
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*pad}{Fore.LIGHTGREEN_EX}{Style.BRIGHT}{tagline}{Fore.GREEN}{' '*(98-pad-len(tagline))}║")
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*98}║")
 
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        info = f"[ SECURE SESSION: {now} ]"
-        pad2 = (88 - len(info)) // 2
-        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*pad2}{Fore.LIGHTGREEN_EX}{Style.BRIGHT}{info}{Fore.GREEN}{' '*(88-pad2-len(info))}║")
-        print(f"{Fore.GREEN}{Style.BRIGHT}{'╚' + '═'*88 + '╝'}")
+        info = f"[ SECURE SESSION: {now} │ FRAMEWORK READY │ ALL MODULES LOADED ]"
+        pad2 = (98 - len(info)) // 2
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{' '*pad2}{Fore.LIGHTGREEN_EX}{Style.BRIGHT}{info}{Fore.GREEN}{' '*(98-pad2-len(info))}║")
+        print(f"{Fore.GREEN}{Style.BRIGHT}{'╚' + '═'*98 + '╝'}")
         print()
-        print(f"{Fore.BLUE}{Style.BRIGHT}{'╔' + '═'*88 + '╗'}")
-        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*88}║")
-        for i, line in enumerate(lines):
-            color = grad_colors[i % len(grad_colors)]
-            print(f"{Fore.BLUE}{Style.BRIGHT}║ {color}{Style.BRIGHT}{line}{Fore.BLUE} ║")
-        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*88}║")
 
-        tagline = "▸ Advanced Network Command & Control Center  ◂  Version 5.1  ◂  Windows 7 → 11"
-        pad = (88 - len(tagline)) // 2
-        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad}{Fore.YELLOW}{Style.BRIGHT}{tagline}{Fore.BLUE}{' '*(88-pad-len(tagline))}║")
-        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*88}║")
+        # Second banner with different style
+        print(f"{Fore.BLUE}{Style.BRIGHT}{'╔' + '═'*98 + '╗'}")
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*98}║")
+        for i, line in enumerate(lines[:6]):  # Only the ASCII art part
+            color = grad_colors[i % len(grad_colors)]
+            print(f"{Fore.BLUE}{Style.BRIGHT}║ {color}{Style.BRIGHT}{line}{Fore.BLUE} {' '*(98-len(line))}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*98}║")
+
+        features = [
+            "▸ ETERNALBLUE │ SMBGHOST │ PRINTNIGHTMARE │ PETITPOTAM │ ZEROLOGON",
+            "▸ ADVANCED SCANNER │ LATERAL MOVEMENT │ PERSISTENCE │ DATA EXTRACTION",
+            "▸ LIVE MONITORING │ WEBCAM │ AUDIO │ KEYLOGGER │ REMOTE CONTROL",
+            "▸ BRUTE FORCE │ EXPLOIT CHAINS │ CLOUD ATTACKS │ DATABASE DUMP"
+        ]
+
+        for feature in features:
+            pad = (98 - len(feature)) // 2
+            print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad}{Fore.YELLOW}{Style.BRIGHT}{feature}{Fore.BLUE}{' '*(98-pad-len(feature))}║")
+
+        tagline = "▸ Advanced Network Command & Control Center  ◂  Version 5.1  ◂  Windows 7 → 11  ◂  MAX POWER"
+        pad = (98 - len(tagline)) // 2
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad}{Fore.YELLOW}{Style.BRIGHT}{tagline}{Fore.BLUE}{' '*(98-pad-len(tagline))}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*98}║")
 
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        info = f"[ Session: {now} ]"
-        pad2 = (88 - len(info)) // 2
-        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad2}{Fore.GREEN}{Style.BRIGHT}{info}{Fore.BLUE}{' '*(88-pad2-len(info))}║")
-        print(f"{Fore.BLUE}{Style.BRIGHT}{'╚' + '═'*88 + '╝'}")
+        info = f"[ Session: {now} │ Ready for Domination │ Type 'help' for 140+ Commands ]"
+        pad2 = (98 - len(info)) // 2
+        print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*pad2}{Fore.GREEN}{Style.BRIGHT}{info}{Fore.BLUE}{' '*(98-pad2-len(info))}║")
+        print(f"{Fore.BLUE}{Style.BRIGHT}{'╚' + '═'*98 + '╝'}")
         print()
 
     @staticmethod
@@ -619,6 +772,62 @@ class OmniShell:
                 return False, f"Usage: {usage}"
         
         return True, ""
+    
+    def run(self):
+        """Main interactive shell loop - Hacker Mode"""
+        # Play hacker startup sound
+        try:
+            import winsound
+            winsound.Beep(800, 100)
+            time.sleep(0.05)
+            winsound.Beep(1000, 150)
+            time.sleep(0.1)
+            winsound.Beep(1200, 200)
+        except:
+            pass
+        
+        # Matrix intro effect
+        os.system('color 0A')
+        os.system('title OMNISCIENCE HACKER MODE - ACTIVE')
+        
+        # Clear screen and show banner
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        # Play banner
+        Visualizer.banner()
+        
+        self.running = True
+        self.command_history = []
+        
+        print(f"\n  {Fore.GREEN}{Style.BRIGHT}● Omniscience Framework READY  │  Type 'help' for commands\n")
+        
+        # Main interactive loop
+        while self.running:
+            try:
+                # Hacker prompt - green matrix style
+                now = datetime.now().strftime("%H:%M:%S")
+                prompt = (f"{Fore.GREEN}{Style.BRIGHT}[{Fore.LIGHTGREEN_EX}{now}{Fore.GREEN}]"
+                         f"{Fore.GREEN} omni"
+                         f"{Fore.WHITE}@"
+                         f"{Fore.LIGHTGREEN_EX}{Style.BRIGHT}shell"
+                         f"{Fore.WHITE}{Style.RESET_ALL}{Fore.GREEN}❯ {Style.RESET_ALL}")
+                
+                cmd_line = input(prompt).strip()
+                if not cmd_line:
+                    continue
+                
+                # Typing sound effect
+                try:
+                    winsound.Beep(random.randint(200, 600), 15)
+                except:
+                    pass
+                
+                self.process_command(cmd_line)
+                
+            except KeyboardInterrupt:
+                print(f"\n  {Fore.YELLOW}{Style.BRIGHT}⚠  Ctrl+C  │  Type 'exit' to quit gracefully")
+            except Exception as e:
+                print(f"{Fore.RED}Error: {e}")
     
     def process_command(self, cmd_line):
         """Processes a single command string. Redirects all prints to self._log."""
@@ -1899,5 +2108,37 @@ class OmniShell:
             self._log(f"{Fore.RED}Error: {e}")
 
 if __name__ == "__main__":
-    shell = OmniShell()
-    shell.run()
+    import sys
+    import subprocess
+
+    # Check if we're in a new window
+    if len(sys.argv) > 1 and sys.argv[1] == "--new-window":
+        # We're in the new window, run the CLI
+        # Advanced hacking welcome sequence
+        MatrixEffects.advanced_welcome()
+
+        # Initialize and run the shell
+        shell = OmniShell()
+        shell.run()
+    else:
+        # Launch new command line window
+        try:
+            # Get the current Python executable and script path
+            python_exe = sys.executable
+            script_path = sys.argv[0]
+
+            # Launch new maximized cmd window
+            cmd = f'cmd /c start /max "" "{python_exe}" "{script_path}" --new-window'
+            subprocess.Popen(cmd, shell=True)
+
+            # Play launch sound and exit current process
+            HackerSounds.access_granted()
+            print(f"{Fore.GREEN}Launching Omniscience Command Interface...")
+            time.sleep(1)
+            sys.exit(0)
+        except Exception as e:
+            print(f"Failed to launch new window: {e}")
+            # Fallback to current window
+            MatrixEffects.intro_cycle(12)
+            shell = OmniShell()
+            shell.run()
