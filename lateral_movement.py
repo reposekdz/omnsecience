@@ -1,3 +1,5 @@
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 """
 OMNISCIENCE MODULE 6 — AdvancedCommandCenter
 Cross-network command execution, lateral movement, and distributed control.

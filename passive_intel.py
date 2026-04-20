@@ -1,3 +1,5 @@
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 """
 OMNISCIENCE MODULE 2 — AgentlessIntelligence
 See exactly what every computer on the network is doing — no agent installed.
