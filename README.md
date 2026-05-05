@@ -12,12 +12,14 @@ Omniscience Ultramax Pro models advanced attack vectors, including automated exp
 - **Autonomous Exploitation**: Automated scanning modules can identify and compromise vulnerable systems across multiple subnets without human intervention, leading to rapid network-wide infection.
 - **Deep Data Exfiltration**: The tool models techniques for decrypting browser password vaults, harvesting WiFi keys, and dumping LSASS memory to recover plaintext credentials and session tokens.
 - **Silent Persistence**: It implements multi-layered persistence (hidden services, registry keys, scheduled tasks) designed to remain active even after system reboots, mirroring advanced persistent threat (APT) behavior.
+- **Silent Persistence**: Implements multi-layered persistence (Ghost Services, registry-level backdoors, and obfuscated scheduled tasks) designed to mirror Advanced Persistent Threat (APT) behavior.
 - **Agentless Lateral Movement**: Utilizes built-in Windows management protocols (WMI, WinRM, SMB) to move between hosts without installing detectable software, making detection by traditional antivirus extremely difficult.
 
 ---
 
 ## 🏗️ OPERATIONAL CAPACITY & SYSTEM THROUGHPUT
 Omniscience Ultramax Pro is engineered for high-concurrency environments where speed and stealth are paramount.
+Omniscience Ultramax Pro is engineered for line-rate discovery and high-concurrency environments.
 
 - **Asynchronous AMMO Engine**: Utilizing a custom-built Asynchronous Multi-threaded Modular Orchestrator (AMMO v2), the tool can manage over **2,000 concurrent socket connections** without thread-locking, allowing for simultaneous exploitation across entire enterprise VLANs.
 - **Line-Rate Discovery**: The scanning engine is capable of saturating 10Gbps uplinks for ultra-fast network mapping, performing port-discovery and service fingerprinting at a rate of 50,000+ packets per second.
@@ -60,6 +62,15 @@ The capacity to exfiltrate massive databases (MySQL/PostgreSQL/MongoDB) via encr
 - **Botnet Recruitment**: Using mass scanning and exploitation to build a network of "zombie" machines for DDoS attacks.
 
 **VIOLATION OF COMPUTER FRAUD AND ABUSE ACT (CFAA) OR EQUIVALENT INTERNATIONAL LAWS CARRIES SEVERE CRIMINAL PENALTIES, INCLUDING SUBSTANTIAL FINES AND PRISON.**
+---
+
+## 🧨 DESTRUCTIVE POTENTIAL: REAL-WORLD IMPACT
+
+### 1. Coordinated Infrastructure Sabotage
+Utilizing the `AgentlessControl` module, the system can execute simultaneous `shutdown` commands or mass `kill_process` tasks across an entire network. By targeting critical services (e.g., database engines, web servers), it can induce catastrophic operational downtime and permanent data loss via unauthenticated `smb_delete_file` operations.
+
+### 2. Automated "Domain Collapse"
+The `UniversalNetworkAccess` engine is designed to find unpatched Domain Controllers. By chaining `Zerologon` (CVE-2020-1472) with `NoPac` (CVE-2021-42278), the framework can reset machine account passwords and elevate to Domain Admin status in seconds, granting total control over the Active Directory forest.
 
 ---
 

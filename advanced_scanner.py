@@ -535,6 +535,75 @@ class AdvancedNetworkScanner:
         
         return found
     
+    def mdns_listen(self, timeout=10) -> List[Dict[str, Any]]:
+        """Real mDNS discovery using scapy multicast."""
+        devices = []
+        if not SCAPY_OK:
+            logger.error("Scapy not available for mDNS scan.")
+            return devices
+        try:
+            logger.info("[mDNS] Listening for mDNS responses...")
+            # mDNS query for all services on 224.0.0.251
+            # This is a simplified query, a full mDNS scan would involve more complex parsing
+            pkt = scapy.IP(dst="224.0.0.251")/scapy.UDP(sport=5353, dport=5353)/scapy.DNS(rd=1, qd=scapy.DNSQR(qname="_services._dns-sd._udp.local"))
+            ans, _ = scapy.srp(scapy.Ether(dst="01:00:5e:00:00:fb")/pkt, timeout=timeout, verbose=0)
+            for _, r in ans:
+                if r.haslayer(scapy.IP) and r[scapy.IP].src not in [d['ip'] for d in devices]:
+                    devices.append({'ip': r[scapy.IP].src, 'type': 'mDNS', 'info': r.summary()})
+                    logger.info(f"[mDNS] Found: {r[scapy.IP].src}")
+        except Exception as e:
+            logger.error(f"mDNS scan failed: {e}")
+        return devices
+
+    def ssdp_discover(self, timeout=5) -> List[Dict[str, Any]]:
+        """SSDP/UPnP discovery."""
+        devices = []
+        try:
+            logger.info("[SSDP] Discovering UPnP devices...")
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(timeout)
+            # SSDP M-SEARCH request
+            ssdp_request = (
+                'M-SEARCH * HTTP/1.1\r\n'
+                'HOST: 239.255.255.250:1900\r\n'
+                'MAN: "ssdp:discover"\r\n'
+                'MX: 2\r\n'
+                'ST: ssdp:all\r\n'
+                '\r\n'
+            )
+            sock.sendto(ssdp_request.encode(), ("239.255.255.250", 1900))
+            while True:
+                try:
+                    data, addr = sock.recvfrom(1024)
+                    src_ip = addr[0]
+                    if src_ip not in [d['ip'] for d in devices]:
+                        devices.append({'ip': src_ip, 'type': 'SSDP', 'response': data.decode(errors='ignore')[:200]})
+                        logger.info(f"[SSDP] Found: {src_ip}")
+                except socket.timeout:
+                    break
+            sock.close()
+        except Exception as e:
+            logger.error(f"SSDP scan failed: {e}")
+        return devices
+
+    def get_interface_info(self) -> List[Dict[str, str]]:
+        """Get detailed network interface information."""
+        # This functionality is typically in network_discovery.py,
+        # but for direct access from commandcenter, we'll add a placeholder or simple implementation.
+        # In a real scenario, AdvancedNetworkScanner would likely integrate with NetworkDiscovery.
+        try:
+            import netifaces
+            interfaces_list = []
+            for iface in netifaces.interfaces():
+                addrs = netifaces.ifaddresses(iface)
+                if netifaces.AF_INET in addrs:
+                    for addr in addrs[netifaces.AF_INET]:
+                        interfaces_list.append({'name': iface, 'ip': addr.get('addr'), 'netmask': addr.get('netmask')})
+            return interfaces_list
+        except ImportError:
+            logger.warning("netifaces not installed. Cannot list interfaces.")
+            return []
+
     def detect_nat_device(self, ip: str) -> bool:
         """Detect if an IP is behind NAT."""
         try:
@@ -677,6 +746,49 @@ class AdvancedNetworkScanner:
         """Get all discovered devices."""
         return list(self.hosts.values())
     
+    def _arp_scan(self, network_range: str) -> List[Dict[str, str]]:
+        """ARP scan for Layer 2 discovery, returning IP and MAC."""
+        devices = []
+        if not SCAPY_OK:
+            logger.error("Scapy not available for ARP scan.")
+            return devices
+        try:
+            logger.info(f"[ARP] Scanning {network_range}...")
+            ans, _ = scapy.srp(scapy.Ether(dst="ff:ff:ff:ff:ff:ff")/scapy.ARP(pdst=network_range), timeout=2, verbose=0)
+            for _, r in ans:
+                devices.append({'ip': r.psrc, 'mac': r.hwsrc})
+        except Exception as e:
+            logger.error(f"ARP scan failed: {e}")
+        return devices
+
+    def _icmp_sweep(self, network_range: str) -> List[Dict[str, str]]:
+        """ICMP ping sweep, returning IP of alive hosts."""
+        devices = []
+        try:
+            network = ipaddress.ip_network(network_range, strict=False)
+            for ip in network.hosts():
+                if os.system(f"ping -n 1 -w 100 {str(ip)}") == 0: # Windows ping
+                    devices.append({'ip': str(ip)})
+        except Exception as e:
+            logger.error(f"ICMP sweep failed: {e}")
+        return devices
+
+    def _netbios_sweep(self, network_range: str) -> List[Dict[str, str]]:
+        """NetBIOS enumeration, returning IP and hostname."""
+        devices = []
+        try:
+            network = ipaddress.ip_network(network_range, strict=False)
+            for ip in network.hosts():
+                try:
+                    result = subprocess.run(['nbtstat', '-A', str(ip)], capture_output=True, text=True, timeout=1)
+                    match = re.search(r"Name\s+<00>\s+UNIQUE\s+([^\s]+)", result.stdout)
+                    if match:
+                        devices.append({'ip': str(ip), 'hostname': match.group(1)})
+                except: pass
+        except Exception as e:
+            logger.error(f"NetBIOS sweep failed: {e}")
+        return devices
+
     def get_devices_by_type(self, network_type: str) -> List[NetworkDevice]:
         """Get devices by network type."""
         return [d for d in self.hosts.values() if d.network_type == network_type]
