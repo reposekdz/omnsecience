@@ -24,19 +24,24 @@ async def main():
         import ctypes
         if not ctypes.windll.shell32.IsUserAnAdmin():
             print("[!] SYSTEM ALERT: Framework requires Administrative privileges for Raw Socket operations.")
+    elif os.name == 'posix':
+        if os.geteuid() != 0:
+            print("[!] SYSTEM ALERT: Framework requires root privileges for Scapy/Raw Socket operations.")
     
     print("""
-    =================================================  [STABLE]
-    ||          OMNISCIENCE ULTRAMAX PRO v6.0      ||
-    ||      ADVANCED CYBERSECURITY FRAMEWORK       ||
-    =================================================
+    ============================================================  [STABLE]
+    ||              OMNISCIENCE ULTRAMAX PRO v7.1             ||
+    ||          HIGH-SECURITY CYBER INTERCEPT PLATFORM        ||
+    ||      AUTHORIZED FOR GOVERNMENTAL INTEL OPERATIONS      ||
+    ============================================================
     [*] Initializing AMMO v2 Asynchronous Engine...
+    [*] Loading Cryptographic Modules...
     [*] Loading Command Center...
     """)
     
     shell = OmniShell()
     try:
-        await shell.cmdloop_async()
+        await shell.start()
     except KeyboardInterrupt:
         print("\n[*] Shutting down C2 sessions...")
     except Exception as e:

@@ -203,7 +203,7 @@ class AgentlessControl:
             iface = dcom.CoCreateInstanceEx(dcom_wmi.CLSID_WbemLevel1Login,
                                             dcom_wmi.IID_IWbemLevel1Login)
             login = dcom_wmi.IWbemLevel1Login(iface)
-            wbem = login.NTLMLogin("//./root/cimv2", NULL=None, lFlags=0)
+            wbem = login.NTLMLogin("//./root/cimv2", None, lFlags=0)
             login.RemRelease()
             iEnum = wbem.ExecQuery(query)
             while True:
@@ -248,7 +248,7 @@ class AgentlessControl:
             iface = dcom.CoCreateInstanceEx(dcom_wmi.CLSID_WbemLevel1Login,
                                             dcom_wmi.IID_IWbemLevel1Login)
             login = dcom_wmi.IWbemLevel1Login(iface)
-            wbem = login.NTLMLogin("//./root/cimv2", NULL=None, lFlags=0)
+            wbem = login.NTLMLogin("//./root/cimv2", None, lFlags=0)
             login.RemRelease()
 
             win32_proc = wbem.GetObject("Win32_Process")
