@@ -1070,6 +1070,46 @@ class Visualizer:
 
 # OmniShell Main Class
 class OmniShell:
+    def __init__(self):
+        """Initialize the Ultra-Max Hacker Shell"""
+        self.hosts = []
+        self.selected_host = None
+        self.modules_loaded = {}
+        self.credentials = {"user": "Administrator", "pass": "", "domain": ""}
+        
+        # Load modules safely
+        self._load_module("1", "NetworkDiscovery", "network_discovery")
+        self._load_module("2", "AgentlessIntelligence", "passive_intel")
+        self._load_module("3", "AgentlessControl", "remote_control")
+        self._load_module("7", "UniversalNetworkAccess", "exploit_engine")
+        
+        # Module loading (delayed)
+        self.discovery = self.modules_loaded.get("1")
+        self.intel = self.modules_loaded.get("2")
+        self.control = self.modules_loaded.get("3")
+        self.universal = self.modules_loaded.get("7")
+        self.adv_scan = None
+        self.center = None
+
+    def _load_module(self, num, class_name, filename):
+        """Load module with error handling"""
+        try:
+            mod = get_module(num)
+            if mod and hasattr(mod, class_name):
+                self.modules_loaded[num] = getattr(mod, class_name)()
+                print(f"{Fore.GREEN}✔ Loaded module {num}: {class_name}")
+            else:
+                print(f"{Fore.YELLOW}⚠ Module {num} degraded")
+        except Exception as e:
+            print(f"{Fore.RED}✘ Module {num} load failed: {e}")
+    def __init__(self):
+        """Initialize the Ultra-Max Hacker Shell"""
+        self.hosts = []
+        self.selected_host = None
+        self.modules_loaded = {}
+        self.credentials = {"user": "Administrator", "pass": "", "domain": ""}
+        
+        # Load modules
     """The Final Master Orchestrator."""
     
     def __init__(self, on_output=None):
@@ -1604,10 +1644,20 @@ class OmniShell:
                 HackerSounds.command_success()
             
             # ==================== SYSTEM ====================
-            elif cmd in ("exit", "quit"):
+            if cmd in ("exit", "quit"):
                 self._log(f"{Fore.YELLOW}[*] Exiting...")
                 HackerSounds.warning()
                 self.running = False
+
+            elif cmd == "clear":
+                os.system('cls' if os.name == 'nt' else 'clear')
+                Visualizer.banner()
+                HackerSounds.command_success()
+
+            elif cmd == "clear":
+                os.system('cls' if os.name == 'nt' else 'clear')
+                Visualizer.banner()
+                HackerSounds.command_success()
 
             elif cmd == "clear":
                 os.system('cls' if os.name == 'nt' else 'clear')

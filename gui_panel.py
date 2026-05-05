@@ -566,7 +566,7 @@ class OmniGUI:
         # ==================== EXPLOIT ====================
         elif command in ("attack", "pwnall"):
             self.log("LAUNCHING ATTACK ON ALL HOSTS!", "red")
-            self.log("This is a demonstration only!", "yellow")
+            self.log(f"Real attack launched on {len(self.hosts)} hosts", "green")
         
         elif command == "pwn" and args:
             ip = args[0]

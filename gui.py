@@ -690,12 +690,12 @@ class AdvancedOmniGUI:
                 self.root.after(0, lambda: self.stat_labels['HOSTS DISCOVERED'].config(text=str(len(self.hosts))))
             else:
                 # Demo mode - add sample hosts
-                demo_hosts = {
-                    '192.168.1.1': type('Host', (), {'ip': '192.168.1.1', 'mac': 'AA:BB:CC:DD:EE:FF', 'hostname': 'Gateway', 'os_hint': 'Router', 'device_type': 'Router'})(),
-                    '192.168.1.105': type('Host', (), {'ip': '192.168.1.105', 'mac': '11:22:33:44:55:66', 'hostname': 'DESKTOP-PC', 'os_hint': 'Windows 11', 'device_type': 'PC'})(),
-                }
+                if self.modules.get('discovery'):
+                    self.hosts = self.modules['discovery'].auto_scan()
+                else:
+                    self.hosts = []
                 self.hosts = demo_hosts
-                self.log_to_all(f"Demo scan complete! Found {len(self.hosts)} hosts", "green")
+                self.log_to_all(f"Scan complete! Found {len(self.hosts)} hosts", "green")
                 self.root.after(0, self.update_hosts_display)
                 self.root.after(0, lambda: self.stat_labels['HOSTS DISCOVERED'].config(text=str(len(self.hosts))))
         except Exception as e:

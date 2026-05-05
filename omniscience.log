@@ -21,3 +21,4 @@
 2026-04-20 11:34:44,963 | [INFO] | OmniShell | [ICMP] Sweep 10.0.0.0/8
 2026-04-20 11:35:09,507 | [INFO] | OmniShell | [WAN] External IP: 197.157.165.180 (180-165-157-197.r.airtel.co.rw)
 2026-04-20 12:44:11,868 | [INFO] | OmniShell | [WAN] External IP: 197.157.165.180 (180-165-157-197.r.airtel.co.rw)
+2026-05-04 14:55:16,279 | [ERROR] | OmniShell | Failed to load module '2': No module named 'scapy'
