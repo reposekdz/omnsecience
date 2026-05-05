@@ -88,9 +88,21 @@ class AgentlessIntelligence:
 
     def wmi_monitor_activity(self, target, user, pwd):
         """Monitor WMI activity on target"""
-        logger.info(f"WMI activity monitor started on {target}")
-        # Stub for WMI event monitoring
-        pass
+        logger.info(f"WMI Real-Time Process Monitor started on {target}")
+        if not self._activity_callback: return
+        
+        def monitor():
+            from remote_control import AgentlessControl
+            ctrl = AgentlessControl()
+            # Agentless monitoring via WMI process polling
+            while self.sniffing:
+                try:
+                    procs = ctrl.list_processes(target, user, pwd)
+                    self._activity_callback({"type": "wmi_event", "target": target, "count": len(procs)})
+                except: pass
+                time.sleep(10)
+        
+        threading.Thread(target=monitor, daemon=True).start()
 
     def wmi_processes(self, target, user, pwd):
         """Get WMI processes"""
@@ -103,4 +115,3 @@ class AgentlessIntelligence:
         from remote_control import AgentlessControl
         ctrl = AgentlessControl()
         return ctrl.list_local_users(target, user, pwd)
-

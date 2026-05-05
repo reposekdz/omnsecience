@@ -227,31 +227,39 @@ class AdvancedNetworkScanner:
             return False
     
     def _get_asn_info(self, ip: str) -> Dict[str, str]:
-        """Get ASN information for an IP using whois."""
+        """Get ASN information for an IP using Team Cymru DNS-based lookup."""
         result = {"asn": "", "isp": "", "org": ""}
+        if self._is_private_ip(ip):
+            return result
+            
         try:
-            # Simple ASN lookup via Team Cymru style query
-            import struct
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(5)
+            # Reversed IP for origin lookup
+            addr_parts = ip.split('.')
+            addr_parts.reverse()
+            reversed_ip = '.'.join(addr_parts)
+            query = f"{reversed_ip}.origin.asn.cymru.com"
+            
             try:
-                # This would require BGP looking glass - simplified for now
-                pass
+                import dns.resolver
+                answers = dns.resolver.resolve(query, 'TXT')
+                for rdata in answers:
+                    # Format: "asn | prefix | cc | registry | allocated"
+                    data = rdata.to_text().strip('"').split('|')
+                    asn = data[0].strip()
+                    result["asn"] = f"AS{asn}"
+                    
+                    # Get AS description
+                    name_query = f"AS{asn}.asn.cymru.com"
+                    name_answers = dns.resolver.resolve(name_query, 'TXT')
+                    for nrdata in name_answers:
+                        # Format: "asn | cc | registry | allocated | desc"
+                        ndata = nrdata.to_text().strip('"').split('|')
+                        if len(ndata) >= 5:
+                            result["isp"] = ndata[4].strip()
+                            result["org"] = ndata[4].strip()
+                    break
             except:
                 pass
-            sock.close()
-        except:
-            pass
-        
-        # Fallback: try DNS ASN lookup
-        try:
-            asn_host = f"AS{ip.replace('.', '-')}.asn.cymru.com"
-            answers = socket.gethostbyname(asn_host)
-            if answers:
-                parts = answers.split("-")
-                if len(parts) >= 3:
-                    result["asn"] = parts[0].strip()
-                    result["org"] = parts[2].strip() if len(parts) > 2 else ""
         except:
             pass
         

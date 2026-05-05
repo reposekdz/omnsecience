@@ -1,6 +1,6 @@
-# OMNISCIENCE ULTRAMAX PRO v5.1
-## PROFESSIONAL CYBERSECURITY FRAMEWORK
-
+# OMNISCIENCE ULTRAMAX PRO v6.0
+## ADVANCED ADAPTIVE CYBERSECURITY OFFENSIVE FRAMEWORK
+### High-Technology Command & Control Center
 ---
 
 ## ⚠️ CRITICAL DISCLAIMER
@@ -24,27 +24,28 @@ This framework contains actual working attack capabilities identical to what rea
 
 ---
 
-## 🔹 FRAMEWORK OVERVIEW
+## 🚀 FRAMEWORK ARCHITECTURE
 
-Omniscience Ultramax Pro is a professional-grade, agentless cybersecurity framework designed for legitimate penetration testing and security research. It implements all modern attack vectors, post-exploitation techniques, and network reconnaissance methods used in real-world cyber operations.
+Omniscience Ultramax Pro is a next-generation, agentless cybersecurity framework engineered for autonomous network domination. It utilizes a multi-threaded asynchronous engine to execute complex exploit chains, deep network reconnaissance, and persistent remote control across heterogeneous environments.
 
-### Core Specifications
-- **Total Commands**: 140+ fully functional
-- **Network Coverage**: 10km radius global scan
-- **Accuracy Rating**: 1999999999999999%
-- **Architecture**: Multi-threaded modular engine
-- **Supported Targets**: Windows (XP→11), Linux, macOS, Android, iOS, Cloud
-- **Lines of Code**: 12,000+ professional grade
+### Technical Specifications
+- **Engine**: Asynchronous Multi-threaded Modular Orchestrator (AMMO v2)
+- **Reconnaissance**: Multi-vector Layer 2-7 discovery (ARP/ICMP/TCP/UDP/mDNS/SSDP/SNMP/BGP)
+- **Exploitation**: Real-time CVE-based payload injection (EternalBlue, SMBGhost, PrintNightmare)
+- **Control**: Fully agentless RCE via WMI, DCOM, WinRM, and SSH
+- **Scalability**: Capable of managing 1,000+ concurrent sessions across isolated subnets
+- **Compliance**: Integrated audit logging and session tracking for authorized testing
 
 ---
 
-## 🔹 FULL CAPABILITY MATRIX
+## 🛡️ CORE CAPABILITY MATRIX
 
 ### 🎯 NETWORK RECONNAISSANCE
 | Feature | Status | Description |
 |---------|--------|-------------|
-| **10km Global Scan** | ✅ FULL | Scans all subnets, PAN, hotspots, mobile networks |
-| **SYN Stealth Scan** | ✅ FULL | Professional half-open port scanning |
+| **Adaptive Global Scan** | ✅ REAL | Subnet-agnostic discovery including PAN and mobile hotspots |
+| **SYN Stealth Engine** | ✅ REAL | High-speed, half-open port scanning with Scapy integration |
+| **BGP/ASN Intelligence** | ✅ REAL | Autonomous system mapping and ISP fingerprinting |
 | **TCP/IP Fingerprinting** | ✅ FULL | Advanced OS detection via stack analysis |
 | **Banner Grabbing** | ✅ FULL | Protocol-aware service identification |
 | **PAN Detection** | ✅ FULL | Bluetooth, WiFi Direct, mobile hotspots |
@@ -77,39 +78,39 @@ All control operates without installing any software on targets:
 | **Live Screen Monitoring** | Continuous screenshot stream | ✅ FULL |
 | **Webcam Capture** | Remote camera access | ✅ FULL |
 | **Audio Recording** | Microphone capture | ✅ FULL |
-| **Keylogger** | Hidden keystroke logging | ✅ FULL |
+| **Shadow Keylogger** | Real-time keystroke exfiltration (memory-resident) | ✅ FULL |
 | **File System Control** | Upload/download/delete/execute | ✅ FULL |
 | **Process Management** | List/kill/create processes | ✅ FULL |
 | **Service Control** | Install/start/stop services | ✅ FULL |
 | **Registry Access** | Read/write registry keys | ✅ FULL |
-| **Clipboard Control** | Read/set remote clipboard | ✅ FULL |
+| **Live Clipboard Sync** | Bidirectional clipboard control | ✅ FULL |
 | **Power Operations** | Shutdown/reboot/logoff | ✅ FULL |
 
-### 💾 DATA EXTRACTION ENGINE
+### 💎 DATA HARVESTING & EXFILTRATION
 All extraction techniques are real working implementations:
 
 | Feature | Description | Status |
 |---------|-------------|--------|
-| **Browser Credentials** | Chrome/Edge/Firefox passwords | ✅ FULL |
+| **Browser Vault Decryption** | AES-GCM decryption for Chrome/Edge/Firefox | ✅ FULL |
 | **WiFi Passwords** | All stored WiFi profiles | ✅ FULL |
-| **LSASS Dumping** | Process memory extraction | ✅ FULL |
-| **NTLM Hash Extraction** | Password hash harvesting | ✅ FULL |
-| **Authentication Tokens** | Windows vault extraction | ✅ FULL |
+| **LSASS Memory Dump** | Advanced mini-dump via comsvcs.dll for hash recovery | ✅ FULL |
+| **SAM/NTLM Harvesting** | Local and domain password hash extraction | ✅ FULL |
+| **Identity Token Stealing** | Windows Vault and DPAPI token harvesting | ✅ FULL |
 | **Browser Cookies** | Full session cookie extraction | ✅ FULL |
 | **Browser History** | Complete browsing history | ✅ FULL |
 | **Database Extraction** | MySQL/PostgreSQL/MongoDB/Redis | ✅ FULL |
 | **Email Extraction** | Outlook/Thunderbird messages | ✅ FULL |
 | **System Information** | Full device properties | ✅ FULL |
 
-### 🛡️ PERSISTENCE MECHANISMS
+### 🔗 PERSISTENCE & LATERAL MOVEMENT
 Professional multi-layer persistence:
 
 | Method | Description | Status |
 |--------|-------------|--------|
-| **Service Installation** | System service backdoor | ✅ FULL |
+| **Ghost Service** | Hidden system service backdoor | ✅ FULL |
 | **Registry Run Key** | Auto-start registry entries | ✅ FULL |
 | **Scheduled Task** | Logon/boot persistence | ✅ FULL |
-| **Admin User Creation** | Hidden admin accounts | ✅ FULL |
+| **Shadow Admin Account** | Concealed administrative user creation | ✅ FULL |
 | **RDP Enable** | Enable remote desktop | ✅ FULL |
 | **Firewall Disable** | Bypass security controls | ✅ FULL |
 
@@ -120,32 +121,32 @@ Real cloud attack vectors used by real threat actors:
 |---------|-------------|--------|
 | **S3 Bucket Scan** | Misconfiguration detection | ✅ FULL |
 | **AWS Metadata** | Instance metadata exfiltration | ✅ FULL |
-| **Azure IMDS Attack** | Managed identity exfiltration | ✅ FULL |
-| **GCP Metadata** | Service account extraction | ✅ FULL |
+| **Azure IMDS Exploit** | Managed identity token exfiltration | ✅ FULL |
+| **GCP Metadata Breach** | Service account token extraction | ✅ FULL |
 | **MySQL Root Access** | Default credential attack | ✅ FULL |
 | **PostgreSQL Attack** | Database takeover | ✅ FULL |
 | **MongoDB No-Auth** | No-auth database extraction | ✅ FULL |
 | **Redis Exploitation** | In-memory database compromise | ✅ FULL |
 
-### 🔴 ACTIVE DIRECTORY ATTACKS
+### 🏗️ ENTERPRISE DOMAIN DOMINATION
 Enterprise domain attack capabilities:
 
 | Feature | Description | Status |
 |---------|-------------|--------|
 | **Kerberoasting** | TGS ticket extraction | ✅ FULL |
-| **Password Spraying** | Domain credential attack | ✅ FULL |
-| **SMB Null Sessions** | Unauthenticated enumeration | ✅ FULL |
-| **Lateral Movement** | WMI/WinRM/SMB/PsExec | ✅ FULL |
-| **Pass-the-Hash** | NTLM hash authentication | ✅ FULL |
+| **Mass Password Spray** | Scalable domain-wide credential validation | ✅ FULL |
+| **SMB Null Enumeration** | Unauthenticated domain information gathering | ✅ FULL |
+| **Pivoted Lateral Move** | Multi-hop movement via compromised nodes | ✅ FULL |
+| **Pass-the-Hash (PtH)** | NTLM authentication without plaintext passwords | ✅ FULL |
 
-### 🚚 DATA EXFILTRATION
+### 📡 ADVANCED EXFILTRATION TUNNELS
 Multiple exfiltration methods:
 
 | Method | Description | Status |
 |--------|-------------|--------|
-| **SMB Transfer** | Windows file sharing | ✅ FULL |
-| **HTTP POST** | Web exfiltration | ✅ FULL |
-| **DNS Tunneling** | Stealth DNS exfiltration | ✅ FULL |
+| **SMB/NTLM Encrypted** | Secure file transfer via SMB pipe | ✅ FULL |
+| **Asynchronous HTTP(S)** | Stealthy POST-based exfiltration | ✅ FULL |
+| **DNS Covert Channel** | Data tunneling via DNS TXT records | ✅ FULL |
 | **ICMP Exfiltration** | ICMP packet data | ✅ FULL |
 
 ---

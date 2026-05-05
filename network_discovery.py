@@ -18,7 +18,7 @@ try:
     import netifaces
 except ImportError:
     import netifaces2 as netifaces
-from scapy.all import ARP, Ether, srp, sr1, IP, ICMP
+from scapy.all import ARP, Ether, srp, sr1, IP, ICMP, UDP, DNS, DNSQR
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("Omniscience.Discovery")
@@ -137,17 +137,45 @@ class NetworkDiscovery:
     
     def mdns_listen(self, timeout=10):
         """mDNS discovery"""
-        logger.info("mDNS discovery")
+        logger.info("Real mDNS discovery using scapy multicast")
         devices = []
-        # Real mDNS requires zeroconf or avahi, stub for now
-        time.sleep(timeout)
+        try:
+            # mDNS query for all services on 224.0.0.251
+            pkt = IP(dst="224.0.0.251")/UDP(sport=5353, dport=5353)/DNS(rd=1, qd=DNSQR(qname="_services._dns-sd._udp.local"))
+            ans, _ = srp(Ether(dst="01:00:5e:00:00:fb")/pkt, timeout=timeout, verbose=0)
+            for _, r in ans:
+                if r.haslayer(IP) and r[IP].src not in [d['ip'] for d in devices]:
+                    devices.append({'ip': r[IP].src, 'type': 'mDNS'})
+        except Exception as e:
+            logger.error(f"mDNS failed: {e}")
         return devices
     
-    def ssdp_discover(self):
+    def ssdp_discover(self, timeout=5):
         """SSDP/UPnP discovery"""
-        logger.info("SSDP discovery")
+        logger.info("Real SSDP/UPnP discovery using M-SEARCH")
         devices = []
-        # Real SSDP multicast, stub for now
+        ssdp_request = (
+            'M-SEARCH * HTTP/1.1\r\n'
+            'HOST: 239.255.255.250:1900\r\n'
+            'MAN: "ssdp:discover"\r\n'
+            'MX: 2\r\n'
+            'ST: ssdp:all\r\n'
+            '\r\n'
+        )
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(timeout)
+            sock.sendto(ssdp_request.encode(), ("239.255.255.250", 1900))
+            while True:
+                try:
+                    data, addr = sock.recvfrom(1024)
+                    if addr[0] not in [d['ip'] for d in devices]:
+                        devices.append({'ip': addr[0], 'type': 'SSDP'})
+                except socket.timeout:
+                    break
+            sock.close()
+        except Exception as e:
+            logger.error(f"SSDP failed: {e}")
         return devices
     
     def auto_scan(self):

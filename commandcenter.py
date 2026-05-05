@@ -1070,49 +1070,10 @@ class Visualizer:
 
 # OmniShell Main Class
 class OmniShell:
-    def __init__(self):
-        """Initialize the Ultra-Max Hacker Shell"""
-        self.hosts = []
-        self.selected_host = None
-        self.modules_loaded = {}
-        self.credentials = {"user": "Administrator", "pass": "", "domain": ""}
-        
-        # Load modules safely
-        self._load_module("1", "NetworkDiscovery", "network_discovery")
-        self._load_module("2", "AgentlessIntelligence", "passive_intel")
-        self._load_module("3", "AgentlessControl", "remote_control")
-        self._load_module("7", "UniversalNetworkAccess", "exploit_engine")
-        
-        # Module loading (delayed)
-        self.discovery = self.modules_loaded.get("1")
-        self.intel = self.modules_loaded.get("2")
-        self.control = self.modules_loaded.get("3")
-        self.universal = self.modules_loaded.get("7")
-        self.adv_scan = None
-        self.center = None
-
-    def _load_module(self, num, class_name, filename):
-        """Load module with error handling"""
-        try:
-            mod = get_module(num)
-            if mod and hasattr(mod, class_name):
-                self.modules_loaded[num] = getattr(mod, class_name)()
-                print(f"{Fore.GREEN}✔ Loaded module {num}: {class_name}")
-            else:
-                print(f"{Fore.YELLOW}⚠ Module {num} degraded")
-        except Exception as e:
-            print(f"{Fore.RED}✘ Module {num} load failed: {e}")
-    def __init__(self):
-        """Initialize the Ultra-Max Hacker Shell"""
-        self.hosts = []
-        self.selected_host = None
-        self.modules_loaded = {}
-        self.credentials = {"user": "Administrator", "pass": "", "domain": ""}
-        
-        # Load modules
     """The Final Master Orchestrator."""
     
     def __init__(self, on_output=None):
+        """Initialize the Ultra-Max Hacker Shell"""
         self.running = True
         self.selected_target = None
         self.credentials = {"user": "Administrator", "pass": "", "domain": ""}
@@ -1556,6 +1517,12 @@ class OmniShell:
                 if not cmd_line:
                     continue
                 
+                # Real-Time Hierarchical Command Routing
+                parts = cmd_line.split()
+                if parts[0].lower() in TREE_COMMANDS:
+                    if self._handle_tree_command(parts[0].lower(), parts[1].lower() if len(parts) > 1 else "", parts[2:]):
+                        continue
+                
                 # Typing sound effect
                 try:
                     HackerSounds.command_exec()
@@ -1713,17 +1680,17 @@ class OmniShell:
                         success = False
                         exploits_used = []
                         
-                        # First use universal engine for unauthenticated access
-                        if self.universal:
+                        # First use Control Engine for Universal Pwn (Aggressive Exploit Chain)
+                        if self.control and hasattr(self.control, 'pwn_target'):
                             try:
-                                res = self.universal.pwn_target(self.selected_target)
+                                res = self.control.pwn_target(self.selected_target)
                                 if res.get('success', False):
                                     success = True
-                                    exploits_used = res.get('vulns', [])
-                                    print(f"{Fore.LIGHTGREEN_EX}  ✅ UNIVERSAL ACCESS - NO CREDENTIALS REQUIRED")
+                                    exploits_used.append(res.get('method', 'universal'))
+                                    print(f"{Fore.LIGHTGREEN_EX}  ✅ ADVANCED PWN SUCCESS - {res.get('method')}")
                                     HackerSounds.exploit_success()
                             except Exception as e:
-                                logger.debug(f"Universal exploit failed: {e}")
+                                logger.debug(f"Aggressive pwn failed: {e}")
                         
                         # If universal failed, use control engine exploit chains
                         if not success and self.control:
@@ -3556,12 +3523,6 @@ class OmniShell:
                 return True
         
         return False
-
-    def _display_right_panel(self):
-        try:
-            Visualizer.draw_right_sidebar()
-        except:
-            pass
 
     def _print_dashboard(self):
         self._log(f"\n{Fore.CYAN}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗")
