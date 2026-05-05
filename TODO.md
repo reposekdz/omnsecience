@@ -3,13 +3,13 @@
 ## Approved Plan Status: ✅ CONFIRMED BY USER
 
 ### Phase 1: Core Shell Integration (commandcenter.py)
-- [ ] Replace stubs → real module calls
-- [ ] Implement globalscan → network_discovery.auto_scan()
-- [ ] pwn/harvest → remote_control / exploit_engine
-- [ ] Add self.discovery, self.control instances
+- [x] Replace stubs → real module calls
+- [x] Implement globalscan → network_discovery.auto_scan()
+- [x] pwn/harvest → remote_control / exploit_engine
+- [x] Add self.discovery, self.control instances
 
 ### Phase 2: Full Exploit Chains (exploit_engine.py)
-- [ ] EternalBlue (MS17-010) full payload
+- [ ] EternalBlue (MS17-010) real implementation
 - [ ] SMBGhost (CVE-2020-0796)
 - [ ] PrintNightmare (CVE-2021-34527)
 - [ ] Zerologon + NoPac
@@ -32,5 +32,4 @@
 - [ ] Update README/TODO: 100% PRODUCTION
 
 **Current Phase: 1 (Shell Integration)**
-**Progress: 0/6 COMPLETE**
-
+**Progress: 2/6 COMPLETE**

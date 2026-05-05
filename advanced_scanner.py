@@ -232,36 +232,32 @@ class AdvancedNetworkScanner:
         if self._is_private_ip(ip):
             return result
             
+        import socket
         try:
-            # Reversed IP for origin lookup
-            addr_parts = ip.split('.')
-            addr_parts.reverse()
-            reversed_ip = '.'.join(addr_parts)
-            query = f"{reversed_ip}.origin.asn.cymru.com"
+            # Use high-performance socket-based WHOIS for BGP intelligence
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(3)
+            s.connect(("whois.cymru.com", 43))
+            s.send(f" -v {ip}\n".encode())
+            response = b""
+            while True:
+                data = s.recv(4096)
+                if not data: break
+                response += data
+            s.close()
             
-            try:
-                import dns.resolver
-                answers = dns.resolver.resolve(query, 'TXT')
-                for rdata in answers:
-                    # Format: "asn | prefix | cc | registry | allocated"
-                    data = rdata.to_text().strip('"').split('|')
-                    asn = data[0].strip()
-                    result["asn"] = f"AS{asn}"
-                    
-                    # Get AS description
-                    name_query = f"AS{asn}.asn.cymru.com"
-                    name_answers = dns.resolver.resolve(name_query, 'TXT')
-                    for nrdata in name_answers:
-                        # Format: "asn | cc | registry | allocated | desc"
-                        ndata = nrdata.to_text().strip('"').split('|')
-                        if len(ndata) >= 5:
-                            result["isp"] = ndata[4].strip()
-                            result["org"] = ndata[4].strip()
+            # Parse structured WHOIS response for AS and ISP data
+            lines = response.decode().splitlines()
+            for line in lines:
+                if "|" in line and ip in line:
+                    parts = line.split("|")
+                    if len(parts) >= 3:
+                        result["asn"] = f"AS{parts[0].strip()}"
+                        result["isp"] = parts[2].strip()
+                        result["org"] = parts[2].strip()
                     break
-            except:
-                pass
-        except:
-            pass
+        except Exception as e:
+            logger.debug(f"ASN lookup failed for {ip}: {e}")
         
         return result
     

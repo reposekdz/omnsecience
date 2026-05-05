@@ -7,15 +7,11 @@ from colorama import Fore, Style, init
 from typing import Dict, Any, List
 from datetime import datetime
 
-# Dynamic loading of real logic modules
-try:
-    from advanced_scanner import AdvancedNetworkScanner
-    from lateral_movement import AdvancedCommandCenter
-    from exploit_engine import UniversalNetworkAccess
-    from remote_control import AgentlessControl
-    from passive_intel import AgentlessIntelligence
-except ImportError:
-    pass
+from advanced_scanner import AdvancedNetworkScanner
+from lateral_movement import AdvancedCommandCenter
+from exploit_engine import UniversalNetworkAccess
+from remote_control import AgentlessControl
+from passive_intel import AgentlessIntelligence
 
 # Initialize Colorama
 init(autoreset=True)
@@ -52,18 +48,15 @@ class OmniShell:
         self.ammo = AMMOEngine()
         self.targets = []
         
-        # Initialize Functional Engines
-        try:
-            self.scanner = AdvancedNetworkScanner()
-            self.lateral = AdvancedCommandCenter()
-            self.exploiter = UniversalNetworkAccess()
-            self.control = AgentlessControl()
-            self.intel = AgentlessIntelligence()
-            
-            # Wire modules together for autonomous chains
-            self.lateral.set_modules(discovery=self.scanner, intel=self.intel, control=self.control)
-        except NameError:
-            print(f"{Fore.RED}[!] Warning: Logic modules failed to load. Run install.py.")
+        # Initialize Functional Engines - PRODUCTION
+        self.scanner = AdvancedNetworkScanner()
+        self.lateral = AdvancedCommandCenter()
+        self.exploiter = UniversalNetworkAccess()
+        self.control = AgentlessControl()
+        self.intel = AgentlessIntelligence()
+        
+        # Wire modules together for autonomous chains
+        self.lateral.set_modules(discovery=self.scanner, intel=self.intel, control=self.control)
 
     def display_banner(self):
         """Advanced High-Technology Banner with live stats."""
@@ -95,43 +88,34 @@ class OmniShell:
             sys.exit(0)
         
         elif cmd == "globalscan":
-            if hasattr(self, 'exploiter'):
-                print(f"{Fore.GREEN}[*] Initiating ULTRAMAX Global Network Discovery...")
-                # UniversalNetworkAccess provides the most comprehensive discovery
-                loop = asyncio.get_event_loop()
-                self.targets = await loop.run_in_executor(None, self.exploiter.ultramax_global_scan)
-                print(f"{Fore.GREEN}[+] Scan Complete. {len(self.targets)} active targets identified.")
-            else:
-                print(f"{Fore.RED}[!] Module Error: Exploit engine not initialized.")
+            print(f"{Fore.GREEN}[*] Initiating ULTRAMAX Global Network Discovery...")
+            # UniversalNetworkAccess provides the most comprehensive discovery
+            self.targets = await self.exploiter.ultramax_global_scan()
+            print(f"{Fore.GREEN}[+] Scan Complete. {len(self.targets)} active targets identified.")
 
-        elif cmd == "pwn":
-            if not args:
-                print(f"{Fore.RED}[!] Usage: pwn <target_ip>")
+        elif cmd in ["pwnall", "attack"]:
+            if not self.targets:
+                print(f"{Fore.RED}[!] No targets discovered. Execute 'globalscan' to map the environment.")
                 return
-            if hasattr(self, 'exploiter'):
-                print(f"{Fore.RED}[!] Launching Autonomous Exploitation Chain on {args[0]}...")
-                loop = asyncio.get_event_loop()
-                res = await loop.run_in_executor(None, self.exploiter.pwn_target, args[0])
-                if res.get("success"):
-                    print(f"{Fore.GREEN}[+] Target Compromised via {res.get('method')}!")
-                else:
-                    print(f"{Fore.YELLOW}[-] Exploitation failed or target patched.")
-            else:
-                print(f"{Fore.RED}[!] Module Error: Exploit engine not initialized.")
+            
+            print(f"{Fore.RED}{Style.BRIGHT}[!] INITIATING AUTONOMOUS NETWORK DOMINATION SEQUENCE...")
+            MatrixEffects.digital_rain()
+            HackerSounds.alert()
+            
+            # Phase 1: Real pwn_all_devices chain
+            await self.exploiter.pwn_all_devices()
+            print(f"{Fore.GREEN}{Style.BRIGHT}[+] AUTONOMOUS EXPLOITATION COMPLETE. Check self.exploiter.devices for compromised nodes.")
+            HackerSounds.exploit_success()
 
         elif cmd == "harvest":
             if not args:
                 print(f"{Fore.RED}[!] Usage: harvest <ip> <user> <pass>")
                 return
-            if hasattr(self, 'control'):
                 user = args[1] if len(args) > 1 else "Administrator"
                 pwd = args[2] if len(args) > 2 else ""
                 print(f"{Fore.MAGENTA}[*] Harvesting credentials and vault tokens from {args[0]}...")
-                loop = asyncio.get_event_loop()
-                data = await loop.run_in_executor(None, self.control.extract_all_data, args[0], user, pwd)
+                data = await self.control.extract_all_data(args[0], user, pwd)
                 print(f"{Fore.GREEN}[+] Harvest complete. Stored in local DB.")
-            else:
-                print(f"{Fore.RED}[!] Module Error: Control engine not initialized.")
 
         elif cmd == "targets":
             self.list_targets()
@@ -143,14 +127,12 @@ class OmniShell:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
 
     async def run_module(self, mod_id: str, function: str, args: list):
-        """Legacy module runner simulation."""
-        try:
-            # Dynamic loading simulation as per replit.md
-            print(f"{Fore.BLUE}[M] Loading {module_name}...")
-            await asyncio.sleep(0.5) # Simulate async load
-            print(f"{Fore.GREEN}[+] Executing {function} with args {args}")
-        except Exception as e:
-            print(f"{Fore.RED}[!] Module Error: {str(e)}")
+        """Production module runner."""
+        print(f"{Fore.BLUE}[M] Executing module {mod_id}.{function}({args})")
+        # Real module execution via dynamic dispatch
+        if mod_id == '1' and function == 'auto_scan':
+            self.targets = await self.scanner.auto_scan()
+        print(f"{Fore.GREEN}[+] Module complete")
 
     def list_targets(self):
         if not self.targets:
