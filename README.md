@@ -9,16 +9,12 @@
 Omniscience Ultramax Pro models advanced attack vectors, including automated exploitation and data exfiltration. The techniques described here—such as EternalBlue, SMBGhost, and memory-resident credential harvesting—are identical to those employed by sophisticated threat actors to compromise global enterprise infrastructure.
 
 ### ☣️ SYSTEM DANGERS
-- **Autonomous Exploitation**: Automated scanning modules can identify and compromise vulnerable systems across multiple subnets without human intervention, leading to rapid network-wide infection.
-- **Deep Data Exfiltration**: The tool models techniques for decrypting browser password vaults, harvesting WiFi keys, and dumping LSASS memory to recover plaintext credentials and session tokens.
-- **Silent Persistence**: It implements multi-layered persistence (hidden services, registry keys, scheduled tasks) designed to remain active even after system reboots, mirroring advanced persistent threat (APT) behavior.
 - **Silent Persistence**: Implements multi-layered persistence (Ghost Services, registry-level backdoors, and obfuscated scheduled tasks) designed to mirror Advanced Persistent Threat (APT) behavior.
 - **Agentless Lateral Movement**: Utilizes built-in Windows management protocols (WMI, WinRM, SMB) to move between hosts without installing detectable software, making detection by traditional antivirus extremely difficult.
 
 ---
 
 ## 🏗️ OPERATIONAL CAPACITY & SYSTEM THROUGHPUT
-Omniscience Ultramax Pro is engineered for high-concurrency environments where speed and stealth are paramount.
 Omniscience Ultramax Pro is engineered for line-rate discovery and high-concurrency environments.
 
 - **Asynchronous AMMO Engine**: Utilizing a custom-built Asynchronous Multi-threaded Modular Orchestrator (AMMO v2), the tool can manage over **2,000 concurrent socket connections** without thread-locking, allowing for simultaneous exploitation across entire enterprise VLANs.
@@ -61,7 +57,6 @@ The capacity to exfiltrate massive databases (MySQL/PostgreSQL/MongoDB) via encr
 - **Identity Theft**: Harvesting personal credentials, browsing histories, and session cookies for the purpose of impersonation or financial fraud.
 - **Botnet Recruitment**: Using mass scanning and exploitation to build a network of "zombie" machines for DDoS attacks.
 
-**VIOLATION OF COMPUTER FRAUD AND ABUSE ACT (CFAA) OR EQUIVALENT INTERNATIONAL LAWS CARRIES SEVERE CRIMINAL PENALTIES, INCLUDING SUBSTANTIAL FINES AND PRISON.**
 ---
 
 ## 🧨 DESTRUCTIVE POTENTIAL: REAL-WORLD IMPACT

