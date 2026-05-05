@@ -23,10 +23,10 @@ async def main():
     if os.name == 'nt':
         import ctypes
         if not ctypes.windll.shell32.IsUserAnAdmin():
-            print("[!] WARNING: Framework requires Administrative privileges for Raw Socket operations (Scanning/Exploitation).")
+            print("[!] SYSTEM ALERT: Framework requires Administrative privileges for Raw Socket operations.")
     
     print("""
-    =================================================
+    =================================================  [STABLE]
     ||          OMNISCIENCE ULTRAMAX PRO v6.0      ||
     ||      ADVANCED CYBERSECURITY FRAMEWORK       ||
     =================================================
