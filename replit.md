@@ -1,4 +1,4 @@
-# Omniscience Framework v5.1
+# Omniscience Framework v7.1.002 ULTRAMAX PRO
 
 ## Project Overview
 A modular, agentless offensive security and network reconnaissance platform designed for penetration testing, red teaming, and security research. Operates over standard protocols (SMB, WMI, SSH, SNMP, WinRM, DCOM) without installing software on target machines.

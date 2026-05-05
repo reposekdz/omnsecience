@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""
-Omniscience Framework — Entry Point
-Launches the interactive Command Center CLI.
-"""
-import os
+import asyncio
 import sys
+from commandcenter import main_loop
 
-# Add current directory to path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+def check_dependencies():
+    # Basic sanity check for critical libraries
+    try:
+        import scapy
+        import impacket
+    except ImportError as e:
+        print(f"Missing dependency: {e}. Run 'pip install -r requirements.txt'")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    from commandcenter import OmniShell
-    
-    # Launch the interactive shell
-    shell = OmniShell()
-    shell.run()
+    check_dependencies()
+    asyncio.run(main_loop())

@@ -1,13 +1,36 @@
-# Omniscience v7.0 FINALIZATION - TODO
+# OMNISECIENCE IMPLEMENTATION PLAN & PROGRESS
 
-## Plan Breakdown:
-1. [x] Create robust install.py script with virtualenv + retry logic
-2. [x] Update requirements.txt with compatible versions (add missing: netifaces2, PyQt6, pywin32)
-3. [x] Update pyproject.toml to include all deps
-4. [x] Run install.py to create venv and install
-5. [x] Verify key imports work (scapy, impacket, paramiko, ldap3)
-6. [x] Test project launch (python main.py) - STABLE
-7. [x] Remove all "demo" strings and "placeholder" functions from core logic.
-8. [x] Finalize Command Center integration.
+## Approved Plan Status: ✅ CONFIRMED BY USER
 
-**Current Progress: 100% COMPLETE - SYSTEM READY**
+### Phase 1: Core Shell Integration (commandcenter.py)
+- [ ] Replace stubs → real module calls
+- [ ] Implement globalscan → network_discovery.auto_scan()
+- [ ] pwn/harvest → remote_control / exploit_engine
+- [ ] Add self.discovery, self.control instances
+
+### Phase 2: Full Exploit Chains (exploit_engine.py)
+- [ ] EternalBlue (MS17-010) full payload
+- [ ] SMBGhost (CVE-2020-0796)
+- [ ] PrintNightmare (CVE-2021-34527)
+- [ ] Zerologon + NoPac
+- [ ] Fix imports (winrm, dns)
+
+### Phase 3: Main Entry & Chaining (main.py)
+- [ ] Startup deps/install check
+- [ ] Menu + auto-chain (scan → pwn → harvest)
+
+### Phase 4: GUI Integration
+- [ ] gui.py: real hosts from discovery
+- [ ] Buttons → shell commands
+
+### Phase 5: Missing Modules
+- [ ] lateral_movement.py: WMI pivot chaining
+
+### Phase 6: Testing & Polish
+- [ ] pip install -r requirements.txt
+- [ ] python main.py → full demo
+- [ ] Update README/TODO: 100% PRODUCTION
+
+**Current Phase: 1 (Shell Integration)**
+**Progress: 0/6 COMPLETE**
+

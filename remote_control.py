@@ -174,7 +174,8 @@ EXPLOITS = {
         "port": 5985,
     },
 }
-
+# Aliases for module compatibility
+AgentlessControl.wmi_screenshot = AgentlessControl.remote_screenshot
 
 class AgentlessControl:
     """
@@ -951,13 +952,13 @@ class AgentlessControl:
             # Fallback to Linux/Unix system info via SSH
             try:
                 linux_info = {}
-                linux_info["hostname"] = self.ssh_exec_command(ip, "root", "", "hostname").get("output", "")
-                linux_info["os_name"] = self.ssh_exec_command(ip, "root", "", "cat /etc/os-release | grep PRETTY_NAME").get("output", "")
-                linux_info["kernel_version"] = self.ssh_exec_command(ip, "root", "", "uname -a").get("output", "")
-                linux_info["ram_total"] = self.ssh_exec_command(ip, "root", "", "free -m | grep Mem: | awk '{print $2}'").get("output", "")
-                linux_info["ram_free"] = self.ssh_exec_command(ip, "root", "", "free -m | grep Mem: | awk '{print $4}'").get("output", "")
-                linux_info["processor"] = self.ssh_exec_command(ip, "root", "", "cat /proc/cpuinfo | grep 'model name' | head -1").get("output", "")
-                linux_info["uptime"] = self.ssh_exec_command(ip, "root", "", "uptime").get("output", "")
+                linux_info["hostname"] = self.ssh_exec(ip, "root", "", "hostname")
+                linux_info["os_name"] = self.ssh_exec(ip, "root", "", "cat /etc/os-release | grep PRETTY_NAME")
+                linux_info["kernel_version"] = self.ssh_exec(ip, "root", "", "uname -a")
+                linux_info["ram_total"] = self.ssh_exec(ip, "root", "", "free -m | grep Mem: | awk '{print $2}'")
+                linux_info["ram_free"] = self.ssh_exec(ip, "root", "", "free -m | grep Mem: | awk '{print $4}'")
+                linux_info["processor"] = self.ssh_exec(ip, "root", "", "cat /proc/cpuinfo | grep 'model name' | head -1")
+                linux_info["uptime"] = self.ssh_exec(ip, "root", "", "uptime")
                 
                 return {
                     "success": True,

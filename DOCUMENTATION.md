@@ -1,4 +1,4 @@
-# OMNISCIENCE FRAMEWORK v7.0 ULTRAMAX - OFFICIAL DOCUMENTATION
+# OMNISCIENCE FRAMEWORK v7.1.002 ULTRAMAX PRO - OFFICIAL DOCUMENTATION
 
 Welcome to the **Omniscience Documentation**. This guide provides a comprehensive breakdown of the framework's architecture, capabilities, and every command available in the Master Shell (`4.py`).
 
