@@ -157,4 +157,4 @@ new_banner = '''    @staticmethod
         
         print(f"{Fore.BLUE}{Style.BRIGHT}║{' '*98}║")
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        info = f"[▶] Session: {now} │ Ready for Domination │ Type 'help' for 140+ Command
+'''

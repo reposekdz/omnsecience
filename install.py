@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-\"\"\"Robust Omniscience Installer with Virtualenv + Network Retry\"\"\"
+"""Robust Omniscience Installer with Virtualenv + Network Retry"""
 
 import os
 import sys

