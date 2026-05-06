@@ -560,30 +560,53 @@ class AdvancedNetworkScanner:
         devices = []
         try:
             logger.info("[SSDP] Discovering UPnP devices...")
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            sock.settimeout(timeout)
-            # SSDP M-SEARCH request
-            ssdp_request = (
-                'M-SEARCH * HTTP/1.1\r\n'
-                'HOST: 239.255.255.250:1900\r\n'
-                'MAN: "ssdp:discover"\r\n'
-                'MX: 2\r\n'
-                'ST: ssdp:all\r\n'
-                '\r\n'
-            )
-            sock.sendto(ssdp_request.encode(), ("239.255.255.250", 1900))
-            while True:
+            
+            # Try multiple SSDP search targets to maximize discovery
+            search_targets = [
+                "ssdp:all",
+                "upnp:rootdevice",
+                "urn:schemas-upnp-org:device:MediaServer:1",
+                "urn:schemas-upnp-org:device:MediaRenderer:1"
+            ]
+            
+            for st in search_targets:
+                ssdp_request = (
+                    'M-SEARCH * HTTP/1.1\r\n'
+                    f'HOST: 239.255.255.250:1900\r\n'
+                    'MAN: "ssdp:discover"\r\n'
+                    'MX: 2\r\n'
+                    f'ST: {st}\r\n'
+                    '\r\n'
+                )
                 try:
-                    data, addr = sock.recvfrom(1024)
-                    src_ip = addr[0]
-                    if src_ip not in [d['ip'] for d in devices]:
-                        devices.append({'ip': src_ip, 'type': 'SSDP', 'response': data.decode(errors='ignore')[:200]})
-                        logger.info(f"[SSDP] Found: {src_ip}")
-                except socket.timeout:
-                    break
-            sock.close()
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    sock.settimeout(3)
+                    sock.sendto(ssdp_request.encode(), ("239.255.255.250", 1900))
+                    while True:
+                        try:
+                            data, addr = sock.recvfrom(1024)
+                            src_ip = addr[0]
+                            if src_ip not in [d['ip'] for d in devices]:
+                                response = data.decode(errors='ignore')[:300]
+                                # Extract device info
+                                device_info = {'ip': src_ip, 'type': 'SSDP', 'response': response}
+                                # Try to parse LOCATION header
+                                for line in response.split('\r\n'):
+                                    if line.upper().startswith('LOCATION:'):
+                                        device_info['location'] = line.split(':', 1)[1].strip()
+                                        break
+                                devices.append(device_info)
+                                logger.info(f"[SSDP] Found: {src_ip}")
+                        except socket.timeout:
+                            break
+                    sock.close()
+                except Exception as e:
+                    logger.debug(f"SSDP search for {st} failed: {e}")
+                    
         except Exception as e:
             logger.error(f"SSDP scan failed: {e}")
+        
+        logger.info(f"[SSDP] Discovery complete. Found {len(devices)} devices.")
         return devices
 
     def get_interface_info(self) -> List[Dict[str, str]]:

