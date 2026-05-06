@@ -32,6 +32,7 @@ class AgentlessIntelligence:
         """Start passive packet sniffing"""
         self.sniffing = True
         logger.info(f"Passive intelligence active (interface: {iface or 'all'})")
+        # Updated for scapy >=2.5: removed deprecated 'filter' and 'nofilter' kwargs
         sniff(iface=iface, prn=self._packet_handler, stop_filter=lambda x: not self.sniffing, count=count)
 
     def stop_sniffing(self):

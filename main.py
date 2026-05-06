@@ -1,22 +1,37 @@
 import asyncio
 import sys
 import os
+import time
 from commandcenter import OmniShell
 
 def check_dependencies():
     """Verify core functional dependencies are installed."""
-    deps = ['scapy', 'impacket', 'paramiko', 'requests', 'cryptography']
+    deps = ['scapy', 'paramiko', 'requests', 'cryptography']
+    optional = ['impacket']
     missing = []
+    optional_missing = []
     for dep in deps:
         try:
             __import__(dep)
         except ImportError:
             missing.append(dep)
+    for dep in optional:
+        try:
+            __import__(dep)
+        except ImportError:
+            optional_missing.append(dep)
     
     if missing:
-        print(f"[!] MISSING DEPENDENCIES: {', '.join(missing)}")
+        print(f"[!] MISSING REQUIRED DEPENDENCIES: {', '.join(missing)}")
         print("[*] Install via: pip install -r requirements.txt")
         sys.exit(1)
+    
+    if optional_missing:
+        print(f"[!] OPTIONAL DEPENDENCIES NOT FOUND: {', '.join(optional_missing)}")
+        print("[*] Some features (Windows SMB/WMI exploitation) will be disabled.")
+        print("[*] To enable full functionality, install: pip install impacket")
+        print("[*] Continuing in limited mode...\n")
+        time.sleep(2)
 
 async def main():
     # Ensure administrative privileges for Scapy and Raw Sockets

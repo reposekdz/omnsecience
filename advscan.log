@@ -1,0 +1,65 @@
+2026-05-06 14:41:15,455 | [INFO] | AdvScanner | [ULTRAMAX] GLOBAL NETWORK DISCOVERY INITIATED
+2026-05-06 14:41:15,490 | [INFO] | AdvScanner | [ULTRAMAX] Scanning range 1/10: 192.168.137.0/24
+2026-05-06 14:41:18,338 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.201
+2026-05-06 14:41:18,356 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.201
+2026-05-06 14:41:30,907 | [INFO] | AdvScanner | [TCP-ULTRA] Found: 192.168.137.201 | OS: Unknown | Ports: 2
+2026-05-06 14:42:59,322 | [INFO] | AdvScanner | [ULTRAMAX] Scanning range 2/10: 192.168.0.0/16
+2026-05-06 14:43:33,933 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.64
+2026-05-06 14:43:34,084 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.64
+2026-05-06 14:43:34,621 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.62
+2026-05-06 14:43:34,667 | [INFO] | AdvScanner | [TCP-ULTRA] Found: 192.168.1.105 | OS: Unknown | Ports: 1
+2026-05-06 14:43:35,421 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.62
+2026-05-06 14:43:35,491 | [INFO] | AdvScanner | [TCP-ULTRA] Found: 192.168.1.1 | OS: Unknown | Ports: 1
+2026-05-06 14:43:36,126 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.60
+2026-05-06 14:43:36,131 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.60
+2026-05-06 14:43:36,133 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.61
+2026-05-06 14:43:36,140 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.61
+2026-05-06 14:43:36,142 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.32
+2026-05-06 14:43:36,143 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.32
+2026-05-06 14:43:36,145 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.31
+2026-05-06 14:43:36,148 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.31
+2026-05-06 14:43:36,154 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.30
+2026-05-06 14:43:36,157 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.30
+2026-05-06 14:43:36,160 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.28
+2026-05-06 14:43:36,403 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.28
+2026-05-06 14:43:36,469 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.106
+2026-05-06 14:43:36,484 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.106
+2026-05-06 14:43:36,502 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.94
+2026-05-06 14:43:36,504 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.94
+2026-05-06 14:43:36,506 | [INFO] | AdvScanner | [ICMP] Found: 192.168.1.1
+2026-05-06 14:43:36,507 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.90
+2026-05-06 14:43:36,508 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.90
+2026-05-06 14:43:36,509 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.101
+2026-05-06 14:43:36,511 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.101
+2026-05-06 14:43:36,512 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.100
+2026-05-06 14:43:36,516 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.100
+2026-05-06 14:43:36,518 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.102
+2026-05-06 14:43:36,519 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.102
+2026-05-06 14:43:36,523 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.91
+2026-05-06 14:43:36,533 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.91
+2026-05-06 14:43:36,559 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.38
+2026-05-06 14:43:36,564 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.38
+2026-05-06 14:43:36,572 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.36
+2026-05-06 14:43:36,575 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.36
+2026-05-06 14:43:36,577 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.34
+2026-05-06 14:43:36,579 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.34
+2026-05-06 14:43:36,581 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.108
+2026-05-06 14:43:36,582 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.108
+2026-05-06 14:43:36,583 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.82
+2026-05-06 14:43:36,584 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.82
+2026-05-06 14:43:36,585 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.81
+2026-05-06 14:43:36,586 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.81
+2026-05-06 14:43:36,587 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.104
+2026-05-06 14:43:36,589 | [INFO] | AdvScanner | [ICMP] Found: 192.168.0.104
+2026-05-06 15:23:34,336 | [INFO] | AdvScanner | [SSDP] Discovering UPnP devices...
+2026-05-06 15:24:26,576 | [INFO] | AdvScanner | [LINUX-INFO] Gathering from None
+2026-05-06 15:24:28,647 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:30,653 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:32,751 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:34,850 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:37,251 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:39,565 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:41,966 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:44,368 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:46,634 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 15:24:48,831 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1

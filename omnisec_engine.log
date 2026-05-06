@@ -1,0 +1,20 @@
+2026-05-06 14:36:28,821 | [WARNING] | impacket not available — Windows exploitation disabled
+2026-05-06 14:36:29,870 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-06 14:37:20,699 | [WARNING] | impacket not available — Windows exploitation disabled
+2026-05-06 14:37:21,740 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-06 14:37:21,740 | [INFO] | [DISCOVER] Starting device discovery (exhaustive=False)
+2026-05-06 14:37:21,741 | [INFO] | [DISCOVER] Scanning 1 network ranges: ['192.168.0/24']...
+2026-05-06 14:37:21,841 | [INFO] | [DISCOVER] Found 6 unique devices across all ranges
+2026-05-06 14:37:34,103 | [INFO] | [STATE] Saved to omnisec_state_1778071054.json
+2026-05-06 14:38:37,762 | [WARNING] | impacket not available — Windows exploitation disabled
+2026-05-06 14:38:38,062 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-06 14:38:38,062 | [INFO] | [DISCOVER] Starting device discovery (exhaustive=True)
+2026-05-06 14:38:38,094 | [INFO] | [DISCOVER] Scanning 5 network ranges: ['172.16.0.0/12', '192.168.137.0/24', '10.0.0.0/8']...
+2026-05-06 15:19:03,489 | [WARNING] | impacket not available — Windows exploitation disabled
+2026-05-06 15:19:10,897 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-06 15:19:10,901 | [INFO] | [DISCOVER] Starting device discovery (exhaustive=False)
+2026-05-06 15:19:10,902 | [INFO] | [DISCOVER] Scanning 1 network ranges: ['192.168.0/24']...
+2026-05-06 15:19:11,430 | [INFO] | [DISCOVER] Found 3 unique devices across all ranges
+2026-05-06 15:19:19,122 | [INFO] | [STATE] Saved to omnisec_state_1778073559.json
+2026-05-06 15:20:07,497 | [WARNING] | impacket not available — Windows exploitation disabled
+2026-05-06 15:20:09,771 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
