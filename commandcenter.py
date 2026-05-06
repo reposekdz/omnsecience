@@ -443,8 +443,13 @@ class OmniShell:
             print(f"{Fore.YELLOW}[*] SMB Vulnerabilities for {args[0]}: {res.get('vulns', [])}")
 
         elif cmd == "nopac-check":
-            # Logic for NoPac check
-            print(f"{Fore.CYAN}[*] Running NoPac probe...")
+            if not args: return
+            target_ip = args[0]
+            print(f"{Fore.CYAN}[*] Running NoPac (CVE-2021-42278) probe on {target_ip}...")
+            device = self.exploiter.devices.get(target_ip, UniversalDevice(target_ip))
+            await asyncio.to_thread(self.exploiter._check_vulnerabilities, device)
+            is_vuln = "CVE-2021-42278_NOPAC_VALIDATED" in device.is_vulnerable
+            print(f"{Fore.YELLOW}[*] NoPac Result: {'VULNERABLE' if is_vuln else 'Safe / Not DC'}")
 
         elif cmd == "etblue-check":
             if not args: return
