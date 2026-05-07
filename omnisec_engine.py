@@ -64,6 +64,9 @@ PARAMIKO_OK = False
 try:
     import scapy.all as scapy
     from scapy.layers import inet, l2
+    # Harden Scapy engine for high-performance scanning
+    logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+    scapy.conf.verb = 0
     SCAPY_OK = True
 except ImportError:
     logger.warning("scapy not available — some features degraded")
