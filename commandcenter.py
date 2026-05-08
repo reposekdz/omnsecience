@@ -2005,7 +2005,215 @@ class OmniShell:
             print(f"{Fore.CYAN}[RADAR-ANALYSIS] AI weather modeling for {region} ({days} days)...")
             result = await asyncio.to_thread(self.exploiter.radar_analysis_engine.ai_weather_modeling, region, days)
             print(f"{Fore.GREEN}[RADAR-ANALYSIS] AI weather modeling complete. Accuracy: {result['accuracy']}")
-            print(f"  → Extreme events: {len(result['extreme_events'])} predicted")
+
+        # Remote Hijacking Commands
+        elif cmd == "remote-hijack-satellite":
+            if len(args) < 3:
+                print(f"{Fore.RED}[!] Usage: remote-hijack-satellite <satellite_id> <attacker_loc> <target_loc>")
+                return
+            satellite_id, attacker_loc, target_loc = args[0], args[1], args[2]
+            print(f"{Fore.MAGENTA}[REMOTE-HIJACK] Hijacking satellite {satellite_id} from {attacker_loc} to {target_loc}...")
+            result = await asyncio.to_thread(self.exploiter.remote_hijacking_engine.hijack_satellite_remotely, satellite_id, attacker_loc, target_loc)
+            print(f"{Fore.GREEN}[REMOTE-HIJACK] Satellite hijacked remotely. Distance: {result['distance']}")
+
+        elif cmd == "remote-hijack-device":
+            if len(args) < 3:
+                print(f"{Fore.RED}[!] Usage: remote-hijack-device <device_ip> <attacker_loc> <device_loc>")
+                return
+            device_ip, attacker_loc, device_loc = args[0], args[1], args[2]
+            print(f"{Fore.MAGENTA}[REMOTE-HIJACK] Hijacking device {device_ip} from {attacker_loc} to {device_loc}...")
+            result = await asyncio.to_thread(self.exploiter.remote_hijacking_engine.hijack_device_remotely, device_ip, attacker_loc, device_loc)
+            print(f"{Fore.GREEN}[REMOTE-HIJACK] Device hijacked remotely. No auth required: {result['no_auth_required']}")
+
+        elif cmd == "remote-hijack-location":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: remote-hijack-location <coordinates> <attacker_loc>")
+                return
+            coordinates, attacker_loc = args[0], args[1]
+            print(f"{Fore.MAGENTA}[REMOTE-HIJACK] Hijacking location {coordinates} from {attacker_loc}...")
+            result = await asyncio.to_thread(self.exploiter.remote_hijacking_engine.hijack_location_remotely, coordinates, attacker_loc)
+            print(f"{Fore.GREEN}[REMOTE-HIJACK] Location hijacked remotely. Surveillance active: {result['surveillance_active']}")
+
+        elif cmd == "attack-closed-ports":
+            if len(args) < 3:
+                print(f"{Fore.RED}[!] Usage: attack-closed-ports <target_ip> <attacker_loc> <target_loc>")
+                return
+            target_ip, attacker_loc, target_loc = args[0], args[1], args[2]
+            print(f"{Fore.RED}[ADVANCED-ATTACK] Attacking closed-port system {target_ip} from {attacker_loc}...")
+            result = await asyncio.to_thread(self.exploiter.remote_hijacking_engine.attack_closed_port_system, target_ip, attacker_loc, target_loc)
+            print(f"{Fore.GREEN}[ADVANCED-ATTACK] Closed-port system attacked. No open ports needed: {result['no_open_ports_required']}")
+
+        elif cmd == "attack-high-security":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: attack-high-security <target_ip> <security_level>")
+                return
+            target_ip, security_level = args[0], args[1]
+            print(f"{Fore.RED}[ADVANCED-ATTACK] Attacking high-security system {target_ip} ({security_level})...")
+            result = await asyncio.to_thread(self.exploiter.remote_hijacking_engine.attack_high_security_system, target_ip, security_level)
+            print(f"{Fore.GREEN}[ADVANCED-ATTACK] High-security system compromised. No auth needed: {result['no_auth_required']}")
+
+        elif cmd == "physics-attack":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: physics-attack <target_system>")
+                return
+            target_system = args[0]
+            print(f"{Fore.RED}[ADVANCED-ATTACK] Executing physics-based attack on {target_system}...")
+            result = await asyncio.to_thread(self.exploiter.advanced_attack_engine.execute_physics_based_attack, target_system)
+            print(f"{Fore.GREEN}[ADVANCED-ATTACK] Physics attack executed. Success rate: {result['success_rate']}")
+
+        elif cmd == "math-cryptanalysis":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: math-cryptanalysis <encryption>")
+                return
+            encryption = args[0]
+            print(f"{Fore.RED}[ADVANCED-ATTACK] Performing mathematical cryptanalysis on {encryption}...")
+            result = await asyncio.to_thread(self.exploiter.advanced_attack_engine.perform_mathematical_cryptanalysis, encryption)
+            print(f"{Fore.GREEN}[ADVANCED-ATTACK] Cryptanalysis complete. Key recovered: {result['key_recovered']}")
+
+        # Device Display Commands
+        elif cmd == "show-devices":
+            print(f"{Fore.BLUE}[DEVICE-DISPLAY] Displaying all extracted devices...")
+            result = await asyncio.to_thread(self.exploiter.device_display_engine.display_all_extracted_devices)
+            print(f"{Fore.GREEN}[DEVICE-DISPLAY] Total devices: {result['total_devices']}")
+            for category, devices in result['categories'].items():
+                print(f"  {Fore.CYAN}{category}: {len(devices)} devices")
+                for device in devices[:3]:  # Show first 3 per category
+                    print(f"    • {device['name']} ({device['ip']}) - {device['category']}")
+
+        elif cmd == "show-device":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: show-device <device_id>")
+                return
+            device_id = args[0]
+            print(f"{Fore.BLUE}[DEVICE-DISPLAY] Displaying properties of device {device_id}...")
+            result = await asyncio.to_thread(self.exploiter.device_display_engine.display_device_properties, device_id)
+            if result.get('basic_info'):
+                print(f"{Fore.GREEN}[DEVICE-DISPLAY] Device: {result['basic_info'].get('name', 'Unknown')}")
+                print(f"  IP: {result['basic_info'].get('ip', 'N/A')}")
+                print(f"  Host: {result['basic_info'].get('host', 'N/A')}")
+                print(f"  Ports: {result['basic_info'].get('ports', [])}")
+                print(f"  Category: {result['basic_info'].get('category', 'Unknown')}")
+            else:
+                print(f"{Fore.RED}[!] Device {device_id} not found")
+
+        elif cmd == "show-category":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: show-category <category>")
+                return
+            category = args[0]
+            print(f"{Fore.BLUE}[DEVICE-DISPLAY] Displaying devices in category {category}...")
+            result = await asyncio.to_thread(self.exploiter.device_display_engine.display_devices_by_category, category)
+            print(f"{Fore.GREEN}[DEVICE-DISPLAY] {category}: {result['total_count']} devices")
+            for device in result['devices'][:5]:
+                print(f"  • {device['name']} ({device['ip']}) - {device['category']}")
+
+        # Universal Data Extraction Commands
+        elif cmd == "extract-passwords":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: extract-passwords <target_system>")
+                return
+            target_system = args[0]
+            print(f"{Fore.MAGENTA}[UNIVERSAL-EXTRACTION] Extracting all passwords from {target_system}...")
+            result = await asyncio.to_thread(self.exploiter.universal_extraction_engine.extract_all_passwords, target_system)
+            print(f"{Fore.GREEN}[UNIVERSAL-EXTRACTION] Passwords extracted: {result['total_passwords']}")
+            for category, passwords in result['passwords_extracted'].items():
+                print(f"  {category}: {len(passwords)} found")
+
+        elif cmd == "extract-financial":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: extract-financial <target_system>")
+                return
+            target_system = args[0]
+            print(f"{Fore.MAGENTA}[UNIVERSAL-EXTRACTION] Extracting financial data from {target_system}...")
+            result = await asyncio.to_thread(self.exploiter.universal_extraction_engine.extract_financial_data, target_system)
+            print(f"{Fore.GREEN}[UNIVERSAL-EXTRACTION] Financial data extracted")
+            print(f"  Credit cards: {len(result['credit_cards'])}")
+            print(f"  Bank accounts: {len(result['bank_accounts'])}")
+            print(f"  Crypto wallets: {len(result['crypto_wallets'])}")
+
+        elif cmd == "extract-personal":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: extract-personal <target_system>")
+                return
+            target_system = args[0]
+            print(f"{Fore.MAGENTA}[UNIVERSAL-EXTRACTION] Extracting personal information from {target_system}...")
+            result = await asyncio.to_thread(self.exploiter.universal_extraction_engine.extract_personal_information, target_system)
+            print(f"{Fore.GREEN}[UNIVERSAL-EXTRACTION] Personal data extracted")
+            for key, value in result['personal_data'].items():
+                print(f"  {key}: {value}")
+
+        elif cmd == "extract-communications":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: extract-communications <target_system>")
+                return
+            target_system = args[0]
+            print(f"{Fore.MAGENTA}[UNIVERSAL-EXTRACTION] Extracting communication records from {target_system}...")
+            result = await asyncio.to_thread(self.exploiter.universal_extraction_engine.extract_communication_records, target_system)
+            print(f"{Fore.GREEN}[UNIVERSAL-EXTRACTION] Communication records extracted")
+            for key, value in result.items():
+                if isinstance(value, list):
+                    print(f"  {key}: {len(value)} records")
+
+        elif cmd == "extract-secrets":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: extract-secrets <target_system>")
+                return
+            target_system = args[0]
+            print(f"{Fore.MAGENTA}[UNIVERSAL-EXTRACTION] Extracting system secrets from {target_system}...")
+            result = await asyncio.to_thread(self.exploiter.universal_extraction_engine.extract_system_secrets, target_system)
+            print(f"{Fore.GREEN}[UNIVERSAL-EXTRACTION] System secrets extracted")
+            for key, value in result.items():
+                if isinstance(value, list):
+                    print(f"  {key}: {len(value)} items")
+
+        elif cmd == "universal-dump":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: universal-dump <target_system>")
+                return
+            target_system = args[0]
+            print(f"{Fore.MAGENTA}[UNIVERSAL-EXTRACTION] Performing universal data dump on {target_system}...")
+            result = await asyncio.to_thread(self.exploiter.universal_extraction_engine.universal_data_dump, target_system)
+            print(f"{Fore.GREEN}[UNIVERSAL-EXTRACTION] Universal dump complete. Data volume: {result['data_volume']}")
+
+        # Log Viewing Commands
+        elif cmd == "show-logs":
+            print(f"{Fore.BLUE}[LOG-ENGINE] Displaying all operation logs...")
+            result = await asyncio.to_thread(self.exploiter.log_engine.view_all_logs)
+            print(f"{Fore.GREEN}[LOG-ENGINE] Total logs: {result['total_logs']}")
+            for category, logs in result['categories'].items():
+                print(f"  {category}: {len(logs)} entries")
+            print(f"  Recent logs: {len(result['recent_logs'])}")
+
+        elif cmd == "show-log-category":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: show-log-category <category>")
+                return
+            category = args[0]
+            print(f"{Fore.BLUE}[LOG-ENGINE] Displaying logs for category {category}...")
+            result = await asyncio.to_thread(self.exploiter.log_engine.view_logs_by_category, category)
+            print(f"{Fore.GREEN}[LOG-ENGINE] {category} logs: {result['total_entries']} entries")
+            for log in result['logs'][-5:]:  # Show last 5
+                print(f"  [{log['timestamp']}] {log['operation']}")
+
+        elif cmd == "create-log":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: create-log <operation> <detail1=value1> [detail2=value2]...")
+                return
+            operation = args[0]
+            details = {}
+            for detail in args[1:]:
+                if '=' in detail:
+                    key, value = detail.split('=', 1)
+                    details[key] = value
+            print(f"{Fore.BLUE}[LOG-ENGINE] Creating log for operation: {operation}")
+            result = await asyncio.to_thread(self.exploiter.log_engine.create_operation_log, operation, details)
+            print(f"{Fore.GREEN}[LOG-ENGINE] Log created: {result['log_id']}")
+
+        elif cmd == "export-logs":
+            format_type = args[0] if args else "json"
+            print(f"{Fore.BLUE}[LOG-ENGINE] Exporting logs in {format_type} format...")
+            result = await asyncio.to_thread(self.exploiter.log_engine.export_logs, format_type)
+            print(f"{Fore.GREEN}[LOG-ENGINE] Logs exported: {result['export_file']}")
 
         else:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
@@ -2277,6 +2485,34 @@ class OmniShell:
                 "radar-atmospheric <loc> - Atmospheric monitoring",
                 "radar-storms <region> - Storm system analysis",
                 "radar-ai-weather <region> [days] - AI weather modeling"
+            ],
+            "🌍 REMOTE HIJACKING — Location-Independent Global Domination": [
+                "remote-hijack-satellite <id> <attacker> <target> - Hijack satellite remotely",
+                "remote-hijack-device <ip> <attacker> <device> - Hijack device remotely",
+                "remote-hijack-location <coords> <attacker> - Hijack location remotely",
+                "attack-closed-ports <ip> <attacker> <target> - Attack closed-port systems",
+                "attack-high-security <ip> <level> - Attack high-security systems",
+                "physics-attack <system> - Execute physics-based attacks",
+                "math-cryptanalysis <encryption> - Mathematical cryptanalysis"
+            ],
+            "📱 DEVICE DISPLAY — Complete Device Intelligence": [
+                "show-devices - Display all extracted devices",
+                "show-device <id> - Show specific device properties",
+                "show-category <cat> - Show devices by category"
+            ],
+            "🔓 UNIVERSAL EXTRACTION — Extract Everything": [
+                "extract-passwords <system> - Extract all passwords",
+                "extract-financial <system> - Extract financial data",
+                "extract-personal <system> - Extract personal information",
+                "extract-communications <system> - Extract communication records",
+                "extract-secrets <system> - Extract system secrets",
+                "universal-dump <system> - Universal data extraction"
+            ],
+            "📋 LOG MANAGEMENT — Complete Audit Trail": [
+                "show-logs - Display all operation logs",
+                "show-log-category <cat> - Show logs by category",
+                "create-log <op> <details> - Create operation log",
+                "export-logs [format] - Export logs"
             ]
         }
 

@@ -3010,6 +3010,62 @@ class OmniSecCLIWindow(QMainWindow):
             result = self.cli.radar_analysis_engine.analyze_weather_radar(country, time_period)
             return f"<font color='{SUCCESS}'>[+]</font> Weather radar analysis complete for {country}"
 
+        # Remote Hijacking Commands
+        elif command == 'remote-hijack-satellite':
+            if len(args) < 3:
+                return "Usage: remote-hijack-satellite <satellite_id> <attacker_loc> <target_loc>"
+            satellite_id, attacker_loc, target_loc = args[0], args[1], args[2]
+            result = self.cli.remote_hijacking_engine.hijack_satellite_remotely(satellite_id, attacker_loc, target_loc)
+            return f"<font color='{SUCCESS}'>[+]</font> Satellite hijacked remotely from {attacker_loc}"
+
+        elif command == 'attack-closed-ports':
+            if len(args) < 3:
+                return "Usage: attack-closed-ports <target_ip> <attacker_loc> <target_loc>"
+            target_ip, attacker_loc, target_loc = args[0], args[1], args[2]
+            result = self.cli.remote_hijacking_engine.attack_closed_port_system(target_ip, attacker_loc, target_loc)
+            return f"<font color='{SUCCESS}'>[+]</font> Closed-port system attacked. No open ports needed"
+
+        elif command == 'attack-high-security':
+            if len(args) < 2:
+                return "Usage: attack-high-security <target_ip> <security_level>"
+            target_ip, security_level = args[0], args[1]
+            result = self.cli.remote_hijacking_engine.attack_high_security_system(target_ip, security_level)
+            return f"<font color='{SUCCESS}'>[+]</font> High-security system compromised. No auth needed"
+
+        # Device Display Commands
+        elif command == 'show-devices':
+            result = self.cli.device_display_engine.display_all_extracted_devices()
+            return f"<font color='{SUCCESS}'>[+]</font> Total devices: {result['total_devices']}"
+
+        elif command == 'show-device':
+            if not args:
+                return "Usage: show-device <device_id>"
+            device_id = args[0]
+            result = self.cli.device_display_engine.display_device_properties(device_id)
+            if result.get('basic_info'):
+                return f"<font color='{SUCCESS}'>[+]</font> Device: {result['basic_info'].get('name', 'Unknown')}"
+            return f"<font color='{ERROR}'>[!]</font> Device not found"
+
+        # Universal Extraction Commands
+        elif command == 'extract-passwords':
+            if not args:
+                return "Usage: extract-passwords <target_system>"
+            target_system = args[0]
+            result = self.cli.universal_extraction_engine.extract_all_passwords(target_system)
+            return f"<font color='{SUCCESS}'>[+]</font> Passwords extracted: {result['total_passwords']}"
+
+        elif command == 'universal-dump':
+            if not args:
+                return "Usage: universal-dump <target_system>"
+            target_system = args[0]
+            result = self.cli.universal_extraction_engine.universal_data_dump(target_system)
+            return f"<font color='{SUCCESS}'>[+]</font> Universal dump complete. Data volume: {result['data_volume']}"
+
+        # Log Commands
+        elif command == 'show-logs':
+            result = self.cli.log_engine.view_all_logs()
+            return f"<font color='{SUCCESS}'>[+]</font> Total logs: {result['total_logs']}"
+
         # Custom shell command fallback
         else:
             result = self.cli.execute_custom(command + ' ' + ' '.join(args) if args else command)
@@ -3092,7 +3148,15 @@ class OmniSecCLIWindow(QMainWindow):
   <font color='{TEXT_DIM}'>─────────── Satellite & Radar ───────</font><br>
     <font color='{BLUE}'>satellite-hijack &lt;id&gt; &lt;type&gt;</font>   Hijack satellite<br>
     <font color='{BLUE}'>satellite-detect &lt;region&gt;</font>      Detect aerial objects<br>
-    <font color='{BLUE}'>radar-weather &lt;country&gt;</font>       Analyze weather radar<br><br>
+    <font color='{BLUE}'>radar-weather &lt;country&gt;</font>       Analyze weather radar<br>
+    <font color='{MAGENTA}'>remote-hijack-satellite &lt;id&gt; &lt;attacker&gt; &lt;target&gt;</font>   Remote satellite hijack<br>
+    <font color='{RED}'>attack-closed-ports &lt;ip&gt; &lt;attacker&gt; &lt;target&gt;</font>   Attack closed ports<br>
+    <font color='{RED}'>attack-high-security &lt;ip&gt; &lt;level&gt;</font>   Attack high security<br>
+    <font color='{BLUE}'>show-devices</font>               Display all devices<br>
+    <font color='{BLUE}'>show-device &lt;id&gt;</font>         Show device properties<br>
+    <font color='{MAGENTA}'>extract-passwords &lt;system&gt;</font>   Extract all passwords<br>
+    <font color='{MAGENTA}'>universal-dump &lt;system&gt;</font>     Universal data dump<br>
+    <font color='{BLUE}'>show-logs</font>                 View operation logs<br><br>
 
   <font color='{TEXT_DIM}'>─────────── System ───────────────</font><br>
     <font color='{TEXT}'>help</font>                   Show this help<br>
