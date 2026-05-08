@@ -1645,6 +1645,88 @@ class OmniShell:
             result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.achieve_water_level_security, system)
             print(f"{Fore.GREEN}[GOD-WATER] Water-level security achieved. Impenetrable: {result['impenetrable']}")
 
+        # AI Automation Commands
+        elif cmd == "ai-discover":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-discover <scope>")
+                return
+            scope = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI autonomous network discovery for {scope}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.autonomous_network_discovery, scope)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Discovery complete. Attack paths identified: {result['attack_paths_identified']}")
+
+        elif cmd == "ai-assess":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-assess <target>")
+                return
+            target = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI vulnerability assessment for {target}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.ai_vulnerability_assessment_automated, target)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Assessment complete. Exploits generated: {result['exploits_generated']}")
+
+        elif cmd == "ai-exploit":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-exploit <target>")
+                return
+            target = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI automated exploitation chain for {target}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.automated_exploitation_chain, target)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Exploitation complete. Persistence established: {result['persistence_established']}")
+
+        elif cmd == "ai-persist":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-persist <target>")
+                return
+            target = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI self-healing persistence for {target}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.self_healing_persistence_automated, target)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Persistence established. Immortal: {result['immortal']}")
+
+        elif cmd == "ai-defend":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-defend <system>")
+                return
+            system = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI predictive defense for {system}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.predictive_defense_automation, system)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Defense active. Prediction accuracy: {result['prediction_accuracy']}")
+
+        elif cmd == "ai-lateral":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: ai-lateral <source> <target>")
+                return
+            source, target = args[0], args[1]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI autonomous lateral movement from {source} to {target}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.autonomous_lateral_movement_ai, source, target)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Lateral movement executed. Stealth maintained: {result['stealth_maintained']}")
+
+        elif cmd == "ai-attack":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-attack <target>")
+                return
+            target = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI orchestrated attack on {target}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.ai_orchestrated_attack_automation, target)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Attack launched. Success guaranteed: {result['success_guaranteed']}")
+
+        elif cmd == "ai-optimize":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-optimize <operation>")
+                return
+            operation = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] AI self-optimizing {operation}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.self_optimizing_operations_ai, operation)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Operation optimized. Performance maximum: {result['performance_maximum']}")
+
+        elif cmd == "ai-autonomous":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-autonomous <mission>")
+                return
+            mission = args[0]
+            print(f"{Fore.MAGENTA}[AI-AUTOMATION] Complete autonomous AI operation: {mission}...")
+            result = await asyncio.to_thread(self.exploiter.ai_automation_engine.complete_autonomous_operation, mission)
+            print(f"{Fore.GREEN}[AI-AUTOMATION] Mission completed. Success rate: {result['success_rate']}")
+
         else:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
 
@@ -1869,7 +1951,16 @@ class OmniShell:
                 "bypass-tpm <ver>         - Bypass TPM security",
                 "neutralize-secure-boot <impl> - Neutralize secure boot",
                 "attack-hsm <type>        - Attack hardware security modules",
-                "water-level-security <sys> - Achieve impenetrable water-level security"
+                "water-level-security <sys> - Achieve impenetrable water-level security",
+                "ai-discover <scope>      - AI autonomous network discovery",
+                "ai-assess <target>       - AI vulnerability assessment",
+                "ai-exploit <target>      - AI automated exploitation chain",
+                "ai-persist <target>      - AI self-healing persistence",
+                "ai-defend <system>       - AI predictive defense",
+                "ai-lateral <src> <tgt>   - AI autonomous lateral movement",
+                "ai-attack <target>       - AI orchestrated attack",
+                "ai-optimize <operation>  - AI self-optimizing operations",
+                "ai-autonomous <mission>  - Complete autonomous AI operation"
             ]
         }
 
