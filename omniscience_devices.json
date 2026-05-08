@@ -1,0 +1,5711 @@
+{
+  "192.168.0.2": {
+    "ip": "192.168.0.2",
+    "mac": "00:1A:2B:02:95:ec",
+    "hostname": "device-2.office",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "rdp"
+    ],
+    "vulnerability_score": 71.50332937069177,
+    "quantum_signature": 379960007,
+    "is_compromised": true,
+    "session_token": "f9eb4124863671e5"
+  },
+  "192.168.0.7": {
+    "ip": "192.168.0.7",
+    "mac": "00:1A:2B:07:44:65",
+    "hostname": "device-7.home",
+    "device_type": "mobile",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      445
+    ],
+    "services": [
+      "http",
+      "smb"
+    ],
+    "vulnerability_score": 44.35928466464102,
+    "quantum_signature": 484072849,
+    "is_compromised": true,
+    "session_token": "141858531bc14d8a"
+  },
+  "192.168.0.10": {
+    "ip": "192.168.0.10",
+    "mac": "00:1A:2B:0a:87:06",
+    "hostname": "device-10.office",
+    "device_type": "printer",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 30.42514361986516,
+    "quantum_signature": 517228140,
+    "is_compromised": true,
+    "session_token": "ce742118d0f54fd6"
+  },
+  "192.168.0.19": {
+    "ip": "192.168.0.19",
+    "mac": "00:1A:2B:13:f5:03",
+    "hostname": "device-19.home",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "smb"
+    ],
+    "vulnerability_score": 63.05418770696882,
+    "quantum_signature": 1511307934,
+    "is_compromised": true,
+    "session_token": "d9771e4388cf80e9"
+  },
+  "192.168.0.29": {
+    "ip": "192.168.0.29",
+    "mac": "00:1A:2B:1d:69:d1",
+    "hostname": "device-29.office",
+    "device_type": "server",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      443,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 82.25475047746862,
+    "quantum_signature": 1389196725,
+    "is_compromised": true,
+    "session_token": "b602690eef8ed27a"
+  },
+  "192.168.0.32": {
+    "ip": "192.168.0.32",
+    "mac": "00:1A:2B:20:30:1a",
+    "hostname": "device-32.local",
+    "device_type": "mobile",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 51.07656391819652,
+    "quantum_signature": 1259603329,
+    "is_compromised": true,
+    "session_token": "dc6c6cc2fbd105c7"
+  },
+  "192.168.0.35": {
+    "ip": "192.168.0.35",
+    "mac": "00:1A:2B:23:c1:d8",
+    "hostname": "device-35.office",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      80
+    ],
+    "services": [
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 25.218764784861627,
+    "quantum_signature": 1450069955,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.37": {
+    "ip": "192.168.0.37",
+    "mac": "00:1A:2B:25:7e:af",
+    "hostname": "device-37.local",
+    "device_type": "mobile",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 61.4295657613744,
+    "quantum_signature": 2089887415,
+    "is_compromised": true,
+    "session_token": "c3cf83a64afab419"
+  },
+  "192.168.0.43": {
+    "ip": "192.168.0.43",
+    "mac": "00:1A:2B:2b:a6:6f",
+    "hostname": "device-43.corp",
+    "device_type": "workstation",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 77.93115127324604,
+    "quantum_signature": 1094625159,
+    "is_compromised": true,
+    "session_token": "f87338c6ac34a4c2"
+  },
+  "192.168.0.47": {
+    "ip": "192.168.0.47",
+    "mac": "00:1A:2B:2f:36:13",
+    "hostname": "device-47.office",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 93.44791162936036,
+    "quantum_signature": 1235735038,
+    "is_compromised": true,
+    "session_token": "44646af8b6a1b620"
+  },
+  "192.168.0.50": {
+    "ip": "192.168.0.50",
+    "mac": "00:1A:2B:32:e4:03",
+    "hostname": "device-50.corp",
+    "device_type": "workstation",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      80,
+      445
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 61.286470400259894,
+    "quantum_signature": 2062197583,
+    "is_compromised": true,
+    "session_token": "51da9bec84b58275"
+  },
+  "192.168.0.56": {
+    "ip": "192.168.0.56",
+    "mac": "00:1A:2B:38:08:f2",
+    "hostname": "device-56.home",
+    "device_type": "router",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 90.3446070849995,
+    "quantum_signature": 1263646552,
+    "is_compromised": true,
+    "session_token": "04e824db47629994"
+  },
+  "192.168.0.67": {
+    "ip": "192.168.0.67",
+    "mac": "00:1A:2B:43:1b:5d",
+    "hostname": "device-67.corp",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      443,
+      445
+    ],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 78.86824897301591,
+    "quantum_signature": 1069636073,
+    "is_compromised": true,
+    "session_token": "ab7bc45986dbd0e2"
+  },
+  "192.168.0.69": {
+    "ip": "192.168.0.69",
+    "mac": "00:1A:2B:45:9d:1f",
+    "hostname": "device-69.local",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 85.40518111858941,
+    "quantum_signature": 1720795538,
+    "is_compromised": true,
+    "session_token": "7e0997dd2efbfb26"
+  },
+  "192.168.0.72": {
+    "ip": "192.168.0.72",
+    "mac": "00:1A:2B:48:e8:49",
+    "hostname": "device-72.home",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 44.816079157652304,
+    "quantum_signature": 1112547073,
+    "is_compromised": true,
+    "session_token": "3e8a8b187bf2157e"
+  },
+  "192.168.0.78": {
+    "ip": "192.168.0.78",
+    "mac": "00:1A:2B:4e:c6:3d",
+    "hostname": "device-78.office",
+    "device_type": "router",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 51.287017297513444,
+    "quantum_signature": 375539212,
+    "is_compromised": true,
+    "session_token": "bd2bfd451c8e1bba"
+  },
+  "192.168.0.79": {
+    "ip": "192.168.0.79",
+    "mac": "00:1A:2B:4f:77:e5",
+    "hostname": "device-79.local",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 21.182532009900548,
+    "quantum_signature": 906112652,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.81": {
+    "ip": "192.168.0.81",
+    "mac": "00:1A:2B:51:75:1f",
+    "hostname": "device-81.home",
+    "device_type": "router",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http"
+    ],
+    "vulnerability_score": 74.71956914637178,
+    "quantum_signature": 1301529860,
+    "is_compromised": true,
+    "session_token": "cf94bd22c68a3d54"
+  },
+  "192.168.0.86": {
+    "ip": "192.168.0.86",
+    "mac": "00:1A:2B:56:80:9f",
+    "hostname": "device-86.corp",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 48.595514160996785,
+    "quantum_signature": 1575833436,
+    "is_compromised": true,
+    "session_token": "a4087733edc0589f"
+  },
+  "192.168.0.87": {
+    "ip": "192.168.0.87",
+    "mac": "00:1A:2B:57:cf:9e",
+    "hostname": "device-87.home",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 38.250851054509624,
+    "quantum_signature": 1630573363,
+    "is_compromised": true,
+    "session_token": "f8ddfeb39df45561"
+  },
+  "192.168.0.88": {
+    "ip": "192.168.0.88",
+    "mac": "00:1A:2B:58:6a:f0",
+    "hostname": "device-88.corp",
+    "device_type": "mobile",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      80,
+      443
+    ],
+    "services": [
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 33.90557541945435,
+    "quantum_signature": 116387379,
+    "is_compromised": true,
+    "session_token": "b138576e4e66078e"
+  },
+  "192.168.0.89": {
+    "ip": "192.168.0.89",
+    "mac": "00:1A:2B:59:eb:27",
+    "hostname": "device-89.lan",
+    "device_type": "iot_device",
+    "os_info": "macOS 14",
+    "open_ports": [
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 65.27610481188535,
+    "quantum_signature": 2001405601,
+    "is_compromised": true,
+    "session_token": "48acfa97ede6a937"
+  },
+  "192.168.0.96": {
+    "ip": "192.168.0.96",
+    "mac": "00:1A:2B:60:56:f0",
+    "hostname": "device-96.corp",
+    "device_type": "iot_device",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 65.10734579430127,
+    "quantum_signature": 1274624168,
+    "is_compromised": true,
+    "session_token": "643b1e85efd02dc0"
+  },
+  "192.168.0.98": {
+    "ip": "192.168.0.98",
+    "mac": "00:1A:2B:62:cf:dc",
+    "hostname": "device-98.corp",
+    "device_type": "mobile",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "mysql"
+    ],
+    "vulnerability_score": 24.283011370390568,
+    "quantum_signature": 1215424000,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.100": {
+    "ip": "192.168.0.100",
+    "mac": "00:1A:2B:64:04:1e",
+    "hostname": "device-100.home",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 67.24009022966618,
+    "quantum_signature": 1302316425,
+    "is_compromised": true,
+    "session_token": "65fa231e8ff0b3e2"
+  },
+  "192.168.0.105": {
+    "ip": "192.168.0.105",
+    "mac": "00:1A:2B:69:b3:ae",
+    "hostname": "device-105.office",
+    "device_type": "server",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80,
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 21.41461900895005,
+    "quantum_signature": 339493326,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.106": {
+    "ip": "192.168.0.106",
+    "mac": "00:1A:2B:6a:c3:62",
+    "hostname": "device-106.home",
+    "device_type": "printer",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 24.701991443317127,
+    "quantum_signature": 483060061,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.108": {
+    "ip": "192.168.0.108",
+    "mac": "00:1A:2B:6c:ef:50",
+    "hostname": "device-108.corp",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      445
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 65.46134636673841,
+    "quantum_signature": 271029085,
+    "is_compromised": true,
+    "session_token": "388a3041ec9178cb"
+  },
+  "192.168.0.113": {
+    "ip": "192.168.0.113",
+    "mac": "00:1A:2B:71:9f:86",
+    "hostname": "device-113.local",
+    "device_type": "camera",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 67.92970587723389,
+    "quantum_signature": 383817288,
+    "is_compromised": true,
+    "session_token": "6d26ef13f1c2c192"
+  },
+  "192.168.0.114": {
+    "ip": "192.168.0.114",
+    "mac": "00:1A:2B:72:de:be",
+    "hostname": "device-114.home",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 68.58801277099226,
+    "quantum_signature": 344188389,
+    "is_compromised": true,
+    "session_token": "fd06641f5cf4b3b0"
+  },
+  "192.168.0.116": {
+    "ip": "192.168.0.116",
+    "mac": "00:1A:2B:74:85:15",
+    "hostname": "device-116.local",
+    "device_type": "printer",
+    "os_info": "iOS 17",
+    "open_ports": [],
+    "services": [
+      "http",
+      "ssh"
+    ],
+    "vulnerability_score": 31.930529203806472,
+    "quantum_signature": 1743512419,
+    "is_compromised": true,
+    "session_token": "adcf12339c7e0f87"
+  },
+  "192.168.0.122": {
+    "ip": "192.168.0.122",
+    "mac": "00:1A:2B:7a:67:5e",
+    "hostname": "device-122.local",
+    "device_type": "iot_device",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 89.32835860444274,
+    "quantum_signature": 1129662548,
+    "is_compromised": true,
+    "session_token": "ae1ed62ea95586a4"
+  },
+  "192.168.0.139": {
+    "ip": "192.168.0.139",
+    "mac": "00:1A:2B:8b:af:f2",
+    "hostname": "device-139.corp",
+    "device_type": "server",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 42.27500596940146,
+    "quantum_signature": 60452215,
+    "is_compromised": true,
+    "session_token": "f872a71b30f818bc"
+  },
+  "192.168.0.143": {
+    "ip": "192.168.0.143",
+    "mac": "00:1A:2B:8f:e1:87",
+    "hostname": "device-143.corp",
+    "device_type": "camera",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp"
+    ],
+    "vulnerability_score": 30.478518207237478,
+    "quantum_signature": 626345133,
+    "is_compromised": true,
+    "session_token": "4502e9540431009e"
+  },
+  "192.168.0.144": {
+    "ip": "192.168.0.144",
+    "mac": "00:1A:2B:90:27:57",
+    "hostname": "device-144.corp",
+    "device_type": "workstation",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      80,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 39.33495172248811,
+    "quantum_signature": 277693164,
+    "is_compromised": true,
+    "session_token": "8864edadd4908f60"
+  },
+  "192.168.0.145": {
+    "ip": "192.168.0.145",
+    "mac": "00:1A:2B:91:20:d4",
+    "hostname": "device-145.lan",
+    "device_type": "router",
+    "os_info": "Windows 11",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 34.464475500816754,
+    "quantum_signature": 517081235,
+    "is_compromised": true,
+    "session_token": "52d400d58dae9c22"
+  },
+  "192.168.0.150": {
+    "ip": "192.168.0.150",
+    "mac": "00:1A:2B:96:63:d5",
+    "hostname": "device-150.home",
+    "device_type": "mobile",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      443
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 80.71123675895876,
+    "quantum_signature": 850678691,
+    "is_compromised": true,
+    "session_token": "88c641ce79a02bf6"
+  },
+  "192.168.0.154": {
+    "ip": "192.168.0.154",
+    "mac": "00:1A:2B:9a:da:d9",
+    "hostname": "device-154.local",
+    "device_type": "mobile",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 46.180855446763864,
+    "quantum_signature": 488603907,
+    "is_compromised": true,
+    "session_token": "b308c778b3b71d3a"
+  },
+  "192.168.0.163": {
+    "ip": "192.168.0.163",
+    "mac": "00:1A:2B:a3:26:a4",
+    "hostname": "device-163.corp",
+    "device_type": "router",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      8080
+    ],
+    "services": [
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 94.21472377500073,
+    "quantum_signature": 1553991307,
+    "is_compromised": true,
+    "session_token": "9dd0bfd130f7b5a7"
+  },
+  "192.168.0.167": {
+    "ip": "192.168.0.167",
+    "mac": "00:1A:2B:a7:46:57",
+    "hostname": "device-167.local",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      80,
+      443,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 72.83937251874798,
+    "quantum_signature": 1577478564,
+    "is_compromised": true,
+    "session_token": "b2cd5d251ffe8ef4"
+  },
+  "192.168.0.168": {
+    "ip": "192.168.0.168",
+    "mac": "00:1A:2B:a8:37:f9",
+    "hostname": "device-168.local",
+    "device_type": "router",
+    "os_info": "macOS 14",
+    "open_ports": [],
+    "services": [
+      "rdp"
+    ],
+    "vulnerability_score": 62.35583927835791,
+    "quantum_signature": 2142509839,
+    "is_compromised": true,
+    "session_token": "4ba91eee87c12964"
+  },
+  "192.168.0.169": {
+    "ip": "192.168.0.169",
+    "mac": "00:1A:2B:a9:2a:9d",
+    "hostname": "device-169.corp",
+    "device_type": "workstation",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "smb"
+    ],
+    "vulnerability_score": 52.110612506900424,
+    "quantum_signature": 808668193,
+    "is_compromised": true,
+    "session_token": "7dc9418e75644f3c"
+  },
+  "192.168.0.170": {
+    "ip": "192.168.0.170",
+    "mac": "00:1A:2B:aa:78:f2",
+    "hostname": "device-170.local",
+    "device_type": "camera",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 26.51101663514885,
+    "quantum_signature": 1194224730,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.171": {
+    "ip": "192.168.0.171",
+    "mac": "00:1A:2B:ab:26:7f",
+    "hostname": "device-171.office",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      445,
+      3389
+    ],
+    "services": [
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 46.608998882380874,
+    "quantum_signature": 1537613920,
+    "is_compromised": true,
+    "session_token": "7863ca1019d52a5e"
+  },
+  "192.168.0.172": {
+    "ip": "192.168.0.172",
+    "mac": "00:1A:2B:ac:19:a7",
+    "hostname": "device-172.office",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 78.18867567105964,
+    "quantum_signature": 1703932429,
+    "is_compromised": true,
+    "session_token": "5217497391445db3"
+  },
+  "192.168.0.175": {
+    "ip": "192.168.0.175",
+    "mac": "00:1A:2B:af:bc:86",
+    "hostname": "device-175.office",
+    "device_type": "mobile",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22
+    ],
+    "services": [
+      "mysql"
+    ],
+    "vulnerability_score": 77.51362223969039,
+    "quantum_signature": 1886073094,
+    "is_compromised": true,
+    "session_token": "73afc80655939044"
+  },
+  "192.168.0.182": {
+    "ip": "192.168.0.182",
+    "mac": "00:1A:2B:b6:cb:02",
+    "hostname": "device-182.local",
+    "device_type": "camera",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "ssh"
+    ],
+    "vulnerability_score": 36.12305003517248,
+    "quantum_signature": 76305123,
+    "is_compromised": true,
+    "session_token": "a7719d1084c6fff6"
+  },
+  "192.168.0.183": {
+    "ip": "192.168.0.183",
+    "mac": "00:1A:2B:b7:d0:44",
+    "hostname": "device-183.local",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 52.312623801055345,
+    "quantum_signature": 1022111539,
+    "is_compromised": true,
+    "session_token": "194f454426471638"
+  },
+  "192.168.0.186": {
+    "ip": "192.168.0.186",
+    "mac": "00:1A:2B:ba:84:45",
+    "hostname": "device-186.office",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [],
+    "services": [
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 90.86101907368214,
+    "quantum_signature": 667112870,
+    "is_compromised": true,
+    "session_token": "3edad6b97ab83ef9"
+  },
+  "192.168.0.190": {
+    "ip": "192.168.0.190",
+    "mac": "00:1A:2B:be:36:2c",
+    "hostname": "device-190.home",
+    "device_type": "mobile",
+    "os_info": "macOS 14",
+    "open_ports": [
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 35.56307827342982,
+    "quantum_signature": 626704620,
+    "is_compromised": true,
+    "session_token": "24634b8c34041bfd"
+  },
+  "192.168.0.198": {
+    "ip": "192.168.0.198",
+    "mac": "00:1A:2B:c6:27:97",
+    "hostname": "device-198.corp",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 88.28178466661528,
+    "quantum_signature": 1249567622,
+    "is_compromised": true,
+    "session_token": "9b9d08be2abc3192"
+  },
+  "192.168.0.199": {
+    "ip": "192.168.0.199",
+    "mac": "00:1A:2B:c7:75:e8",
+    "hostname": "device-199.local",
+    "device_type": "camera",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 39.65254699302312,
+    "quantum_signature": 1233296772,
+    "is_compromised": true,
+    "session_token": "001b278308e07110"
+  },
+  "192.168.0.203": {
+    "ip": "192.168.0.203",
+    "mac": "00:1A:2B:cb:ec:78",
+    "hostname": "device-203.local",
+    "device_type": "mobile",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      443,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 89.18437827874715,
+    "quantum_signature": 731966671,
+    "is_compromised": true,
+    "session_token": "8ca2cca32141cc5e"
+  },
+  "192.168.0.205": {
+    "ip": "192.168.0.205",
+    "mac": "00:1A:2B:cd:bf:09",
+    "hostname": "device-205.lan",
+    "device_type": "camera",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 94.49399118438346,
+    "quantum_signature": 718291403,
+    "is_compromised": true,
+    "session_token": "153650ae0a678288"
+  },
+  "192.168.0.212": {
+    "ip": "192.168.0.212",
+    "mac": "00:1A:2B:d4:89:62",
+    "hostname": "device-212.local",
+    "device_type": "router",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 23.219744901300746,
+    "quantum_signature": 1125652522,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.213": {
+    "ip": "192.168.0.213",
+    "mac": "00:1A:2B:d5:55:f9",
+    "hostname": "device-213.local",
+    "device_type": "router",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 62.50904877688654,
+    "quantum_signature": 710307227,
+    "is_compromised": true,
+    "session_token": "e764d6303aa36c1e"
+  },
+  "192.168.0.216": {
+    "ip": "192.168.0.216",
+    "mac": "00:1A:2B:d8:ba:06",
+    "hostname": "device-216.local",
+    "device_type": "router",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 42.395749793546585,
+    "quantum_signature": 1508992448,
+    "is_compromised": true,
+    "session_token": "dffa55cf8eb34d2a"
+  },
+  "192.168.0.220": {
+    "ip": "192.168.0.220",
+    "mac": "00:1A:2B:dc:ff:74",
+    "hostname": "device-220.home",
+    "device_type": "printer",
+    "os_info": "iOS 17",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "ssh"
+    ],
+    "vulnerability_score": 77.00203835368865,
+    "quantum_signature": 762054794,
+    "is_compromised": true,
+    "session_token": "8ff2777430b8fd8b"
+  },
+  "192.168.0.221": {
+    "ip": "192.168.0.221",
+    "mac": "00:1A:2B:dd:52:72",
+    "hostname": "device-221.lan",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 62.20187756232037,
+    "quantum_signature": 926125884,
+    "is_compromised": true,
+    "session_token": "e8b37e5adab024f4"
+  },
+  "192.168.0.227": {
+    "ip": "192.168.0.227",
+    "mac": "00:1A:2B:e3:5e:82",
+    "hostname": "device-227.home",
+    "device_type": "printer",
+    "os_info": "Windows 11",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 54.77276854481852,
+    "quantum_signature": 1461814791,
+    "is_compromised": true,
+    "session_token": "f2040ba2deab9139"
+  },
+  "192.168.0.229": {
+    "ip": "192.168.0.229",
+    "mac": "00:1A:2B:e5:1e:1b",
+    "hostname": "device-229.corp",
+    "device_type": "mobile",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 36.28414337730484,
+    "quantum_signature": 1583125334,
+    "is_compromised": true,
+    "session_token": "3725b7fac2868156"
+  },
+  "192.168.0.230": {
+    "ip": "192.168.0.230",
+    "mac": "00:1A:2B:e6:a3:49",
+    "hostname": "device-230.office",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 86.85202329641898,
+    "quantum_signature": 1605798126,
+    "is_compromised": true,
+    "session_token": "a4bf8611880a1088"
+  },
+  "192.168.0.231": {
+    "ip": "192.168.0.231",
+    "mac": "00:1A:2B:e7:db:4c",
+    "hostname": "device-231.lan",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 80.31858690118041,
+    "quantum_signature": 1394950832,
+    "is_compromised": true,
+    "session_token": "78672922fec621a4"
+  },
+  "192.168.0.232": {
+    "ip": "192.168.0.232",
+    "mac": "00:1A:2B:e8:ea:ae",
+    "hostname": "device-232.corp",
+    "device_type": "printer",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      443,
+      3389
+    ],
+    "services": [
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 78.5721942567287,
+    "quantum_signature": 1540625242,
+    "is_compromised": true,
+    "session_token": "5972ed7ca952c348"
+  },
+  "192.168.0.236": {
+    "ip": "192.168.0.236",
+    "mac": "00:1A:2B:ec:9a:f7",
+    "hostname": "device-236.lan",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "https",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 84.20154922979397,
+    "quantum_signature": 1179573390,
+    "is_compromised": true,
+    "session_token": "9defed87c1c73f1d"
+  },
+  "192.168.0.237": {
+    "ip": "192.168.0.237",
+    "mac": "00:1A:2B:ed:8b:38",
+    "hostname": "device-237.corp",
+    "device_type": "mobile",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 87.16198875870256,
+    "quantum_signature": 2083625466,
+    "is_compromised": true,
+    "session_token": "d13b34a4e8ac07f6"
+  },
+  "192.168.0.244": {
+    "ip": "192.168.0.244",
+    "mac": "00:1A:2B:f4:33:79",
+    "hostname": "device-244.home",
+    "device_type": "router",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 80.02694425094352,
+    "quantum_signature": 1542276902,
+    "is_compromised": true,
+    "session_token": "a5252b10c710e033"
+  },
+  "192.168.0.245": {
+    "ip": "192.168.0.245",
+    "mac": "00:1A:2B:f5:ad:01",
+    "hostname": "device-245.local",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80
+    ],
+    "services": [
+      "rdp"
+    ],
+    "vulnerability_score": 57.01793677627668,
+    "quantum_signature": 57507780,
+    "is_compromised": true,
+    "session_token": "abb2a58d3fc3b29d"
+  },
+  "192.168.0.249": {
+    "ip": "192.168.0.249",
+    "mac": "00:1A:2B:f9:a6:d5",
+    "hostname": "device-249.home",
+    "device_type": "router",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 66.6890024296608,
+    "quantum_signature": 1226054196,
+    "is_compromised": true,
+    "session_token": "7d640d5e4145bb8b"
+  },
+  "192.168.0.250": {
+    "ip": "192.168.0.250",
+    "mac": "00:1A:2B:fa:e4:4e",
+    "hostname": "device-250.home",
+    "device_type": "server",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 92.55372630208001,
+    "quantum_signature": 1761858691,
+    "is_compromised": true,
+    "session_token": "780ec57252b917be"
+  },
+  "192.168.1.9": {
+    "ip": "192.168.1.9",
+    "mac": "00:1A:2B:09:44:2e",
+    "hostname": "device-9.local",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 78.02922635626678,
+    "quantum_signature": 786788910,
+    "is_compromised": true,
+    "session_token": "e290807b9d24aecc"
+  },
+  "192.168.1.11": {
+    "ip": "192.168.1.11",
+    "mac": "00:1A:2B:0b:4c:7d",
+    "hostname": "device-11.lan",
+    "device_type": "mobile",
+    "os_info": "Windows 11",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 46.814307236633084,
+    "quantum_signature": 1603769829,
+    "is_compromised": true,
+    "session_token": "33d75e6f3ae6f122"
+  },
+  "192.168.1.12": {
+    "ip": "192.168.1.12",
+    "mac": "00:1A:2B:0c:17:91",
+    "hostname": "device-12.lan",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      80,
+      443,
+      3389
+    ],
+    "services": [
+      "http"
+    ],
+    "vulnerability_score": 69.134570376314,
+    "quantum_signature": 31659441,
+    "is_compromised": true,
+    "session_token": "2d2f37c938fa7ef7"
+  },
+  "192.168.1.16": {
+    "ip": "192.168.1.16",
+    "mac": "00:1A:2B:10:6d:7a",
+    "hostname": "device-16.corp",
+    "device_type": "camera",
+    "os_info": "macOS 14",
+    "open_ports": [
+      443,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 76.98168185850983,
+    "quantum_signature": 2141824165,
+    "is_compromised": true,
+    "session_token": "0ac3039e86bb47e4"
+  },
+  "192.168.1.17": {
+    "ip": "192.168.1.17",
+    "mac": "00:1A:2B:11:6f:a7",
+    "hostname": "device-17.lan",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 34.87753142167025,
+    "quantum_signature": 961532468,
+    "is_compromised": true,
+    "session_token": "5dbeca0ea7f790ba"
+  },
+  "192.168.1.29": {
+    "ip": "192.168.1.29",
+    "mac": "00:1A:2B:1d:0a:dd",
+    "hostname": "device-29.home",
+    "device_type": "server",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https"
+    ],
+    "vulnerability_score": 72.85139631553012,
+    "quantum_signature": 1501016626,
+    "is_compromised": true,
+    "session_token": "493c374c03f5c7f1"
+  },
+  "192.168.1.32": {
+    "ip": "192.168.1.32",
+    "mac": "00:1A:2B:20:b6:b0",
+    "hostname": "device-32.corp",
+    "device_type": "workstation",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 48.83532127533771,
+    "quantum_signature": 707769693,
+    "is_compromised": true,
+    "session_token": "7ba6d37db962b4ad"
+  },
+  "192.168.1.33": {
+    "ip": "192.168.1.33",
+    "mac": "00:1A:2B:21:5a:77",
+    "hostname": "device-33.corp",
+    "device_type": "router",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "https"
+    ],
+    "vulnerability_score": 80.84026870044498,
+    "quantum_signature": 2005167505,
+    "is_compromised": true,
+    "session_token": "d8426c0935133265"
+  },
+  "192.168.1.37": {
+    "ip": "192.168.1.37",
+    "mac": "00:1A:2B:25:9f:c7",
+    "hostname": "device-37.corp",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 79.24282622693978,
+    "quantum_signature": 554273370,
+    "is_compromised": true,
+    "session_token": "f57ccc6df5fc02c5"
+  },
+  "192.168.1.42": {
+    "ip": "192.168.1.42",
+    "mac": "00:1A:2B:2a:32:50",
+    "hostname": "device-42.corp",
+    "device_type": "mobile",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 40.622879372754284,
+    "quantum_signature": 905109712,
+    "is_compromised": true,
+    "session_token": "1880833e66c502b3"
+  },
+  "192.168.1.44": {
+    "ip": "192.168.1.44",
+    "mac": "00:1A:2B:2c:42:75",
+    "hostname": "device-44.lan",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 51.02277617070973,
+    "quantum_signature": 1700208609,
+    "is_compromised": true,
+    "session_token": "eb76fdb85aa1d6da"
+  },
+  "192.168.1.45": {
+    "ip": "192.168.1.45",
+    "mac": "00:1A:2B:2d:cb:c5",
+    "hostname": "device-45.local",
+    "device_type": "camera",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "https"
+    ],
+    "vulnerability_score": 29.55574024486713,
+    "quantum_signature": 2068119387,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.51": {
+    "ip": "192.168.1.51",
+    "mac": "00:1A:2B:33:d6:ef",
+    "hostname": "device-51.home",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      443
+    ],
+    "services": [
+      "ssh"
+    ],
+    "vulnerability_score": 25.546165089277228,
+    "quantum_signature": 983492381,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.61": {
+    "ip": "192.168.1.61",
+    "mac": "00:1A:2B:3d:cf:f6",
+    "hostname": "device-61.local",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 77.82558929569572,
+    "quantum_signature": 1524007059,
+    "is_compromised": true,
+    "session_token": "5e4023949f31cc5e"
+  },
+  "192.168.1.69": {
+    "ip": "192.168.1.69",
+    "mac": "00:1A:2B:45:4e:5d",
+    "hostname": "device-69.local",
+    "device_type": "server",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      445,
+      8080
+    ],
+    "services": [],
+    "vulnerability_score": 86.9866548173947,
+    "quantum_signature": 953473845,
+    "is_compromised": true,
+    "session_token": "a6bb578889d52212"
+  },
+  "192.168.1.71": {
+    "ip": "192.168.1.71",
+    "mac": "00:1A:2B:47:9e:1d",
+    "hostname": "device-71.office",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [],
+    "services": [
+      "http",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 39.52372926547666,
+    "quantum_signature": 239999114,
+    "is_compromised": true,
+    "session_token": "83cdf670fc40faa2"
+  },
+  "192.168.1.72": {
+    "ip": "192.168.1.72",
+    "mac": "00:1A:2B:48:55:fd",
+    "hostname": "device-72.lan",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 24.575315302939387,
+    "quantum_signature": 1564515794,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.75": {
+    "ip": "192.168.1.75",
+    "mac": "00:1A:2B:4b:f9:45",
+    "hostname": "device-75.home",
+    "device_type": "camera",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 83.4405259796045,
+    "quantum_signature": 2106851582,
+    "is_compromised": true,
+    "session_token": "d4225734f85f7e01"
+  },
+  "192.168.1.81": {
+    "ip": "192.168.1.81",
+    "mac": "00:1A:2B:51:a0:45",
+    "hostname": "device-81.home",
+    "device_type": "camera",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 46.546023905310264,
+    "quantum_signature": 994446806,
+    "is_compromised": true,
+    "session_token": "fe744e7c0a220aa1"
+  },
+  "192.168.1.87": {
+    "ip": "192.168.1.87",
+    "mac": "00:1A:2B:57:7f:f4",
+    "hostname": "device-87.corp",
+    "device_type": "router",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 68.48741056217656,
+    "quantum_signature": 1776473810,
+    "is_compromised": true,
+    "session_token": "ac6cf020955b77fc"
+  },
+  "192.168.1.89": {
+    "ip": "192.168.1.89",
+    "mac": "00:1A:2B:59:aa:33",
+    "hostname": "device-89.home",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 76.97004671918334,
+    "quantum_signature": 1237612904,
+    "is_compromised": true,
+    "session_token": "b949d13482faeefd"
+  },
+  "192.168.1.93": {
+    "ip": "192.168.1.93",
+    "mac": "00:1A:2B:5d:a9:20",
+    "hostname": "device-93.local",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [
+      80
+    ],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 85.35165502358612,
+    "quantum_signature": 440424246,
+    "is_compromised": true,
+    "session_token": "0dea190dc826384c"
+  },
+  "192.168.1.97": {
+    "ip": "192.168.1.97",
+    "mac": "00:1A:2B:61:cd:72",
+    "hostname": "device-97.corp",
+    "device_type": "mobile",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      443
+    ],
+    "services": [
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 50.83132719966679,
+    "quantum_signature": 297873688,
+    "is_compromised": true,
+    "session_token": "161ee6c02c4ab21d"
+  },
+  "192.168.1.102": {
+    "ip": "192.168.1.102",
+    "mac": "00:1A:2B:66:f5:09",
+    "hostname": "device-102.home",
+    "device_type": "workstation",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 32.49245845559588,
+    "quantum_signature": 1848045126,
+    "is_compromised": true,
+    "session_token": "82334c209b39d548"
+  },
+  "192.168.1.103": {
+    "ip": "192.168.1.103",
+    "mac": "00:1A:2B:67:65:6c",
+    "hostname": "device-103.local",
+    "device_type": "mobile",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 82.8641234529025,
+    "quantum_signature": 1060461918,
+    "is_compromised": true,
+    "session_token": "124e60a2de3258f5"
+  },
+  "192.168.1.106": {
+    "ip": "192.168.1.106",
+    "mac": "00:1A:2B:6a:05:b4",
+    "hostname": "device-106.home",
+    "device_type": "mobile",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 54.36717249833739,
+    "quantum_signature": 933017558,
+    "is_compromised": true,
+    "session_token": "bda062201cb83cb2"
+  },
+  "192.168.1.110": {
+    "ip": "192.168.1.110",
+    "mac": "00:1A:2B:6e:d5:f0",
+    "hostname": "device-110.corp",
+    "device_type": "iot_device",
+    "os_info": "Android 14",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 73.84872767046392,
+    "quantum_signature": 777221517,
+    "is_compromised": true,
+    "session_token": "0700f630f5a2b6c6"
+  },
+  "192.168.1.112": {
+    "ip": "192.168.1.112",
+    "mac": "00:1A:2B:70:9a:46",
+    "hostname": "device-112.office",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 71.88777294230141,
+    "quantum_signature": 1345990618,
+    "is_compromised": true,
+    "session_token": "de44835f352b8ac9"
+  },
+  "192.168.1.115": {
+    "ip": "192.168.1.115",
+    "mac": "00:1A:2B:73:0d:d2",
+    "hostname": "device-115.home",
+    "device_type": "printer",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80
+    ],
+    "services": [
+      "http",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 89.72052385669654,
+    "quantum_signature": 1083560687,
+    "is_compromised": true,
+    "session_token": "8fd42452c5afeb2e"
+  },
+  "192.168.1.117": {
+    "ip": "192.168.1.117",
+    "mac": "00:1A:2B:75:80:20",
+    "hostname": "device-117.home",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 77.53783587819946,
+    "quantum_signature": 940729326,
+    "is_compromised": true,
+    "session_token": "cad932379ee818d2"
+  },
+  "192.168.1.120": {
+    "ip": "192.168.1.120",
+    "mac": "00:1A:2B:78:c4:7b",
+    "hostname": "device-120.office",
+    "device_type": "server",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 91.11996332584695,
+    "quantum_signature": 381145260,
+    "is_compromised": true,
+    "session_token": "1bddc5393aef7aa8"
+  },
+  "192.168.1.124": {
+    "ip": "192.168.1.124",
+    "mac": "00:1A:2B:7c:42:0c",
+    "hostname": "device-124.local",
+    "device_type": "printer",
+    "os_info": "iOS 17",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 67.40257981577844,
+    "quantum_signature": 853533161,
+    "is_compromised": true,
+    "session_token": "124ad554a789045a"
+  },
+  "192.168.1.126": {
+    "ip": "192.168.1.126",
+    "mac": "00:1A:2B:7e:3e:25",
+    "hostname": "device-126.home",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      443,
+      3389
+    ],
+    "services": [
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 20.263897356724886,
+    "quantum_signature": 533184085,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.127": {
+    "ip": "192.168.1.127",
+    "mac": "00:1A:2B:7f:38:3d",
+    "hostname": "device-127.local",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 44.869588649234586,
+    "quantum_signature": 1189924703,
+    "is_compromised": true,
+    "session_token": "bf1697e8adb6a3ff"
+  },
+  "192.168.1.128": {
+    "ip": "192.168.1.128",
+    "mac": "00:1A:2B:80:38:02",
+    "hostname": "device-128.office",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 68.88953437586332,
+    "quantum_signature": 1590207659,
+    "is_compromised": true,
+    "session_token": "b7e06a4ad5297c55"
+  },
+  "192.168.1.129": {
+    "ip": "192.168.1.129",
+    "mac": "00:1A:2B:81:e5:e3",
+    "hostname": "device-129.local",
+    "device_type": "iot_device",
+    "os_info": "macOS 14",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 47.88112025371842,
+    "quantum_signature": 2059241845,
+    "is_compromised": true,
+    "session_token": "f008b47721cac923"
+  },
+  "192.168.1.133": {
+    "ip": "192.168.1.133",
+    "mac": "00:1A:2B:85:6f:38",
+    "hostname": "device-133.office",
+    "device_type": "mobile",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 37.92904911222921,
+    "quantum_signature": 361179067,
+    "is_compromised": true,
+    "session_token": "03dec3d34638e3a1"
+  },
+  "192.168.1.135": {
+    "ip": "192.168.1.135",
+    "mac": "00:1A:2B:87:b1:a2",
+    "hostname": "device-135.local",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 85.94033852606974,
+    "quantum_signature": 904232250,
+    "is_compromised": true,
+    "session_token": "5cc28677b2ebf705"
+  },
+  "192.168.1.137": {
+    "ip": "192.168.1.137",
+    "mac": "00:1A:2B:89:54:0f",
+    "hostname": "device-137.lan",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80,
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 73.97920037664946,
+    "quantum_signature": 989502365,
+    "is_compromised": true,
+    "session_token": "7db5040021998e17"
+  },
+  "192.168.1.138": {
+    "ip": "192.168.1.138",
+    "mac": "00:1A:2B:8a:76:10",
+    "hostname": "device-138.lan",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https"
+    ],
+    "vulnerability_score": 32.765940988491536,
+    "quantum_signature": 1442449413,
+    "is_compromised": true,
+    "session_token": "c11bb9cc908ff28b"
+  },
+  "192.168.1.140": {
+    "ip": "192.168.1.140",
+    "mac": "00:1A:2B:8c:4d:6e",
+    "hostname": "device-140.corp",
+    "device_type": "camera",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      445
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 46.32945929491176,
+    "quantum_signature": 320143977,
+    "is_compromised": true,
+    "session_token": "2f11b49cb4b51ebd"
+  },
+  "192.168.1.142": {
+    "ip": "192.168.1.142",
+    "mac": "00:1A:2B:8e:5a:d6",
+    "hostname": "device-142.home",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 73.01947420047719,
+    "quantum_signature": 188620745,
+    "is_compromised": true,
+    "session_token": "ea9432aee31773ad"
+  },
+  "192.168.1.143": {
+    "ip": "192.168.1.143",
+    "mac": "00:1A:2B:8f:dc:0f",
+    "hostname": "device-143.lan",
+    "device_type": "mobile",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      443
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 35.501261567061036,
+    "quantum_signature": 1250129821,
+    "is_compromised": true,
+    "session_token": "08065ad08c5e496c"
+  },
+  "192.168.1.150": {
+    "ip": "192.168.1.150",
+    "mac": "00:1A:2B:96:91:dd",
+    "hostname": "device-150.office",
+    "device_type": "workstation",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 77.04889514203644,
+    "quantum_signature": 1993565742,
+    "is_compromised": true,
+    "session_token": "151bdef5214adfac"
+  },
+  "192.168.1.160": {
+    "ip": "192.168.1.160",
+    "mac": "00:1A:2B:a0:ae:73",
+    "hostname": "device-160.corp",
+    "device_type": "iot_device",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 70.94088992252804,
+    "quantum_signature": 1466658208,
+    "is_compromised": true,
+    "session_token": "1c8bb4ec58b24174"
+  },
+  "192.168.1.162": {
+    "ip": "192.168.1.162",
+    "mac": "00:1A:2B:a2:20:84",
+    "hostname": "device-162.office",
+    "device_type": "printer",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "smb"
+    ],
+    "vulnerability_score": 41.869210303699916,
+    "quantum_signature": 652832472,
+    "is_compromised": true,
+    "session_token": "66e4707bdf8088da"
+  },
+  "192.168.1.163": {
+    "ip": "192.168.1.163",
+    "mac": "00:1A:2B:a3:e7:88",
+    "hostname": "device-163.local",
+    "device_type": "printer",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 79.93230609488458,
+    "quantum_signature": 616618044,
+    "is_compromised": true,
+    "session_token": "b45edd1def5e7161"
+  },
+  "192.168.1.164": {
+    "ip": "192.168.1.164",
+    "mac": "00:1A:2B:a4:5a:67",
+    "hostname": "device-164.office",
+    "device_type": "mobile",
+    "os_info": "Android 14",
+    "open_ports": [
+      80
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 36.62290674830054,
+    "quantum_signature": 841050882,
+    "is_compromised": true,
+    "session_token": "9082e4fca14e5de0"
+  },
+  "192.168.1.166": {
+    "ip": "192.168.1.166",
+    "mac": "00:1A:2B:a6:a9:6a",
+    "hostname": "device-166.lan",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      443,
+      3389
+    ],
+    "services": [
+      "http",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 85.89305812759166,
+    "quantum_signature": 544689943,
+    "is_compromised": true,
+    "session_token": "0af66a519299e389"
+  },
+  "192.168.1.171": {
+    "ip": "192.168.1.171",
+    "mac": "00:1A:2B:ab:97:68",
+    "hostname": "device-171.lan",
+    "device_type": "camera",
+    "os_info": "Windows 11",
+    "open_ports": [
+      443,
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 50.77274715476744,
+    "quantum_signature": 1684979950,
+    "is_compromised": true,
+    "session_token": "827cc2f831649bec"
+  },
+  "192.168.1.172": {
+    "ip": "192.168.1.172",
+    "mac": "00:1A:2B:ac:05:5e",
+    "hostname": "device-172.home",
+    "device_type": "printer",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 62.193651479291375,
+    "quantum_signature": 1013411682,
+    "is_compromised": true,
+    "session_token": "5946ee2b690b68e9"
+  },
+  "192.168.1.179": {
+    "ip": "192.168.1.179",
+    "mac": "00:1A:2B:b3:e5:9c",
+    "hostname": "device-179.home",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 22.58385249564055,
+    "quantum_signature": 857224167,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.180": {
+    "ip": "192.168.1.180",
+    "mac": "00:1A:2B:b4:7d:78",
+    "hostname": "device-180.local",
+    "device_type": "printer",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 71.346608985963,
+    "quantum_signature": 1648482632,
+    "is_compromised": true,
+    "session_token": "a8aef57c8e9fe6de"
+  },
+  "192.168.1.183": {
+    "ip": "192.168.1.183",
+    "mac": "00:1A:2B:b7:d8:20",
+    "hostname": "device-183.home",
+    "device_type": "workstation",
+    "os_info": "macOS 14",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 87.17823059479825,
+    "quantum_signature": 1121747688,
+    "is_compromised": true,
+    "session_token": "11b789cd12864e1b"
+  },
+  "192.168.1.185": {
+    "ip": "192.168.1.185",
+    "mac": "00:1A:2B:b9:c7:7d",
+    "hostname": "device-185.corp",
+    "device_type": "server",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 45.6676369396214,
+    "quantum_signature": 1928271744,
+    "is_compromised": true,
+    "session_token": "de76b0913af2150e"
+  },
+  "192.168.1.189": {
+    "ip": "192.168.1.189",
+    "mac": "00:1A:2B:bd:fa:5b",
+    "hostname": "device-189.home",
+    "device_type": "camera",
+    "os_info": "macOS 14",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 35.95244491442226,
+    "quantum_signature": 1372572324,
+    "is_compromised": true,
+    "session_token": "cf5c668014045c0f"
+  },
+  "192.168.1.190": {
+    "ip": "192.168.1.190",
+    "mac": "00:1A:2B:be:f8:47",
+    "hostname": "device-190.corp",
+    "device_type": "printer",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 80.30946957869595,
+    "quantum_signature": 1507293063,
+    "is_compromised": true,
+    "session_token": "13cc7d69e46f92b1"
+  },
+  "192.168.1.197": {
+    "ip": "192.168.1.197",
+    "mac": "00:1A:2B:c5:4a:34",
+    "hostname": "device-197.corp",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 40.547708973221845,
+    "quantum_signature": 113680839,
+    "is_compromised": true,
+    "session_token": "a675c4d5364123b4"
+  },
+  "192.168.1.199": {
+    "ip": "192.168.1.199",
+    "mac": "00:1A:2B:c7:c4:e1",
+    "hostname": "device-199.corp",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      80,
+      3389
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 42.536558219560916,
+    "quantum_signature": 1674052035,
+    "is_compromised": true,
+    "session_token": "90d377ba0830e1b6"
+  },
+  "192.168.1.201": {
+    "ip": "192.168.1.201",
+    "mac": "00:1A:2B:c9:ac:c3",
+    "hostname": "device-201.corp",
+    "device_type": "camera",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      3389
+    ],
+    "services": [
+      "http",
+      "rdp"
+    ],
+    "vulnerability_score": 25.144711379944393,
+    "quantum_signature": 700223649,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.202": {
+    "ip": "192.168.1.202",
+    "mac": "00:1A:2B:ca:b4:23",
+    "hostname": "device-202.local",
+    "device_type": "iot_device",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 62.35434850270426,
+    "quantum_signature": 66176867,
+    "is_compromised": true,
+    "session_token": "db5426fbb379368f"
+  },
+  "192.168.1.209": {
+    "ip": "192.168.1.209",
+    "mac": "00:1A:2B:d1:76:06",
+    "hostname": "device-209.home",
+    "device_type": "mobile",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 79.54027865369613,
+    "quantum_signature": 1111765335,
+    "is_compromised": true,
+    "session_token": "6144f5519f8f19f8"
+  },
+  "192.168.1.211": {
+    "ip": "192.168.1.211",
+    "mac": "00:1A:2B:d3:0f:6f",
+    "hostname": "device-211.local",
+    "device_type": "workstation",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      80,
+      443
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 62.993703792997565,
+    "quantum_signature": 576143618,
+    "is_compromised": true,
+    "session_token": "86633e31295b279b"
+  },
+  "192.168.1.215": {
+    "ip": "192.168.1.215",
+    "mac": "00:1A:2B:d7:1f:e6",
+    "hostname": "device-215.lan",
+    "device_type": "printer",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 26.323311196372252,
+    "quantum_signature": 951037137,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.220": {
+    "ip": "192.168.1.220",
+    "mac": "00:1A:2B:dc:42:fd",
+    "hostname": "device-220.local",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 39.37845328938167,
+    "quantum_signature": 1235048029,
+    "is_compromised": true,
+    "session_token": "1e8d53e96b1e156a"
+  },
+  "192.168.1.225": {
+    "ip": "192.168.1.225",
+    "mac": "00:1A:2B:e1:fc:0e",
+    "hostname": "device-225.corp",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 93.73083423026856,
+    "quantum_signature": 895658188,
+    "is_compromised": true,
+    "session_token": "7c4d228aad1e75fc"
+  },
+  "192.168.1.228": {
+    "ip": "192.168.1.228",
+    "mac": "00:1A:2B:e4:73:04",
+    "hostname": "device-228.lan",
+    "device_type": "server",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 37.23301324980609,
+    "quantum_signature": 696252111,
+    "is_compromised": true,
+    "session_token": "b31b7a361977908a"
+  },
+  "192.168.1.229": {
+    "ip": "192.168.1.229",
+    "mac": "00:1A:2B:e5:be:70",
+    "hostname": "device-229.office",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [],
+    "services": [
+      "mysql"
+    ],
+    "vulnerability_score": 71.83276393942941,
+    "quantum_signature": 2138758258,
+    "is_compromised": true,
+    "session_token": "576b5a9e22fdf917"
+  },
+  "192.168.1.233": {
+    "ip": "192.168.1.233",
+    "mac": "00:1A:2B:e9:6c:b0",
+    "hostname": "device-233.local",
+    "device_type": "iot_device",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 22.590587656481517,
+    "quantum_signature": 325647240,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.1.236": {
+    "ip": "192.168.1.236",
+    "mac": "00:1A:2B:ec:b6:b1",
+    "hostname": "device-236.corp",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 85.12778026933483,
+    "quantum_signature": 158128234,
+    "is_compromised": true,
+    "session_token": "20f55d464311c59a"
+  },
+  "192.168.1.240": {
+    "ip": "192.168.1.240",
+    "mac": "00:1A:2B:f0:b9:48",
+    "hostname": "device-240.corp",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 30.672166235185838,
+    "quantum_signature": 1170457115,
+    "is_compromised": true,
+    "session_token": "45cf9d217e6b3e86"
+  },
+  "192.168.1.249": {
+    "ip": "192.168.1.249",
+    "mac": "00:1A:2B:f9:50:c9",
+    "hostname": "device-249.lan",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "mysql"
+    ],
+    "vulnerability_score": 87.38649754086617,
+    "quantum_signature": 105822347,
+    "is_compromised": true,
+    "session_token": "19f4aaf37ae39d4a"
+  },
+  "192.168.1.251": {
+    "ip": "192.168.1.251",
+    "mac": "00:1A:2B:fb:f8:90",
+    "hostname": "device-251.local",
+    "device_type": "workstation",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 63.124173411256834,
+    "quantum_signature": 650655854,
+    "is_compromised": true,
+    "session_token": "9ab24e797382989a"
+  },
+  "192.168.1.254": {
+    "ip": "192.168.1.254",
+    "mac": "00:1A:2B:fe:48:28",
+    "hostname": "device-254.local",
+    "device_type": "server",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 85.20552732522941,
+    "quantum_signature": 176064324,
+    "is_compromised": true,
+    "session_token": "a8b18a839ac4a22d"
+  },
+  "10.0.0.3": {
+    "ip": "10.0.0.3",
+    "mac": "00:1A:2B:03:60:8b",
+    "hostname": "device-3.lan",
+    "device_type": "mobile",
+    "os_info": "iOS 17",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 78.38957366329913,
+    "quantum_signature": 1239780512,
+    "is_compromised": true,
+    "session_token": "4e4e1f09c8dcd892"
+  },
+  "10.0.0.4": {
+    "ip": "10.0.0.4",
+    "mac": "00:1A:2B:04:ce:6a",
+    "hostname": "device-4.local",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 39.475836638147626,
+    "quantum_signature": 1297308225,
+    "is_compromised": true,
+    "session_token": "2624abe01a8eeb68"
+  },
+  "10.0.0.7": {
+    "ip": "10.0.0.7",
+    "mac": "00:1A:2B:07:43:d1",
+    "hostname": "device-7.office",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 75.49356803782632,
+    "quantum_signature": 907805276,
+    "is_compromised": true,
+    "session_token": "958a58705ab228b7"
+  },
+  "10.0.0.10": {
+    "ip": "10.0.0.10",
+    "mac": "00:1A:2B:0a:e6:02",
+    "hostname": "device-10.home",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      445
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 28.19547651582134,
+    "quantum_signature": 651860503,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.13": {
+    "ip": "10.0.0.13",
+    "mac": "00:1A:2B:0d:2e:87",
+    "hostname": "device-13.home",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 46.66556098634044,
+    "quantum_signature": 1103106540,
+    "is_compromised": true,
+    "session_token": "81741b8de6c124e4"
+  },
+  "10.0.0.14": {
+    "ip": "10.0.0.14",
+    "mac": "00:1A:2B:0e:6e:0f",
+    "hostname": "device-14.corp",
+    "device_type": "printer",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 61.30871967539065,
+    "quantum_signature": 412363311,
+    "is_compromised": true,
+    "session_token": "e78cd02c2fc4d165"
+  },
+  "10.0.0.23": {
+    "ip": "10.0.0.23",
+    "mac": "00:1A:2B:17:cc:85",
+    "hostname": "device-23.home",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 89.12757599778129,
+    "quantum_signature": 844335742,
+    "is_compromised": true,
+    "session_token": "9b9e0cc68000abe2"
+  },
+  "10.0.0.28": {
+    "ip": "10.0.0.28",
+    "mac": "00:1A:2B:1c:91:5f",
+    "hostname": "device-28.home",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 43.56916548977809,
+    "quantum_signature": 530246777,
+    "is_compromised": true,
+    "session_token": "7b8f74b4cd0ab39a"
+  },
+  "10.0.0.47": {
+    "ip": "10.0.0.47",
+    "mac": "00:1A:2B:2f:b6:07",
+    "hostname": "device-47.office",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 82.71438065897752,
+    "quantum_signature": 1360167589,
+    "is_compromised": true,
+    "session_token": "6c3033f56541ddd7"
+  },
+  "10.0.0.51": {
+    "ip": "10.0.0.51",
+    "mac": "00:1A:2B:33:35:53",
+    "hostname": "device-51.home",
+    "device_type": "mobile",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      443
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 93.82066859314398,
+    "quantum_signature": 1254383265,
+    "is_compromised": true,
+    "session_token": "b12f599a142cd4f1"
+  },
+  "10.0.0.52": {
+    "ip": "10.0.0.52",
+    "mac": "00:1A:2B:34:cb:b8",
+    "hostname": "device-52.lan",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 27.302812380068218,
+    "quantum_signature": 1988697138,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.54": {
+    "ip": "10.0.0.54",
+    "mac": "00:1A:2B:36:4e:de",
+    "hostname": "device-54.corp",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 85.37419627834097,
+    "quantum_signature": 1109809334,
+    "is_compromised": true,
+    "session_token": "c6bfb5fc128371d3"
+  },
+  "10.0.0.55": {
+    "ip": "10.0.0.55",
+    "mac": "00:1A:2B:37:6d:93",
+    "hostname": "device-55.corp",
+    "device_type": "workstation",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 87.46001677867773,
+    "quantum_signature": 126061203,
+    "is_compromised": true,
+    "session_token": "67ad1db1f247a034"
+  },
+  "10.0.0.56": {
+    "ip": "10.0.0.56",
+    "mac": "00:1A:2B:38:3c:62",
+    "hostname": "device-56.lan",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 22.509924940951464,
+    "quantum_signature": 1050800094,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.59": {
+    "ip": "10.0.0.59",
+    "mac": "00:1A:2B:3b:b1:4a",
+    "hostname": "device-59.lan",
+    "device_type": "router",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      80,
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 77.86550199129948,
+    "quantum_signature": 1758828732,
+    "is_compromised": true,
+    "session_token": "26293c7ef443a0bb"
+  },
+  "10.0.0.61": {
+    "ip": "10.0.0.61",
+    "mac": "00:1A:2B:3d:b7:b1",
+    "hostname": "device-61.local",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 52.09397328492399,
+    "quantum_signature": 1755342915,
+    "is_compromised": true,
+    "session_token": "6d1da99b33739d9a"
+  },
+  "10.0.0.62": {
+    "ip": "10.0.0.62",
+    "mac": "00:1A:2B:3e:88:22",
+    "hostname": "device-62.office",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      445,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 47.664410381026926,
+    "quantum_signature": 464706755,
+    "is_compromised": true,
+    "session_token": "530d6802d813871a"
+  },
+  "10.0.0.66": {
+    "ip": "10.0.0.66",
+    "mac": "00:1A:2B:42:27:f8",
+    "hostname": "device-66.local",
+    "device_type": "router",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 81.9720424110612,
+    "quantum_signature": 1494243308,
+    "is_compromised": true,
+    "session_token": "fc7909c1479da026"
+  },
+  "10.0.0.70": {
+    "ip": "10.0.0.70",
+    "mac": "00:1A:2B:46:5d:54",
+    "hostname": "device-70.office",
+    "device_type": "router",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      443,
+      445
+    ],
+    "services": [
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 21.409194251716826,
+    "quantum_signature": 419314493,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.75": {
+    "ip": "10.0.0.75",
+    "mac": "00:1A:2B:4b:f0:61",
+    "hostname": "device-75.local",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 28.871325164344313,
+    "quantum_signature": 1706594277,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.77": {
+    "ip": "10.0.0.77",
+    "mac": "00:1A:2B:4d:9e:f7",
+    "hostname": "device-77.office",
+    "device_type": "server",
+    "os_info": "macOS 14",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 41.47340353245875,
+    "quantum_signature": 1781972430,
+    "is_compromised": true,
+    "session_token": "03a32562cf925c78"
+  },
+  "10.0.0.78": {
+    "ip": "10.0.0.78",
+    "mac": "00:1A:2B:4e:38:60",
+    "hostname": "device-78.local",
+    "device_type": "router",
+    "os_info": "macOS 14",
+    "open_ports": [
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 68.20175472739805,
+    "quantum_signature": 684278933,
+    "is_compromised": true,
+    "session_token": "ed4a428d1cb7a1f4"
+  },
+  "10.0.0.80": {
+    "ip": "10.0.0.80",
+    "mac": "00:1A:2B:50:7b:c1",
+    "hostname": "device-80.local",
+    "device_type": "server",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 56.96731898516434,
+    "quantum_signature": 982679157,
+    "is_compromised": true,
+    "session_token": "fcc08f0e0d95091a"
+  },
+  "10.0.0.81": {
+    "ip": "10.0.0.81",
+    "mac": "00:1A:2B:51:f1:44",
+    "hostname": "device-81.local",
+    "device_type": "iot_device",
+    "os_info": "Android 14",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 92.58460625803687,
+    "quantum_signature": 1364151299,
+    "is_compromised": true,
+    "session_token": "116631699cea2d91"
+  },
+  "10.0.0.87": {
+    "ip": "10.0.0.87",
+    "mac": "00:1A:2B:57:9b:85",
+    "hostname": "device-87.corp",
+    "device_type": "iot_device",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 79.69020337007483,
+    "quantum_signature": 892876116,
+    "is_compromised": true,
+    "session_token": "ce11b88b3b132662"
+  },
+  "10.0.0.91": {
+    "ip": "10.0.0.91",
+    "mac": "00:1A:2B:5b:45:bc",
+    "hostname": "device-91.home",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 20.903793361236893,
+    "quantum_signature": 65083602,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.92": {
+    "ip": "10.0.0.92",
+    "mac": "00:1A:2B:5c:13:6e",
+    "hostname": "device-92.office",
+    "device_type": "router",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      443
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 46.188905767569,
+    "quantum_signature": 323224410,
+    "is_compromised": true,
+    "session_token": "be54afb525b73fef"
+  },
+  "10.0.0.93": {
+    "ip": "10.0.0.93",
+    "mac": "00:1A:2B:5d:5c:6f",
+    "hostname": "device-93.corp",
+    "device_type": "server",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 28.566633578831453,
+    "quantum_signature": 370393263,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.99": {
+    "ip": "10.0.0.99",
+    "mac": "00:1A:2B:63:fd:ac",
+    "hostname": "device-99.local",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 31.95229012127385,
+    "quantum_signature": 209845401,
+    "is_compromised": true,
+    "session_token": "67c8f62666cc98b3"
+  },
+  "10.0.0.100": {
+    "ip": "10.0.0.100",
+    "mac": "00:1A:2B:64:9f:f5",
+    "hostname": "device-100.lan",
+    "device_type": "iot_device",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 27.070550269135204,
+    "quantum_signature": 1627089740,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.101": {
+    "ip": "10.0.0.101",
+    "mac": "00:1A:2B:65:cb:81",
+    "hostname": "device-101.office",
+    "device_type": "server",
+    "os_info": "iOS 17",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 39.101278937605684,
+    "quantum_signature": 401528762,
+    "is_compromised": true,
+    "session_token": "d4e13174ceb83818"
+  },
+  "10.0.0.105": {
+    "ip": "10.0.0.105",
+    "mac": "00:1A:2B:69:bb:5c",
+    "hostname": "device-105.corp",
+    "device_type": "workstation",
+    "os_info": "Windows 11",
+    "open_ports": [],
+    "services": [
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 41.143207585124415,
+    "quantum_signature": 1334478449,
+    "is_compromised": true,
+    "session_token": "78981b13c17c1abb"
+  },
+  "10.0.0.114": {
+    "ip": "10.0.0.114",
+    "mac": "00:1A:2B:72:5c:0f",
+    "hostname": "device-114.corp",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 72.71314691702091,
+    "quantum_signature": 1087078056,
+    "is_compromised": true,
+    "session_token": "e72520acbf4bcd76"
+  },
+  "10.0.0.115": {
+    "ip": "10.0.0.115",
+    "mac": "00:1A:2B:73:3d:96",
+    "hostname": "device-115.home",
+    "device_type": "server",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 68.18081078732672,
+    "quantum_signature": 1452854455,
+    "is_compromised": true,
+    "session_token": "384a6ef0ddad4a8d"
+  },
+  "10.0.0.123": {
+    "ip": "10.0.0.123",
+    "mac": "00:1A:2B:7b:28:57",
+    "hostname": "device-123.office",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [],
+    "services": [
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 80.5968049727316,
+    "quantum_signature": 282606740,
+    "is_compromised": true,
+    "session_token": "2f681b2f4a1f79b5"
+  },
+  "10.0.0.124": {
+    "ip": "10.0.0.124",
+    "mac": "00:1A:2B:7c:91:f5",
+    "hostname": "device-124.lan",
+    "device_type": "iot_device",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 84.81145850581485,
+    "quantum_signature": 1310621278,
+    "is_compromised": true,
+    "session_token": "c7bd306856216787"
+  },
+  "10.0.0.125": {
+    "ip": "10.0.0.125",
+    "mac": "00:1A:2B:7d:62:7e",
+    "hostname": "device-125.lan",
+    "device_type": "mobile",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 28.912092101872002,
+    "quantum_signature": 2012682153,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.131": {
+    "ip": "10.0.0.131",
+    "mac": "00:1A:2B:83:34:e6",
+    "hostname": "device-131.office",
+    "device_type": "workstation",
+    "os_info": "macOS 14",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "mysql"
+    ],
+    "vulnerability_score": 71.12404617083334,
+    "quantum_signature": 495878393,
+    "is_compromised": true,
+    "session_token": "a9ed54e55c1370ff"
+  },
+  "10.0.0.135": {
+    "ip": "10.0.0.135",
+    "mac": "00:1A:2B:87:50:28",
+    "hostname": "device-135.corp",
+    "device_type": "camera",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 50.87617840983182,
+    "quantum_signature": 471342659,
+    "is_compromised": true,
+    "session_token": "e3ada68ade71cd7c"
+  },
+  "10.0.0.146": {
+    "ip": "10.0.0.146",
+    "mac": "00:1A:2B:92:23:01",
+    "hostname": "device-146.office",
+    "device_type": "iot_device",
+    "os_info": "Android 14",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 37.31062190140396,
+    "quantum_signature": 1037150991,
+    "is_compromised": true,
+    "session_token": "f9cb87e665172415"
+  },
+  "10.0.0.149": {
+    "ip": "10.0.0.149",
+    "mac": "00:1A:2B:95:d4:11",
+    "hostname": "device-149.corp",
+    "device_type": "server",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "http"
+    ],
+    "vulnerability_score": 77.10552696014298,
+    "quantum_signature": 571383689,
+    "is_compromised": true,
+    "session_token": "dbcee8dc7cb5166d"
+  },
+  "10.0.0.150": {
+    "ip": "10.0.0.150",
+    "mac": "00:1A:2B:96:89:e7",
+    "hostname": "device-150.corp",
+    "device_type": "router",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      443
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 51.513794665226555,
+    "quantum_signature": 1103202716,
+    "is_compromised": true,
+    "session_token": "af9626813c55f999"
+  },
+  "10.0.0.151": {
+    "ip": "10.0.0.151",
+    "mac": "00:1A:2B:97:13:20",
+    "hostname": "device-151.office",
+    "device_type": "camera",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 46.65394491242244,
+    "quantum_signature": 1258013929,
+    "is_compromised": true,
+    "session_token": "b7f9d6d0d1fdce22"
+  },
+  "10.0.0.153": {
+    "ip": "10.0.0.153",
+    "mac": "00:1A:2B:99:21:65",
+    "hostname": "device-153.lan",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      3389
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 54.27460588420952,
+    "quantum_signature": 1837280566,
+    "is_compromised": true,
+    "session_token": "52fb1da93f074cc4"
+  },
+  "10.0.0.154": {
+    "ip": "10.0.0.154",
+    "mac": "00:1A:2B:9a:42:a3",
+    "hostname": "device-154.lan",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 29.697245448656645,
+    "quantum_signature": 447652985,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.155": {
+    "ip": "10.0.0.155",
+    "mac": "00:1A:2B:9b:de:3a",
+    "hostname": "device-155.lan",
+    "device_type": "router",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 90.43590318630318,
+    "quantum_signature": 2051920594,
+    "is_compromised": true,
+    "session_token": "c92d4567338ebcbc"
+  },
+  "10.0.0.162": {
+    "ip": "10.0.0.162",
+    "mac": "00:1A:2B:a2:56:81",
+    "hostname": "device-162.lan",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 55.07737927883181,
+    "quantum_signature": 1176810641,
+    "is_compromised": true,
+    "session_token": "81ddb6a9c1e4d60b"
+  },
+  "10.0.0.163": {
+    "ip": "10.0.0.163",
+    "mac": "00:1A:2B:a3:d4:a6",
+    "hostname": "device-163.corp",
+    "device_type": "printer",
+    "os_info": "iOS 17",
+    "open_ports": [],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 50.18955159909457,
+    "quantum_signature": 1975451902,
+    "is_compromised": true,
+    "session_token": "6c2f2a9f278a574a"
+  },
+  "10.0.0.168": {
+    "ip": "10.0.0.168",
+    "mac": "00:1A:2B:a8:9a:4a",
+    "hostname": "device-168.office",
+    "device_type": "server",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "smb"
+    ],
+    "vulnerability_score": 82.17133522108877,
+    "quantum_signature": 804818933,
+    "is_compromised": true,
+    "session_token": "85211cc8070a95ed"
+  },
+  "10.0.0.169": {
+    "ip": "10.0.0.169",
+    "mac": "00:1A:2B:a9:f3:fd",
+    "hostname": "device-169.office",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 70.17043287930849,
+    "quantum_signature": 1248076449,
+    "is_compromised": true,
+    "session_token": "0c0325e6a9e56ce3"
+  },
+  "10.0.0.171": {
+    "ip": "10.0.0.171",
+    "mac": "00:1A:2B:ab:85:34",
+    "hostname": "device-171.lan",
+    "device_type": "camera",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 54.56951293162116,
+    "quantum_signature": 2101285531,
+    "is_compromised": true,
+    "session_token": "9aa17da8e1e1f6fd"
+  },
+  "10.0.0.177": {
+    "ip": "10.0.0.177",
+    "mac": "00:1A:2B:b1:63:69",
+    "hostname": "device-177.office",
+    "device_type": "mobile",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 39.28791283244757,
+    "quantum_signature": 1436458835,
+    "is_compromised": true,
+    "session_token": "84613e27ad0f595c"
+  },
+  "10.0.0.178": {
+    "ip": "10.0.0.178",
+    "mac": "00:1A:2B:b2:aa:3a",
+    "hostname": "device-178.home",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [],
+    "services": [
+      "mysql"
+    ],
+    "vulnerability_score": 69.22121141663142,
+    "quantum_signature": 149032322,
+    "is_compromised": true,
+    "session_token": "b3a9be0031d98ae3"
+  },
+  "10.0.0.180": {
+    "ip": "10.0.0.180",
+    "mac": "00:1A:2B:b4:f6:8c",
+    "hostname": "device-180.office",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [
+      80,
+      443,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 33.654777318175675,
+    "quantum_signature": 562661561,
+    "is_compromised": true,
+    "session_token": "14bb5afe91bc764d"
+  },
+  "10.0.0.182": {
+    "ip": "10.0.0.182",
+    "mac": "00:1A:2B:b6:04:7d",
+    "hostname": "device-182.corp",
+    "device_type": "printer",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      443,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 90.76918612193447,
+    "quantum_signature": 2062200655,
+    "is_compromised": true,
+    "session_token": "e4f3795a1170bbbf"
+  },
+  "10.0.0.185": {
+    "ip": "10.0.0.185",
+    "mac": "00:1A:2B:b9:85:ee",
+    "hostname": "device-185.lan",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 59.578956648329985,
+    "quantum_signature": 417640755,
+    "is_compromised": true,
+    "session_token": "f64a09fc03547162"
+  },
+  "10.0.0.188": {
+    "ip": "10.0.0.188",
+    "mac": "00:1A:2B:bc:2d:03",
+    "hostname": "device-188.home",
+    "device_type": "printer",
+    "os_info": "Windows 11",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 30.831637567094674,
+    "quantum_signature": 1472793586,
+    "is_compromised": true,
+    "session_token": "302e8aa814809bac"
+  },
+  "10.0.0.189": {
+    "ip": "10.0.0.189",
+    "mac": "00:1A:2B:bd:e1:18",
+    "hostname": "device-189.local",
+    "device_type": "server",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 28.078788152547375,
+    "quantum_signature": 1399753617,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.195": {
+    "ip": "10.0.0.195",
+    "mac": "00:1A:2B:c3:09:8d",
+    "hostname": "device-195.local",
+    "device_type": "router",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 48.437523568549246,
+    "quantum_signature": 761591096,
+    "is_compromised": true,
+    "session_token": "146005e10d5bebe1"
+  },
+  "10.0.0.199": {
+    "ip": "10.0.0.199",
+    "mac": "00:1A:2B:c7:df:9b",
+    "hostname": "device-199.office",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 59.01755864932804,
+    "quantum_signature": 230517006,
+    "is_compromised": true,
+    "session_token": "06929c8f63346b72"
+  },
+  "10.0.0.201": {
+    "ip": "10.0.0.201",
+    "mac": "00:1A:2B:c9:16:62",
+    "hostname": "device-201.office",
+    "device_type": "mobile",
+    "os_info": "macOS 14",
+    "open_ports": [
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh"
+    ],
+    "vulnerability_score": 67.79008032925393,
+    "quantum_signature": 626533265,
+    "is_compromised": true,
+    "session_token": "a1c8361cb7e45022"
+  },
+  "10.0.0.203": {
+    "ip": "10.0.0.203",
+    "mac": "00:1A:2B:cb:fc:6b",
+    "hostname": "device-203.lan",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 44.53467303419197,
+    "quantum_signature": 1623463169,
+    "is_compromised": true,
+    "session_token": "ba9b6e8cb838b850"
+  },
+  "10.0.0.204": {
+    "ip": "10.0.0.204",
+    "mac": "00:1A:2B:cc:6a:72",
+    "hostname": "device-204.home",
+    "device_type": "workstation",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      80,
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh"
+    ],
+    "vulnerability_score": 23.469993318750706,
+    "quantum_signature": 1218562891,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.207": {
+    "ip": "10.0.0.207",
+    "mac": "00:1A:2B:cf:ff:9e",
+    "hostname": "device-207.home",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 72.32360584760272,
+    "quantum_signature": 1552997679,
+    "is_compromised": true,
+    "session_token": "56c03ca87b735eed"
+  },
+  "10.0.0.208": {
+    "ip": "10.0.0.208",
+    "mac": "00:1A:2B:d0:21:5e",
+    "hostname": "device-208.local",
+    "device_type": "router",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 75.74793475585477,
+    "quantum_signature": 780369227,
+    "is_compromised": true,
+    "session_token": "14162752261c0521"
+  },
+  "10.0.0.213": {
+    "ip": "10.0.0.213",
+    "mac": "00:1A:2B:d5:d0:09",
+    "hostname": "device-213.corp",
+    "device_type": "iot_device",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      80,
+      445
+    ],
+    "services": [
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 90.35965458481776,
+    "quantum_signature": 1258919363,
+    "is_compromised": true,
+    "session_token": "e79efe7c93698bde"
+  },
+  "10.0.0.218": {
+    "ip": "10.0.0.218",
+    "mac": "00:1A:2B:da:dd:1f",
+    "hostname": "device-218.local",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      445,
+      3389
+    ],
+    "services": [
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 72.759292848001,
+    "quantum_signature": 895283345,
+    "is_compromised": true,
+    "session_token": "44a06e90c54a89fe"
+  },
+  "10.0.0.219": {
+    "ip": "10.0.0.219",
+    "mac": "00:1A:2B:db:c2:8a",
+    "hostname": "device-219.lan",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      443,
+      445
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 50.389344656171644,
+    "quantum_signature": 1739340345,
+    "is_compromised": true,
+    "session_token": "1699d85b4852529e"
+  },
+  "10.0.0.220": {
+    "ip": "10.0.0.220",
+    "mac": "00:1A:2B:dc:cd:bc",
+    "hostname": "device-220.corp",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh"
+    ],
+    "vulnerability_score": 89.94012776563952,
+    "quantum_signature": 95109407,
+    "is_compromised": true,
+    "session_token": "b74310fc111b8b61"
+  },
+  "10.0.0.221": {
+    "ip": "10.0.0.221",
+    "mac": "00:1A:2B:dd:d3:2d",
+    "hostname": "device-221.corp",
+    "device_type": "mobile",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 72.06958094637008,
+    "quantum_signature": 1263226848,
+    "is_compromised": true,
+    "session_token": "287ef5652d0c7338"
+  },
+  "10.0.0.228": {
+    "ip": "10.0.0.228",
+    "mac": "00:1A:2B:e4:d2:7e",
+    "hostname": "device-228.lan",
+    "device_type": "server",
+    "os_info": "Windows 11",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "http",
+      "smb"
+    ],
+    "vulnerability_score": 70.40916425120116,
+    "quantum_signature": 218465142,
+    "is_compromised": true,
+    "session_token": "7f3aeae0bf1c83bf"
+  },
+  "10.0.0.229": {
+    "ip": "10.0.0.229",
+    "mac": "00:1A:2B:e5:e0:79",
+    "hostname": "device-229.home",
+    "device_type": "workstation",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      3389,
+      8080
+    ],
+    "services": [
+      "mysql"
+    ],
+    "vulnerability_score": 85.98526984990193,
+    "quantum_signature": 1875927548,
+    "is_compromised": true,
+    "session_token": "f0b9f4bc18c54f36"
+  },
+  "10.0.0.231": {
+    "ip": "10.0.0.231",
+    "mac": "00:1A:2B:e7:6e:8a",
+    "hostname": "device-231.lan",
+    "device_type": "router",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 20.377299131250616,
+    "quantum_signature": 980794071,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.232": {
+    "ip": "10.0.0.232",
+    "mac": "00:1A:2B:e8:58:39",
+    "hostname": "device-232.office",
+    "device_type": "server",
+    "os_info": "macOS 14",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 66.10384317403384,
+    "quantum_signature": 1313092621,
+    "is_compromised": true,
+    "session_token": "768ffe75ce1b2b1c"
+  },
+  "10.0.0.234": {
+    "ip": "10.0.0.234",
+    "mac": "00:1A:2B:ea:29:5e",
+    "hostname": "device-234.lan",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh"
+    ],
+    "vulnerability_score": 51.148409273413435,
+    "quantum_signature": 81693650,
+    "is_compromised": true,
+    "session_token": "1532ce1bd124bd1c"
+  },
+  "10.0.0.236": {
+    "ip": "10.0.0.236",
+    "mac": "00:1A:2B:ec:76:85",
+    "hostname": "device-236.local",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 48.84085236389778,
+    "quantum_signature": 788140126,
+    "is_compromised": true,
+    "session_token": "f09df22a6e3064d9"
+  },
+  "10.0.0.238": {
+    "ip": "10.0.0.238",
+    "mac": "00:1A:2B:ee:54:32",
+    "hostname": "device-238.office",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "smb"
+    ],
+    "vulnerability_score": 28.210150895437906,
+    "quantum_signature": 638194778,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "10.0.0.240": {
+    "ip": "10.0.0.240",
+    "mac": "00:1A:2B:f0:6d:c4",
+    "hostname": "device-240.office",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      80,
+      8080
+    ],
+    "services": [
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 68.36309035797613,
+    "quantum_signature": 1165521833,
+    "is_compromised": true,
+    "session_token": "9fbd94d63b1232d2"
+  },
+  "10.0.0.243": {
+    "ip": "10.0.0.243",
+    "mac": "00:1A:2B:f3:3f:3d",
+    "hostname": "device-243.office",
+    "device_type": "iot_device",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 83.45604892575173,
+    "quantum_signature": 743340197,
+    "is_compromised": true,
+    "session_token": "3e5a10830e2cca3a"
+  },
+  "10.0.0.245": {
+    "ip": "10.0.0.245",
+    "mac": "00:1A:2B:f5:60:01",
+    "hostname": "device-245.home",
+    "device_type": "camera",
+    "os_info": "Windows Server 2022",
+    "open_ports": [],
+    "services": [
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 45.765197169359936,
+    "quantum_signature": 1086585354,
+    "is_compromised": true,
+    "session_token": "e9fa74493eb65176"
+  },
+  "192.168.0.8": {
+    "ip": "192.168.0.8",
+    "mac": "00:1A:2B:08:c1:b0",
+    "hostname": "device-8.home",
+    "device_type": "router",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22,
+      445
+    ],
+    "services": [
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 27.53958952190359,
+    "quantum_signature": 1634455467,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.9": {
+    "ip": "192.168.0.9",
+    "mac": "00:1A:2B:09:cd:40",
+    "hostname": "device-9.home",
+    "device_type": "iot_device",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 80.63742234444582,
+    "quantum_signature": 1504075929,
+    "is_compromised": true,
+    "session_token": "5e072dce5bcabece"
+  },
+  "192.168.0.12": {
+    "ip": "192.168.0.12",
+    "mac": "00:1A:2B:0c:a5:14",
+    "hostname": "device-12.lan",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 56.79383710711057,
+    "quantum_signature": 1745006072,
+    "is_compromised": true,
+    "session_token": "163f3838e2ae0f64"
+  },
+  "192.168.0.17": {
+    "ip": "192.168.0.17",
+    "mac": "00:1A:2B:11:09:00",
+    "hostname": "device-17.local",
+    "device_type": "server",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 42.57576641689494,
+    "quantum_signature": 1081444075,
+    "is_compromised": true,
+    "session_token": "2a4afcc6401aaaf1"
+  },
+  "192.168.0.24": {
+    "ip": "192.168.0.24",
+    "mac": "00:1A:2B:18:07:13",
+    "hostname": "device-24.office",
+    "device_type": "router",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb"
+    ],
+    "vulnerability_score": 71.31724591434005,
+    "quantum_signature": 1955547570,
+    "is_compromised": true,
+    "session_token": "f3eb218567744d85"
+  },
+  "192.168.0.28": {
+    "ip": "192.168.0.28",
+    "mac": "00:1A:2B:1c:eb:1f",
+    "hostname": "device-28.corp",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 42.10594315022486,
+    "quantum_signature": 355593565,
+    "is_compromised": true,
+    "session_token": "65ca1b0bbf818b16"
+  },
+  "192.168.0.30": {
+    "ip": "192.168.0.30",
+    "mac": "00:1A:2B:1e:ec:80",
+    "hostname": "device-30.home",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      443,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 23.412999835480104,
+    "quantum_signature": 1627994288,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.31": {
+    "ip": "192.168.0.31",
+    "mac": "00:1A:2B:1f:2e:e6",
+    "hostname": "device-31.lan",
+    "device_type": "workstation",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22
+    ],
+    "services": [
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 80.33600342741705,
+    "quantum_signature": 750862117,
+    "is_compromised": true,
+    "session_token": "306f758f681f73a6"
+  },
+  "192.168.0.34": {
+    "ip": "192.168.0.34",
+    "mac": "00:1A:2B:22:79:26",
+    "hostname": "device-34.lan",
+    "device_type": "iot_device",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 59.49605209908349,
+    "quantum_signature": 2016167963,
+    "is_compromised": true,
+    "session_token": "0db675b754e18972"
+  },
+  "192.168.0.38": {
+    "ip": "192.168.0.38",
+    "mac": "00:1A:2B:26:aa:f4",
+    "hostname": "device-38.lan",
+    "device_type": "router",
+    "os_info": "Android 14",
+    "open_ports": [
+      80,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 22.180882066177002,
+    "quantum_signature": 782573922,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.46": {
+    "ip": "192.168.0.46",
+    "mac": "00:1A:2B:2e:69:f6",
+    "hostname": "device-46.lan",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 26.51858101094586,
+    "quantum_signature": 1842172180,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.57": {
+    "ip": "192.168.0.57",
+    "mac": "00:1A:2B:39:bd:58",
+    "hostname": "device-57.corp",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [],
+    "services": [
+      "http",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 41.07198405608128,
+    "quantum_signature": 690555893,
+    "is_compromised": true,
+    "session_token": "42a2af354b89fcf8"
+  },
+  "192.168.0.59": {
+    "ip": "192.168.0.59",
+    "mac": "00:1A:2B:3b:f3:cd",
+    "hostname": "device-59.office",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      443,
+      445,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 69.50485393458234,
+    "quantum_signature": 1634760217,
+    "is_compromised": true,
+    "session_token": "affb569573cd978a"
+  },
+  "192.168.0.62": {
+    "ip": "192.168.0.62",
+    "mac": "00:1A:2B:3e:68:72",
+    "hostname": "device-62.home",
+    "device_type": "workstation",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      80,
+      443,
+      3389
+    ],
+    "services": [
+      "http",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 77.93133942877414,
+    "quantum_signature": 1265260501,
+    "is_compromised": true,
+    "session_token": "8d5c4aa412491c87"
+  },
+  "192.168.0.63": {
+    "ip": "192.168.0.63",
+    "mac": "00:1A:2B:3f:83:3b",
+    "hostname": "device-63.home",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 53.02326865403231,
+    "quantum_signature": 1282123058,
+    "is_compromised": true,
+    "session_token": "fc32c045ab5c549f"
+  },
+  "192.168.0.76": {
+    "ip": "192.168.0.76",
+    "mac": "00:1A:2B:4c:57:bb",
+    "hostname": "device-76.home",
+    "device_type": "server",
+    "os_info": "Unknown IoT",
+    "open_ports": [],
+    "services": [
+      "http",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 26.13198439674419,
+    "quantum_signature": 1163344136,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.77": {
+    "ip": "192.168.0.77",
+    "mac": "00:1A:2B:4d:ff:dc",
+    "hostname": "device-77.lan",
+    "device_type": "printer",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 58.916184295685035,
+    "quantum_signature": 116838024,
+    "is_compromised": true,
+    "session_token": "316fb12276c7aac6"
+  },
+  "192.168.0.83": {
+    "ip": "192.168.0.83",
+    "mac": "00:1A:2B:53:7b:09",
+    "hostname": "device-83.home",
+    "device_type": "router",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 32.70816742321674,
+    "quantum_signature": 352212,
+    "is_compromised": true,
+    "session_token": "22f393710dff5e12"
+  },
+  "192.168.0.91": {
+    "ip": "192.168.0.91",
+    "mac": "00:1A:2B:5b:fe:bb",
+    "hostname": "device-91.corp",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      445,
+      3389
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 74.9432854206758,
+    "quantum_signature": 1612282686,
+    "is_compromised": true,
+    "session_token": "edc197c93bd7d43b"
+  },
+  "192.168.0.94": {
+    "ip": "192.168.0.94",
+    "mac": "00:1A:2B:5e:33:65",
+    "hostname": "device-94.office",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [],
+    "services": [
+      "http",
+      "smb"
+    ],
+    "vulnerability_score": 83.69718623824747,
+    "quantum_signature": 599673515,
+    "is_compromised": true,
+    "session_token": "479e0bd240156c0d"
+  },
+  "192.168.0.104": {
+    "ip": "192.168.0.104",
+    "mac": "00:1A:2B:68:9d:c3",
+    "hostname": "device-104.local",
+    "device_type": "router",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      445,
+      3389
+    ],
+    "services": [
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 75.99486325465398,
+    "quantum_signature": 526251553,
+    "is_compromised": true,
+    "session_token": "5812be4cdee499c3"
+  },
+  "192.168.0.107": {
+    "ip": "192.168.0.107",
+    "mac": "00:1A:2B:6b:13:d0",
+    "hostname": "device-107.home",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 64.22756389378287,
+    "quantum_signature": 1251988864,
+    "is_compromised": true,
+    "session_token": "cfd474fa2d45d3a5"
+  },
+  "192.168.0.117": {
+    "ip": "192.168.0.117",
+    "mac": "00:1A:2B:75:5b:68",
+    "hostname": "device-117.lan",
+    "device_type": "router",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "rdp"
+    ],
+    "vulnerability_score": 90.85221764735884,
+    "quantum_signature": 716821639,
+    "is_compromised": true,
+    "session_token": "94b94e5704aaf2a2"
+  },
+  "192.168.0.127": {
+    "ip": "192.168.0.127",
+    "mac": "00:1A:2B:7f:e7:7c",
+    "hostname": "device-127.local",
+    "device_type": "camera",
+    "os_info": "iOS 17",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 46.65451333120738,
+    "quantum_signature": 1366001068,
+    "is_compromised": true,
+    "session_token": "92d302847b44e4b8"
+  },
+  "192.168.0.129": {
+    "ip": "192.168.0.129",
+    "mac": "00:1A:2B:81:46:97",
+    "hostname": "device-129.office",
+    "device_type": "iot_device",
+    "os_info": "Windows 11",
+    "open_ports": [
+      80,
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb",
+      "rdp"
+    ],
+    "vulnerability_score": 62.215670125282045,
+    "quantum_signature": 1709363614,
+    "is_compromised": true,
+    "session_token": "871d9094209e6042"
+  },
+  "192.168.0.130": {
+    "ip": "192.168.0.130",
+    "mac": "00:1A:2B:82:bc:46",
+    "hostname": "device-130.home",
+    "device_type": "printer",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      22,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "rdp"
+    ],
+    "vulnerability_score": 94.90091701156126,
+    "quantum_signature": 2057483875,
+    "is_compromised": true,
+    "session_token": "99b70d846858ab82"
+  },
+  "192.168.0.131": {
+    "ip": "192.168.0.131",
+    "mac": "00:1A:2B:83:6f:5c",
+    "hostname": "device-131.home",
+    "device_type": "server",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 27.897479352050006,
+    "quantum_signature": 792821594,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.133": {
+    "ip": "192.168.0.133",
+    "mac": "00:1A:2B:85:76:f6",
+    "hostname": "device-133.office",
+    "device_type": "mobile",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      80,
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 27.247506110162302,
+    "quantum_signature": 2144254164,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.135": {
+    "ip": "192.168.0.135",
+    "mac": "00:1A:2B:87:37:50",
+    "hostname": "device-135.office",
+    "device_type": "camera",
+    "os_info": "iOS 17",
+    "open_ports": [
+      22,
+      445,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 90.06526681916449,
+    "quantum_signature": 1506465999,
+    "is_compromised": true,
+    "session_token": "7dbdf5d7ae0215db"
+  },
+  "192.168.0.136": {
+    "ip": "192.168.0.136",
+    "mac": "00:1A:2B:88:af:ae",
+    "hostname": "device-136.corp",
+    "device_type": "mobile",
+    "os_info": "Windows 11",
+    "open_ports": [
+      22,
+      445,
+      8080
+    ],
+    "services": [
+      "https"
+    ],
+    "vulnerability_score": 57.226831952564126,
+    "quantum_signature": 1768394044,
+    "is_compromised": true,
+    "session_token": "80359a12d29a5422"
+  },
+  "192.168.0.137": {
+    "ip": "192.168.0.137",
+    "mac": "00:1A:2B:89:f9:89",
+    "hostname": "device-137.corp",
+    "device_type": "iot_device",
+    "os_info": "macOS 14",
+    "open_ports": [],
+    "services": [
+      "rdp"
+    ],
+    "vulnerability_score": 65.70666427095783,
+    "quantum_signature": 584134109,
+    "is_compromised": true,
+    "session_token": "38ff2235c7b44e01"
+  },
+  "192.168.0.153": {
+    "ip": "192.168.0.153",
+    "mac": "00:1A:2B:99:e3:43",
+    "hostname": "device-153.lan",
+    "device_type": "printer",
+    "os_info": "macOS 14",
+    "open_ports": [
+      443,
+      3389,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 32.050263174168336,
+    "quantum_signature": 1517128023,
+    "is_compromised": true,
+    "session_token": "03954e8297ace577"
+  },
+  "192.168.0.155": {
+    "ip": "192.168.0.155",
+    "mac": "00:1A:2B:9b:7f:c7",
+    "hostname": "device-155.office",
+    "device_type": "workstation",
+    "os_info": "macOS 14",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 37.994247384311095,
+    "quantum_signature": 1448622924,
+    "is_compromised": true,
+    "session_token": "5a6ae8b2ac2d5607"
+  },
+  "192.168.0.157": {
+    "ip": "192.168.0.157",
+    "mac": "00:1A:2B:9d:fb:36",
+    "hostname": "device-157.office",
+    "device_type": "server",
+    "os_info": "macOS 14",
+    "open_ports": [
+      22,
+      8080
+    ],
+    "services": [
+      "https",
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 89.64821880005519,
+    "quantum_signature": 1844843430,
+    "is_compromised": true,
+    "session_token": "7dc613174a08d8fb"
+  },
+  "192.168.0.165": {
+    "ip": "192.168.0.165",
+    "mac": "00:1A:2B:a5:81:45",
+    "hostname": "device-165.lan",
+    "device_type": "printer",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 56.658078885418504,
+    "quantum_signature": 1567337931,
+    "is_compromised": true,
+    "session_token": "827caed248172e1e"
+  },
+  "192.168.0.173": {
+    "ip": "192.168.0.173",
+    "mac": "00:1A:2B:ad:d4:36",
+    "hostname": "device-173.home",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 47.19416595714348,
+    "quantum_signature": 1829238912,
+    "is_compromised": true,
+    "session_token": "e1c99a60569fe90c"
+  },
+  "192.168.0.178": {
+    "ip": "192.168.0.178",
+    "mac": "00:1A:2B:b2:40:9f",
+    "hostname": "device-178.local",
+    "device_type": "printer",
+    "os_info": "iOS 17",
+    "open_ports": [
+      443,
+      445
+    ],
+    "services": [
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 69.18574792036519,
+    "quantum_signature": 293213528,
+    "is_compromised": true,
+    "session_token": "49152b0d114b1a1b"
+  },
+  "192.168.0.184": {
+    "ip": "192.168.0.184",
+    "mac": "00:1A:2B:b8:28:cf",
+    "hostname": "device-184.corp",
+    "device_type": "workstation",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      443
+    ],
+    "services": [
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 54.91350695532929,
+    "quantum_signature": 1796028348,
+    "is_compromised": true,
+    "session_token": "b66d31e35a08169e"
+  },
+  "192.168.0.189": {
+    "ip": "192.168.0.189",
+    "mac": "00:1A:2B:bd:05:74",
+    "hostname": "device-189.office",
+    "device_type": "mobile",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      80,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 85.27161347961201,
+    "quantum_signature": 944698646,
+    "is_compromised": true,
+    "session_token": "13271d57137aff74"
+  },
+  "192.168.0.191": {
+    "ip": "192.168.0.191",
+    "mac": "00:1A:2B:bf:18:de",
+    "hostname": "device-191.corp",
+    "device_type": "server",
+    "os_info": "iOS 17",
+    "open_ports": [
+      80,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb",
+      "mysql"
+    ],
+    "vulnerability_score": 65.71432214412087,
+    "quantum_signature": 383413089,
+    "is_compromised": true,
+    "session_token": "65f79f42373a0c96"
+  },
+  "192.168.0.192": {
+    "ip": "192.168.0.192",
+    "mac": "00:1A:2B:c0:78:85",
+    "hostname": "device-192.corp",
+    "device_type": "mobile",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      80,
+      445
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 29.67095860705214,
+    "quantum_signature": 302480980,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.194": {
+    "ip": "192.168.0.194",
+    "mac": "00:1A:2B:c2:6b:77",
+    "hostname": "device-194.home",
+    "device_type": "mobile",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "smb",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 82.47545072800409,
+    "quantum_signature": 1589113114,
+    "is_compromised": true,
+    "session_token": "00a6af652a1300a8"
+  },
+  "192.168.0.204": {
+    "ip": "192.168.0.204",
+    "mac": "00:1A:2B:cc:87:21",
+    "hostname": "device-204.home",
+    "device_type": "mobile",
+    "os_info": "macOS 14",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 23.244015394965704,
+    "quantum_signature": 1656251010,
+    "is_compromised": false,
+    "session_token": null
+  },
+  "192.168.0.208": {
+    "ip": "192.168.0.208",
+    "mac": "00:1A:2B:d0:53:a9",
+    "hostname": "device-208.office",
+    "device_type": "iot_device",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "mysql"
+    ],
+    "vulnerability_score": 68.8882044194912,
+    "quantum_signature": 824606324,
+    "is_compromised": true,
+    "session_token": "b4da067fe73e34d6"
+  },
+  "192.168.0.210": {
+    "ip": "192.168.0.210",
+    "mac": "00:1A:2B:d2:8d:ac",
+    "hostname": "device-210.lan",
+    "device_type": "iot_device",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      8080
+    ],
+    "services": [
+      "https",
+      "mysql"
+    ],
+    "vulnerability_score": 82.3384038054844,
+    "quantum_signature": 1873835538,
+    "is_compromised": true,
+    "session_token": "755ea60965e67449"
+  },
+  "192.168.0.218": {
+    "ip": "192.168.0.218",
+    "mac": "00:1A:2B:da:48:8f",
+    "hostname": "device-218.local",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      80
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 45.928935017435194,
+    "quantum_signature": 182084292,
+    "is_compromised": true,
+    "session_token": "56e0ef78d7a5a6bf"
+  },
+  "192.168.0.223": {
+    "ip": "192.168.0.223",
+    "mac": "00:1A:2B:df:03:03",
+    "hostname": "device-223.lan",
+    "device_type": "printer",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      3389
+    ],
+    "services": [
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 39.30792255293977,
+    "quantum_signature": 1044199698,
+    "is_compromised": true,
+    "session_token": "6d8f946538d171ba"
+  },
+  "192.168.0.224": {
+    "ip": "192.168.0.224",
+    "mac": "00:1A:2B:e0:d3:86",
+    "hostname": "device-224.home",
+    "device_type": "mobile",
+    "os_info": "Android 14",
+    "open_ports": [
+      22,
+      443,
+      8080
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 48.607083281441334,
+    "quantum_signature": 367412493,
+    "is_compromised": true,
+    "session_token": "b1f2da530091f6f0"
+  },
+  "192.168.0.235": {
+    "ip": "192.168.0.235",
+    "mac": "00:1A:2B:eb:67:1f",
+    "hostname": "device-235.office",
+    "device_type": "mobile",
+    "os_info": "Unknown IoT",
+    "open_ports": [
+      80,
+      443,
+      3389
+    ],
+    "services": [
+      "http",
+      "https",
+      "rdp"
+    ],
+    "vulnerability_score": 59.53339599808103,
+    "quantum_signature": 1632849731,
+    "is_compromised": true,
+    "session_token": "f09a264f52d3007e"
+  },
+  "192.168.0.238": {
+    "ip": "192.168.0.238",
+    "mac": "00:1A:2B:ee:be:62",
+    "hostname": "device-238.corp",
+    "device_type": "camera",
+    "os_info": "Android 14",
+    "open_ports": [
+      445,
+      8080
+    ],
+    "services": [
+      "ssh",
+      "mysql"
+    ],
+    "vulnerability_score": 77.40091802848164,
+    "quantum_signature": 1239456109,
+    "is_compromised": true,
+    "session_token": "f9934b0b4e29f046"
+  },
+  "192.168.0.243": {
+    "ip": "192.168.0.243",
+    "mac": "00:1A:2B:f3:34:cf",
+    "hostname": "device-243.corp",
+    "device_type": "iot_device",
+    "os_info": "macOS 14",
+    "open_ports": [
+      445,
+      8080
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 35.822754830632825,
+    "quantum_signature": 2123768679,
+    "is_compromised": true,
+    "session_token": "14de8195b3ba7259"
+  },
+  "192.168.0.251": {
+    "ip": "192.168.0.251",
+    "mac": "00:1A:2B:fb:e0:ca",
+    "hostname": "device-251.office",
+    "device_type": "router",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      443
+    ],
+    "services": [
+      "ssh",
+      "rdp",
+      "mysql"
+    ],
+    "vulnerability_score": 40.48607081209143,
+    "quantum_signature": 590206079,
+    "is_compromised": true,
+    "session_token": "308006ba55da912b"
+  },
+  "192.168.0.253": {
+    "ip": "192.168.0.253",
+    "mac": "00:1A:2B:fd:47:86",
+    "hostname": "device-253.office",
+    "device_type": "printer",
+    "os_info": "Windows Server 2022",
+    "open_ports": [
+      22,
+      443,
+      445,
+      3389
+    ],
+    "services": [
+      "http",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 45.47980958998838,
+    "quantum_signature": 2096730721,
+    "is_compromised": true,
+    "session_token": "00a22b8f548c3651"
+  },
+  "192.168.0.254": {
+    "ip": "192.168.0.254",
+    "mac": "00:1A:2B:fe:d5:9c",
+    "hostname": "device-254.local",
+    "device_type": "workstation",
+    "os_info": "Ubuntu 22.04",
+    "open_ports": [
+      22
+    ],
+    "services": [
+      "http",
+      "https",
+      "ssh",
+      "smb"
+    ],
+    "vulnerability_score": 44.660616721608534,
+    "quantum_signature": 448623810,
+    "is_compromised": true,
+    "session_token": "58e308f7eb6669df"
+  }
+}

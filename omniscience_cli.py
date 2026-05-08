@@ -18,6 +18,7 @@ from datetime import datetime
 
 QUANTUM_ENTANGLEMENT_KEY = 0xDEADBEEFCAFEBABE
 DISCOVERY_CACHE_FILE = "omniscience_devices.json"
+SESSIONS_CACHE_FILE = "omniscience_sessions.json"
 
 @dataclass
 class QuantumDevice:
@@ -35,20 +36,22 @@ class QuantumDevice:
 
 class QuantumOmniscienceEngine:
     """Complete revolutionary cyber domination engine."""
-    
+
     def __init__(self):
         self.devices: Dict[str, QuantumDevice] = {}
         self.sessions: Dict[str, Dict] = {}
+        self.load_discovered_devices()
+        self.load_sessions()
         
     async def scan_network(self, network: str) -> List[QuantumDevice]:
         """Quantum stealth network discovery."""
         devices = []
         base_ip = network.split('/')[0]
         ip_parts = base_ip.split('.')
-        
+
         if len(ip_parts) != 4:
             return devices
-            
+
         for i in range(1, 255):
             target = f"{ip_parts[0]}.{ip_parts[1]}.{ip_parts[2]}.{i}"
             if random.random() > 0.7:
@@ -65,6 +68,8 @@ class QuantumOmniscienceEngine:
                 )
                 devices.append(device)
                 self.devices[target] = device
+
+        self.save_discovered_devices()
         return devices
     
     async def exploit_device(self, ip: str) -> bool:
@@ -79,9 +84,13 @@ class QuantumOmniscienceEngine:
             self.sessions[ip] = {
                 'token': device.session_token,
                 'timestamp': datetime.now().isoformat(),
-                'device': device
+                'hostname': device.hostname,
+                'os_info': device.os_info,
+                'ip': device.ip
             }
             print(f"[+] SUCCESS: Exploited {device.hostname} ({ip}) - Session token: {device.session_token}")
+            self.save_discovered_devices()
+            self.save_sessions()
             return True
         else:
             print(f"[-] FAILED: Device {ip} has low vulnerability score ({device.vulnerability_score:.1f})")
@@ -103,6 +112,7 @@ class QuantumOmniscienceEngine:
         networks = ["192.168.0.0/24", "192.168.1.0/24", "10.0.0.0/24"]
         for network in networks:
             await self.scan_network(network)
+        self.save_discovered_devices()
         return self.devices
     
     async def exploit_all(self) -> Dict[str, Any]:
@@ -146,6 +156,46 @@ class QuantumOmniscienceEngine:
         
         return fetch_result
     
+    def save_discovered_devices(self):
+        """Save discovered devices to cache file."""
+        try:
+            device_data = {}
+            for ip, device in self.devices.items():
+                device_data[ip] = asdict(device)
+            with open(DISCOVERY_CACHE_FILE, 'w') as f:
+                json.dump(device_data, f, indent=2)
+        except Exception as e:
+            print(f"[!] Warning: Could not save device cache: {e}")
+
+    def load_discovered_devices(self):
+        """Load discovered devices from cache file."""
+        try:
+            if os.path.exists(DISCOVERY_CACHE_FILE):
+                with open(DISCOVERY_CACHE_FILE, 'r') as f:
+                    device_data = json.load(f)
+                for ip, data in device_data.items():
+                    device = QuantumDevice(**data)
+                    self.devices[ip] = device
+        except Exception as e:
+            print(f"[!] Warning: Could not load device cache: {e}")
+
+    def save_sessions(self):
+        """Save active sessions to cache file."""
+        try:
+            with open(SESSIONS_CACHE_FILE, 'w') as f:
+                json.dump(self.sessions, f, indent=2)
+        except Exception as e:
+            print(f"[!] Warning: Could not save sessions cache: {e}")
+
+    def load_sessions(self):
+        """Load active sessions from cache file."""
+        try:
+            if os.path.exists(SESSIONS_CACHE_FILE):
+                with open(SESSIONS_CACHE_FILE, 'r') as f:
+                    self.sessions = json.load(f)
+        except Exception as e:
+            print(f"[!] Warning: Could not load sessions cache: {e}")
+
     def display_devices(self, limit: int = 50):
         """Display discovered devices."""
         print(f"\n[+] Discovered {len(self.devices)} devices:")
@@ -209,8 +259,7 @@ class OmniCLI:
         elif cmd == "sessions":
             print(f"\n[+] Active Sessions: {len(self.engine.sessions)}")
             for ip, session in self.engine.sessions.items():
-                device = session['device']
-                print(f"  {ip}: {session['token']} | {device.hostname} | {device.os_info}")
+                print(f"  {ip}: {session['token']} | {session['hostname']} | {session['os_info']}")
                 
         elif cmd == "targets":
             self.engine.display_devices()
