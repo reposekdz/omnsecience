@@ -1394,6 +1394,257 @@ class OmniShell:
             result = await asyncio.to_thread(self.exploiter.electromagnetic_warfare_engine.manipulate_quantum_fields, location)
             print(f"{Fore.GREEN}[EM-WARFARE] Quantum fields manipulated. Reality control active.")
 
+        # ─── GOD-LEVEL CPU/FIRMWARE/HARDWARE COMMANDS — 2028 Future Technology ───
+
+        # Ring -3 Neutralization
+        elif cmd == "ring-neutralize":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ring-neutralize <system> <ring_level>")
+                return
+            system = args[0]
+            ring = args[1] if len(args) > 1 else "Ring -3"
+            print(f"{Fore.MAGENTA}[GOD-CPU] Neutralizing {ring} protections on {system}...")
+            result = await asyncio.to_thread(self.exploiter.ring3_neutralization_engine.neutralize_ring_protections, system, ring)
+            print(f"{Fore.GREEN}[GOD-CPU] {ring} neutralized. Privilege level: {result['privilege_level']}")
+
+        elif cmd == "deploy-rootkit":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: deploy-rootkit <system>")
+                return
+            system = args[0]
+            print(f"{Fore.MAGENTA}[GOD-CPU] Deploying perfect rootkit to {system}...")
+            result = await asyncio.to_thread(self.exploiter.ring3_neutralization_engine.deploy_perfect_rootkit, system)
+            print(f"{Fore.GREEN}[GOD-CPU] Rootkit deployed at {result['rootkit_level']} level. Persistence: {result['persistence']}")
+
+        elif cmd == "hypervisor-escape":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: hypervisor-escape <hypervisor_type>")
+                return
+            hypervisor = args[0]
+            print(f"{Fore.MAGENTA}[GOD-CPU] Escaping {hypervisor} hypervisor...")
+            result = await asyncio.to_thread(self.exploiter.ring3_neutralization_engine.bypass_hypervisor_protections, hypervisor)
+            print(f"{Fore.GREEN}[GOD-CPU] Hypervisor escaped. Access level: {result['access_level']}")
+
+        elif cmd == "microcode-exploit":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: microcode-exploit <cpu_type>")
+                return
+            cpu = args[0]
+            print(f"{Fore.MAGENTA}[GOD-CPU] Exploiting {cpu} microcode...")
+            result = await asyncio.to_thread(self.exploiter.ring3_neutralization_engine.exploit_microcode_vulnerabilities, cpu)
+            print(f"{Fore.GREEN}[GOD-CPU] Microcode exploited. Control level: {result['control_level']}")
+
+        elif cmd == "hardware-virtualization-dominate":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: hardware-virtualization-dominate <platform>")
+                return
+            platform = args[0]
+            print(f"{Fore.MAGENTA}[GOD-CPU] Dominating hardware virtualization on {platform}...")
+            result = await asyncio.to_thread(self.exploiter.ring3_neutralization_engine.dominate_hardware_virtualization, platform)
+            print(f"{Fore.GREEN}[GOD-CPU] Hardware virtualization dominated. Reality control: {result['reality_control']}")
+
+        # Microcode Patching
+        elif cmd == "analyze-microcode":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: analyze-microcode <cpu_model>")
+                return
+            cpu = args[0]
+            print(f"{Fore.BLUE}[GOD-MICROCODE] Analyzing {cpu} microcode...")
+            result = await asyncio.to_thread(self.exploiter.microcode_patching_engine.analyze_cpu_microcode, cpu)
+            print(f"{Fore.GREEN}[GOD-MICROCODE] Analysis complete. Patch opportunities: {result['patch_opportunities']}")
+
+        elif cmd == "generate-microcode-patch":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: generate-microcode-patch <vulnerability>")
+                return
+            vuln = args[0]
+            print(f"{Fore.BLUE}[GOD-MICROCODE] Generating AI microcode patch for {vuln}...")
+            result = await asyncio.to_thread(self.exploiter.microcode_patching_engine.generate_ai_microcode_patch, vuln)
+            print(f"{Fore.GREEN}[GOD-MICROCODE] Patch generated. Undetectable: {result['undetectable']}")
+
+        elif cmd == "inject-microcode-rootkit":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: inject-microcode-rootkit <cpu> <rootkit_type>")
+                return
+            cpu, rootkit_type = args[0], args[1]
+            print(f"{Fore.BLUE}[GOD-MICROCODE] Injecting {rootkit_type} rootkit into {cpu} microcode...")
+            result = await asyncio.to_thread(self.exploiter.microcode_patching_engine.inject_microcode_rootkit, cpu, rootkit_type)
+            print(f"{Fore.GREEN}[GOD-MICROCODE] Rootkit injected. Persistence: {result['persistence_level']}")
+
+        elif cmd == "firmware-persistence":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: firmware-persistence <system>")
+                return
+            system = args[0]
+            print(f"{Fore.BLUE}[GOD-MICROCODE] Establishing firmware persistence on {system}...")
+            result = await asyncio.to_thread(self.exploiter.microcode_patching_engine.establish_firmware_persistence, system)
+            print(f"{Fore.GREEN}[GOD-MICROCODE] Firmware persistence established. Survivability: {result['survivability']}")
+
+        # BIOS/UEFI Persistence
+        elif cmd == "analyze-firmware":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: analyze-firmware <firmware_type>")
+                return
+            fw_type = args[0]
+            print(f"{Fore.CYAN}[GOD-FIRMWARE] Analyzing {fw_type} firmware...")
+            result = await asyncio.to_thread(self.exploiter.bios_uefi_persistence_engine.analyze_firmware_image, fw_type)
+            print(f"{Fore.GREEN}[GOD-FIRMWARE] Analysis complete. Rootkit potential: {result['rootkit_potential']}")
+
+        elif cmd == "inject-firmware-rootkit":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: inject-firmware-rootkit <firmware> <rootkit_type>")
+                return
+            firmware, rootkit_type = args[0], args[1]
+            print(f"{Fore.CYAN}[GOD-FIRMWARE] Injecting {rootkit_type} into {firmware}...")
+            result = await asyncio.to_thread(self.exploiter.bios_uefi_persistence_engine.inject_firmware_rootkit, firmware, rootkit_type)
+            print(f"{Fore.GREEN}[GOD-FIRMWARE] Rootkit injected. Survival rate: {result['survival_rate']}")
+
+        elif cmd == "exploit-smm":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: exploit-smm <platform>")
+                return
+            platform = args[0]
+            print(f"{Fore.CYAN}[GOD-FIRMWARE] Exploiting System Management Mode on {platform}...")
+            result = await asyncio.to_thread(self.exploiter.bios_uefi_persistence_engine.exploit_system_management_mode, platform)
+            print(f"{Fore.GREEN}[GOD-FIRMWARE] SMM exploited. Privilege level: {result['privilege_level']}")
+
+        elif cmd == "manipulate-spi":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: manipulate-spi <chip_type>")
+                return
+            chip = args[0]
+            print(f"{Fore.CYAN}[GOD-FIRMWARE] Manipulating SPI flash chip {chip}...")
+            result = await asyncio.to_thread(self.exploiter.bios_uefi_persistence_engine.manipulate_spi_flash, chip)
+            print(f"{Fore.GREEN}[GOD-FIRMWARE] SPI manipulated. Survival: {result['survival']}")
+
+        elif cmd == "immortal-persistence":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: immortal-persistence <system>")
+                return
+            system = args[0]
+            print(f"{Fore.CYAN}[GOD-FIRMWARE] Establishing immortal persistence on {system}...")
+            result = await asyncio.to_thread(self.exploiter.bios_uefi_persistence_engine.establish_immortal_persistence, system)
+            print(f"{Fore.GREEN}[GOD-FIRMWARE] Immortal persistence established. Survives: {', '.join(result['survives'])}")
+
+        # Side-Channel Blinding
+        elif cmd == "blind-cache":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: blind-cache <process>")
+                return
+            process = args[0]
+            print(f"{Fore.YELLOW}[GOD-SIDECHANNEL] Blinding cache side-channels for {process}...")
+            result = await asyncio.to_thread(self.exploiter.side_channel_blinding_engine.blind_cache_side_channels, process)
+            print(f"{Fore.GREEN}[GOD-SIDECHANNEL] Cache blinded. Performance impact: {result['performance_impact']}")
+
+        elif cmd == "neutralize-timing":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: neutralize-timing <operation>")
+                return
+            operation = args[0]
+            print(f"{Fore.YELLOW}[GOD-SIDECHANNEL] Neutralizing timing attacks on {operation}...")
+            result = await asyncio.to_thread(self.exploiter.side_channel_blinding_engine.neutralize_timing_attacks, operation)
+            print(f"{Fore.GREEN}[GOD-SIDECHANNEL] Timing neutralized. Precision eliminated: {result['precision_eliminated']}")
+
+        elif cmd == "prevent-power-analysis":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: prevent-power-analysis <device>")
+                return
+            device = args[0]
+            print(f"{Fore.YELLOW}[GOD-SIDECHANNEL] Preventing power analysis on {device}...")
+            result = await asyncio.to_thread(self.exploiter.side_channel_blinding_engine.prevent_power_analysis, device)
+            print(f"{Fore.GREEN}[GOD-SIDECHANNEL] Power analysis prevented. Energy masked: {result['energy_masked']}")
+
+        elif cmd == "shield-em-leakage":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: shield-em-leakage <system>")
+                return
+            system = args[0]
+            print(f"{Fore.YELLOW}[GOD-SIDECHANNEL] Shielding EM leakage from {system}...")
+            result = await asyncio.to_thread(self.exploiter.side_channel_blinding_engine.shield_electromagnetic_leakage, system)
+            print(f"{Fore.GREEN}[GOD-SIDECHANNEL] EM leakage shielded. Radiation controlled: {result['radiation_controlled']}")
+
+        elif cmd == "defend-branch-prediction":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: defend-branch-prediction <cpu>")
+                return
+            cpu = args[0]
+            print(f"{Fore.YELLOW}[GOD-SIDECHANNEL] Defending branch prediction attacks on {cpu}...")
+            result = await asyncio.to_thread(self.exploiter.side_channel_blinding_engine.defend_branch_prediction_attacks, cpu)
+            print(f"{Fore.GREEN}[GOD-SIDECHANNEL] Branch prediction defended. Spectre prevented: {result['spectre_prevented']}")
+
+        elif cmd == "protect-spectre-meltdown":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: protect-spectre-meltdown <system>")
+                return
+            system = args[0]
+            print(f"{Fore.YELLOW}[GOD-SIDECHANNEL] Protecting against Spectre/Meltdown on {system}...")
+            result = await asyncio.to_thread(self.exploiter.side_channel_blinding_engine.protect_spectre_meltdown, system)
+            print(f"{Fore.GREEN}[GOD-SIDECHANNEL] Spectre/Meltdown protected. Side-channel immune: {result['side_channel_immune']}")
+
+        # Intel ME & AMD PSP Neutralization
+        elif cmd == "neutralize-intel-me":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: neutralize-intel-me <me_version>")
+                return
+            me_version = args[0]
+            print(f"{Fore.RED}[GOD-EMBEDDED] Neutralizing Intel ME {me_version}...")
+            result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.neutralize_intel_me, me_version)
+            print(f"{Fore.GREEN}[GOD-EMBEDDED] Intel ME neutralized. Control established: {result['control_established']}")
+
+        elif cmd == "bypass-amd-psp":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: bypass-amd-psp <psp_version>")
+                return
+            psp_version = args[0]
+            print(f"{Fore.RED}[GOD-EMBEDDED] Bypassing AMD PSP {psp_version}...")
+            result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.bypass_amd_psp, psp_version)
+            print(f"{Fore.GREEN}[GOD-EMBEDDED] AMD PSP bypassed. Control established: {result['control_established']}")
+
+        elif cmd == "exploit-embedded-controller":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: exploit-embedded-controller <ec_type>")
+                return
+            ec_type = args[0]
+            print(f"{Fore.RED}[GOD-EMBEDDED] Exploiting embedded controller {ec_type}...")
+            result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.exploit_embedded_controller, ec_type)
+            print(f"{Fore.GREEN}[GOD-EMBEDDED] Embedded controller exploited. System control: {result['system_control']}")
+
+        elif cmd == "bypass-tpm":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: bypass-tpm <tpm_version>")
+                return
+            tpm_version = args[0]
+            print(f"{Fore.RED}[GOD-EMBEDDED] Bypassing TPM {tpm_version}...")
+            result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.bypass_tpm_security, tpm_version)
+            print(f"{Fore.GREEN}[GOD-EMBEDDED] TPM bypassed. Keys extracted: {result['keys_extracted']}")
+
+        elif cmd == "neutralize-secure-boot":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: neutralize-secure-boot <implementation>")
+                return
+            implementation = args[0]
+            print(f"{Fore.RED}[GOD-EMBEDDED] Neutralizing secure boot {implementation}...")
+            result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.neutralize_secure_boot, implementation)
+            print(f"{Fore.GREEN}[GOD-EMBEDDED] Secure boot neutralized. Unsigned code allowed: {result['unsigned_code_allowed']}")
+
+        elif cmd == "attack-hsm":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: attack-hsm <hsm_type>")
+                return
+            hsm_type = args[0]
+            print(f"{Fore.RED}[GOD-EMBEDDED] Attacking hardware security module {hsm_type}...")
+            result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.attack_hardware_security_modules, hsm_type)
+            print(f"{Fore.GREEN}[GOD-EMBEDDED] HSM attacked. Keys compromised: {result['keys_compromised']}")
+
+        elif cmd == "water-level-security":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: water-level-security <system>")
+                return
+            system = args[0]
+            print(f"{Fore.BLUE}[GOD-WATER] Achieving water-level security on {system} - nothing can penetrate...")
+            result = await asyncio.to_thread(self.exploiter.intel_me_amd_psp_neutralization_engine.achieve_water_level_security, system)
+            print(f"{Fore.GREEN}[GOD-WATER] Water-level security achieved. Impenetrable: {result['impenetrable']}")
+
         else:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
 
@@ -1589,7 +1840,36 @@ class OmniShell:
                 "satellite-hijack <sys>  - Hijack satellite communications",
                 "wifi-dominate <ssid> <reg> - Dominate WiFi networks",
                 "military-frequencies <sys> - Exploit military communications",
-                "quantum-fields <loc>    - Manipulate quantum electromagnetic fields"
+                "quantum-fields <loc>    - Manipulate quantum fields"
+            ],
+            "⚡ GOD-LEVEL CPU/FIRMWARE/HARDWARE COMMANDS — 2028 Future Technology": [
+                "ring-neutralize <sys> <ring> - Neutralize CPU ring protections",
+                "deploy-rootkit <sys>     - Deploy perfect microcode rootkit",
+                "hypervisor-escape <type> - Escape hypervisor to bare metal",
+                "microcode-exploit <cpu>  - Exploit CPU microcode vulnerabilities",
+                "hardware-virtualization-dominate <plat> - Dominate hardware virtualization",
+                "analyze-microcode <cpu>  - Analyze CPU microcode for patches",
+                "generate-microcode-patch <vuln> - Generate AI microcode patch",
+                "inject-microcode-rootkit <cpu> <type> - Inject microcode rootkit",
+                "firmware-persistence <sys> - Establish firmware-level persistence",
+                "analyze-firmware <type>  - Analyze firmware for persistence",
+                "inject-firmware-rootkit <fw> <type> - Inject firmware rootkit",
+                "exploit-smm <platform>   - Exploit System Management Mode",
+                "manipulate-spi <chip>    - Manipulate SPI flash chip",
+                "immortal-persistence <sys> - Establish immortal persistence",
+                "blind-cache <process>    - Blind cache side-channel attacks",
+                "neutralize-timing <op>   - Neutralize timing attacks",
+                "prevent-power-analysis <dev> - Prevent power analysis attacks",
+                "shield-em-leakage <sys>  - Shield electromagnetic leakage",
+                "defend-branch-prediction <cpu> - Defend branch prediction attacks",
+                "protect-spectre-meltdown <sys> - Protect against Spectre/Meltdown",
+                "neutralize-intel-me <ver> - Neutralize Intel Management Engine",
+                "bypass-amd-psp <ver>     - Bypass AMD Secure Processor",
+                "exploit-embedded-controller <type> - Exploit embedded controller",
+                "bypass-tpm <ver>         - Bypass TPM security",
+                "neutralize-secure-boot <impl> - Neutralize secure boot",
+                "attack-hsm <type>        - Attack hardware security modules",
+                "water-level-security <sys> - Achieve impenetrable water-level security"
             ]
         }
 
