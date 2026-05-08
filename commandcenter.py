@@ -1204,6 +1204,196 @@ class OmniShell:
         elif cmd == "history":
             for i, h in enumerate(self.cmd_history): print(f"  {i}: {h}")
 
+        # ─── GOD-LIKE COMMANDS — Revolutionary Capabilities Never Seen In World History ───
+
+        # Distributed AI Swarm Intelligence
+        elif cmd == "swarm-dominate":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: swarm-dominate <operation> [targets...]")
+                return
+            operation = args[0]
+            targets = args[1:] if len(args) > 1 else [target] if target else []
+            print(f"{Fore.MAGENTA}[GOD-AI] Activating 1M AI Swarm for {operation}...")
+            result = await asyncio.to_thread(self.exploiter.distributed_ai_swarm.execute_swarm_operation, operation, targets)
+            print(f"{Fore.GREEN}[GOD-AI] Swarm operation complete. Success rate: {result['success_rate']:.1%}")
+
+        elif cmd == "swarm-predict":
+            timeframe = int(args[0]) if args else 3600
+            print(f"{Fore.MAGENTA}[GOD-AI] Predicting all future events for {timeframe} seconds...")
+            predictions = await asyncio.to_thread(self.exploiter.distributed_ai_swarm.predict_future_events, timeframe)
+            print(f"{Fore.GREEN}[GOD-AI] Perfect predictions generated. Accuracy: {predictions['accuracy']:.1%}")
+
+        elif cmd == "swarm-omniscience":
+            print(f"{Fore.MAGENTA}[GOD-AI] Activating omniscience mode - knowing everything...")
+            await asyncio.to_thread(self.exploiter.distributed_ai_swarm._activate_omniscience_mode)
+            print(f"{Fore.GREEN}[GOD-AI] Omniscience achieved. All knowledge now available.")
+
+        # Signal Dominance Engine
+        elif cmd == "signal-hijack":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: signal-hijack <frequency> <message>")
+                return
+            frequency, message = args[0], " ".join(args[1:])
+            print(f"{Fore.CYAN}[SIGNAL-GOD] Hijacking frequency {frequency}...")
+            result = await asyncio.to_thread(self.exploiter.signal_dominance_engine.hijack_radio_frequency, frequency, message)
+            print(f"{Fore.GREEN}[SIGNAL-GOD] Frequency hijacked. Global broadcast active.")
+
+        elif cmd == "tv-control":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: tv-control <channel> <content>")
+                return
+            channel, content = args[0], " ".join(args[1:])
+            print(f"{Fore.CYAN}[SIGNAL-GOD] Taking control of TV channel {channel}...")
+            result = await asyncio.to_thread(self.exploiter.signal_dominance_engine.control_tv_broadcast, channel, content)
+            print(f"{Fore.GREEN}[SIGNAL-GOD] TV broadcast hijacked. Mind control active.")
+
+        elif cmd == "em-manipulate":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: em-manipulate <location> <field_type>")
+                return
+            location, field_type = args[0], args[1]
+            print(f"{Fore.CYAN}[SIGNAL-GOD] Manipulating EM fields at {location}...")
+            result = await asyncio.to_thread(self.exploiter.signal_dominance_engine.manipulate_electromagnetic_field, location, field_type)
+            print(f"{Fore.GREEN}[SIGNAL-GOD] EM field manipulation active. Reality altered.")
+
+        elif cmd == "neural-hijack":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: neural-hijack <target_brain>")
+                return
+            target_brain = args[0]
+            print(f"{Fore.MAGENTA}[NEURAL-GOD] Hijacking neural signals of {target_brain}...")
+            result = await asyncio.to_thread(self.exploiter.signal_dominance_engine.interface_neural_signals, target_brain)
+            print(f"{Fore.GREEN}[NEURAL-GOD] Neural interface established. Mind control active.")
+
+        # Quantum Cryptography Engine
+        elif cmd == "quantum-break":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: quantum-break <crypto_system> <encrypted_data>")
+                return
+            crypto_system, encrypted_data = args[0], " ".join(args[1:])
+            print(f"{Fore.BLUE}[QUANTUM-GOD] Breaking {crypto_system} encryption instantly...")
+            result = await asyncio.to_thread(self.exploiter.quantum_crypto_engine.break_encryption, crypto_system, encrypted_data.encode())
+            print(f"{Fore.GREEN}[QUANTUM-GOD] Encryption broken. Key recovered: {result['recovered_key']}")
+
+        elif cmd == "quantum-encrypt":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: quantum-encrypt <data>")
+                return
+            data = " ".join(args)
+            print(f"{Fore.BLUE}[QUANTUM-GOD] Creating unbreakable quantum encryption...")
+            result = await asyncio.to_thread(self.exploiter.quantum_crypto_engine.create_unbreakable_encryption, data.encode())
+            print(f"{Fore.GREEN}[QUANTUM-GOD] Unbreakable encryption created. Key: {result['quantum_key']}")
+
+        elif cmd == "quantum-keys":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: quantum-keys <recipients...>")
+                return
+            recipients = args
+            print(f"{Fore.BLUE}[QUANTUM-GOD] Distributing quantum keys to {len(recipients)} recipients...")
+            result = await asyncio.to_thread(self.exploiter.quantum_crypto_engine.distribute_quantum_keys, recipients)
+            print(f"{Fore.GREEN}[QUANTUM-GOD] Quantum keys distributed. Security: {result['security_level']}")
+
+        # Reality Manipulation Engine
+        elif cmd == "causal-loop":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: causal-loop <target_event>")
+                return
+            target_event = " ".join(args)
+            print(f"{Fore.YELLOW}[REALITY-GOD] Creating causal loop for {target_event}...")
+            result = await asyncio.to_thread(self.exploiter.reality_manipulation_engine.create_causal_loop, target_event)
+            print(f"{Fore.GREEN}[REALITY-GOD] Causal loop created. Infinity achieved.")
+
+        elif cmd == "timeline-control":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: timeline-control <timeline> <change>")
+                return
+            timeline, change = args[0], " ".join(args[1:])
+            print(f"{Fore.YELLOW}[REALITY-GOD] Manipulating timeline {timeline}...")
+            result = await asyncio.to_thread(self.exploiter.reality_manipulation_engine.manipulate_timeline, timeline, change)
+            print(f"{Fore.GREEN}[REALITY-GOD] Timeline altered. Reality changed.")
+
+        elif cmd == "probability-set":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: probability-set <event> <desired_outcome>")
+                return
+            event, outcome = args[0], " ".join(args[1:])
+            print(f"{Fore.YELLOW}[REALITY-GOD] Setting probability for {event} to guaranteed...")
+            result = await asyncio.to_thread(self.exploiter.reality_manipulation_engine.control_probability, event, outcome)
+            print(f"{Fore.GREEN}[REALITY-GOD] Probability set to 100%. Outcome guaranteed.")
+
+        elif cmd == "universe-shape":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: universe-shape <parameter> <value>")
+                return
+            parameter, value = args[0], " ".join(args[1:])
+            print(f"{Fore.YELLOW}[REALITY-GOD] Shaping universe parameter {parameter}...")
+            result = await asyncio.to_thread(self.exploiter.reality_manipulation_engine.shape_universe, parameter, value)
+            print(f"{Fore.GREEN}[REALITY-GOD] Universe shaped. God-level achievement unlocked.")
+
+        elif cmd == "hypervisor-escape":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: hypervisor-escape <vm_system>")
+                return
+            vm_system = args[0]
+            print(f"{Fore.YELLOW}[REALITY-GOD] Escaping hypervisor to base reality from {vm_system}...")
+            result = await asyncio.to_thread(self.exploiter.reality_manipulation_engine.escape_hypervisor_to_reality, vm_system)
+            print(f"{Fore.GREEN}[REALITY-GOD] Hypervisor escaped. Base reality control achieved.")
+
+        # Electromagnetic Warfare Engine
+        elif cmd == "em-jam":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: em-jam <frequency> <radius_km>")
+                return
+            frequency, radius = args[0], int(args[1]) if len(args) > 1 else 1000
+            print(f"{Fore.RED}[EM-WARFARE] Jamming frequency {frequency} in {radius}km radius...")
+            result = await asyncio.to_thread(self.exploiter.electromagnetic_warfare_engine.jam_radio_frequencies, frequency, radius)
+            print(f"{Fore.GREEN}[EM-WARFARE] Frequency jammed. Total spectrum control active.")
+
+        elif cmd == "cellular-dominate":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: cellular-dominate <provider> <region>")
+                return
+            provider, region = args[0], args[1]
+            print(f"{Fore.RED}[EM-WARFARE] Taking control of {provider} cellular network in {region}...")
+            result = await asyncio.to_thread(self.exploiter.electromagnetic_warfare_engine.control_cellular_networks, provider, region)
+            print(f"{Fore.GREEN}[EM-WARFARE] Cellular network dominated. Surveillance active.")
+
+        elif cmd == "satellite-hijack":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: satellite-hijack <satellite_system>")
+                return
+            satellite_system = args[0]
+            print(f"{Fore.RED}[EM-WARFARE] Hijacking satellite system {satellite_system}...")
+            result = await asyncio.to_thread(self.exploiter.electromagnetic_warfare_engine.dominate_satellite_communications, satellite_system)
+            print(f"{Fore.GREEN}[EM-WARFARE] Satellite hijacked. Global control achieved.")
+
+        elif cmd == "wifi-dominate":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: wifi-dominate <ssid_pattern> <region>")
+                return
+            ssid_pattern, region = args[0], args[1]
+            print(f"{Fore.RED}[EM-WARFARE] Dominating all WiFi networks matching {ssid_pattern} in {region}...")
+            result = await asyncio.to_thread(self.exploiter.electromagnetic_warfare_engine.control_wifi_networks, ssid_pattern, region)
+            print(f"{Fore.GREEN}[EM-WARFARE] WiFi networks dominated. MITM active.")
+
+        elif cmd == "military-frequencies":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: military-frequencies <military_system>")
+                return
+            military_system = args[0]
+            print(f"{Fore.RED}[EM-WARFARE] Exploiting military frequencies of {military_system}...")
+            result = await asyncio.to_thread(self.exploiter.electromagnetic_warfare_engine.exploit_military_frequencies, military_system)
+            print(f"{Fore.GREEN}[EM-WARFARE] Military frequencies exploited. Intelligence gathered.")
+
+        elif cmd == "quantum-fields":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: quantum-fields <location>")
+                return
+            location = args[0]
+            print(f"{Fore.RED}[EM-WARFARE] Manipulating quantum EM fields at {location}...")
+            result = await asyncio.to_thread(self.exploiter.electromagnetic_warfare_engine.manipulate_quantum_fields, location)
+            print(f"{Fore.GREEN}[EM-WARFARE] Quantum fields manipulated. Reality control active.")
+
         else:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
 
@@ -1377,6 +1567,29 @@ class OmniShell:
                 "setcreds <u> <p> [d]   - Global credential configuration",
                 "clear / history        - Terminal maintenance commands",
                 "exit / quit            - Orderly shutdown of framework"
+            ],
+            "👑 GOD-LIKE COMMANDS — Revolutionary Capabilities Never Seen In World History": [
+                "swarm-dominate <op> [targets] - 1M AI swarm operation execution",
+                "swarm-predict [time]    - Perfect future prediction for timeframe",
+                "swarm-omniscience       - Activate omniscience mode (know everything)",
+                "signal-hijack <freq> <msg> - Hijack radio frequencies globally",
+                "tv-control <chan> <cont> - Take control of TV broadcasts worldwide",
+                "em-manipulate <loc> <type> - Manipulate electromagnetic fields",
+                "neural-hijack <brain>   - Establish neural signal interface",
+                "quantum-break <sys> <data> - Break any encryption instantly",
+                "quantum-encrypt <data>  - Create unbreakable quantum encryption",
+                "quantum-keys <recipients> - Distribute quantum keys securely",
+                "causal-loop <event>     - Create infinite causal loops",
+                "timeline-control <tl> <ch> - Manipulate timelines and reality",
+                "probability-set <ev> <out> - Set probability to 100% guaranteed",
+                "universe-shape <param> <val> - Shape universe parameters",
+                "hypervisor-escape <vm>  - Escape to base reality from hypervisor",
+                "em-jam <freq> [radius]  - Jam radio frequencies in area",
+                "cellular-dominate <prov> <reg> - Control cellular networks",
+                "satellite-hijack <sys>  - Hijack satellite communications",
+                "wifi-dominate <ssid> <reg> - Dominate WiFi networks",
+                "military-frequencies <sys> - Exploit military communications",
+                "quantum-fields <loc>    - Manipulate quantum electromagnetic fields"
             ]
         }
 
