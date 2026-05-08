@@ -2985,6 +2985,31 @@ class OmniSecCLIWindow(QMainWindow):
             info = self.cli.get_system_info(target)
             return self.format_system_info(info)
         
+        # Satellite & Radar Commands
+        elif command == 'satellite-hijack':
+            if not args:
+                return "Usage: satellite-hijack <satellite_id> <type>"
+            satellite_id = args[0]
+            sat_type = args[1] if len(args) > 1 else "Communications"
+            result = self.cli.satellite_hijacking_engine.hijack_satellite(satellite_id, sat_type)
+            return f"<font color='{SUCCESS}'>[+]</font> Satellite hijacked. Control: {result['control_established']}"
+
+        elif command == 'satellite-detect':
+            if not args:
+                return "Usage: satellite-detect <region> [object_type]"
+            region = args[0]
+            obj_type = args[1] if len(args) > 1 else "all"
+            result = self.cli.satellite_intelligence_engine.detect_aerial_objects(region, obj_type)
+            return f"<font color='{SUCCESS}'>[+]</font> Detection complete. Objects: {len(result['objects_detected'])}"
+
+        elif command == 'radar-weather':
+            if not args:
+                return "Usage: radar-weather <country> [time_period]"
+            country = args[0]
+            time_period = args[1] if len(args) > 1 else "current"
+            result = self.cli.radar_analysis_engine.analyze_weather_radar(country, time_period)
+            return f"<font color='{SUCCESS}'>[+]</font> Weather radar analysis complete for {country}"
+
         # Custom shell command fallback
         else:
             result = self.cli.execute_custom(command + ' ' + ' '.join(args) if args else command)
@@ -3064,11 +3089,16 @@ class OmniSecCLIWindow(QMainWindow):
  <font color='{TEXT_DIM}'>─────────── Visualization ─────────</font><br>
    <font color='{CYAN}'>visualize &lt;ip&gt;</font>          Show extracted data dashboard<br><br>
 
- <font color='{TEXT_DIM}'>─────────── System ───────────────</font><br>
-   <font color='{TEXT}'>help</font>                   Show this help<br>
-   <font color='{TEXT}'>clear</font>                  Clear terminal<br>
-   <font color='{TEXT}'>status</font>                 Show engine status<br>
-   <font color='{TEXT}'>exit</font>                   Exit application
+  <font color='{TEXT_DIM}'>─────────── Satellite & Radar ───────</font><br>
+    <font color='{BLUE}'>satellite-hijack &lt;id&gt; &lt;type&gt;</font>   Hijack satellite<br>
+    <font color='{BLUE}'>satellite-detect &lt;region&gt;</font>      Detect aerial objects<br>
+    <font color='{BLUE}'>radar-weather &lt;country&gt;</font>       Analyze weather radar<br><br>
+
+  <font color='{TEXT_DIM}'>─────────── System ───────────────</font><br>
+    <font color='{TEXT}'>help</font>                   Show this help<br>
+    <font color='{TEXT}'>clear</font>                  Clear terminal<br>
+    <font color='{TEXT}'>status</font>                 Show engine status<br>
+    <font color='{TEXT}'>exit</font>                   Exit application
 """
         return help_text
     

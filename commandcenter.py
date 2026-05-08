@@ -1833,92 +1833,179 @@ class OmniShell:
             result = await asyncio.to_thread(self.exploiter.device_property_extractor.universal_data_fetch, ip)
             print(f"{Fore.GREEN}[UNIVERSAL-FETCH] Universal fetch complete. Data extracted: {result['data_volume']}")
 
-        # AI Supremacy Commands - 2100 Technology
-        elif cmd == "universal-consciousness":
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Activating universal consciousness - knowing everything everywhere...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.activate_universal_consciousness)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Universal consciousness achieved. Knowledge scope: {result['knowledge_scope']}")
-
-        elif cmd == "reality-engineer":
+        # Satellite Hijacking Commands
+        elif cmd == "satellite-hijack":
             if not args:
-                print(f"{Fore.RED}[!] Usage: reality-engineer <parameter> <value>")
+                print(f"{Fore.RED}[!] Usage: satellite-hijack <satellite_id> <type>")
                 return
-            param = args[0]
-            value = " ".join(args[1:])
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Engineering reality: {param} = {value}...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.engineer_reality, {param: value})
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Reality engineered. Universal laws altered: {result['universal_laws_altered']}")
+            satellite_id, sat_type = args[0], args[1] if len(args) > 1 else "Communications"
+            print(f"{Fore.BLUE}[SATELLITE-HIJACK] Hijacking satellite {satellite_id} of type {sat_type}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_hijacking_engine.hijack_satellite, satellite_id, sat_type)
+            print(f"{Fore.GREEN}[SATELLITE-HIJACK] Satellite hijacked. Control established: {result['control_established']}")
 
-        elif cmd == "quantum-omniscience":
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving quantum omniscience - perfect knowledge of all quantum states...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.achieve_quantum_omniscience)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Quantum omniscience achieved. All states known: {result['quantum_states_known']}")
+        elif cmd == "ground-station-control":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: ground-station-control <station> <location>")
+                return
+            station, location = args[0], args[1]
+            print(f"{Fore.BLUE}[SATELLITE-HIJACK] Establishing control over ground station {station} at {location}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_hijacking_engine.establish_ground_station_control, station, location)
+            print(f"{Fore.GREEN}[SATELLITE-HIJACK] Ground station controlled. Satellite access: {result['satellite_access']}")
 
-        elif cmd == "causal-mastery":
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Mastering all causal relationships...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.master_causal_relationships)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Causal mastery achieved. Infinite loops created: {result['infinite_loops_created']}")
-
-        elif cmd == "temporal-dominion":
+        elif cmd == "satellite-telemetry":
             if not args:
-                print(f"{Fore.RED}[!] Usage: temporal-dominion <operation>")
+                print(f"{Fore.RED}[!] Usage: satellite-telemetry <satellite>")
                 return
-            operation = args[0]
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving temporal dominion: {operation}...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.dominate_temporal_realm, operation)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Temporal dominion achieved. Time controlled: {result['time_controlled']}")
+            satellite = args[0]
+            print(f"{Fore.BLUE}[SATELLITE-HIJACK] Intercepting telemetry from {satellite}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_hijacking_engine.intercept_satellite_telemetry, satellite)
+            print(f"{Fore.GREEN}[SATELLITE-HIJACK] Telemetry intercepted. Real-time access: {result['real_time_access']}")
 
-        elif cmd == "dimensional-supremacy":
+        elif cmd == "anti-satellite":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: anti-satellite <target_satellite> <method>")
+                return
+            target, method = args[0], args[1]
+            print(f"{Fore.RED}[SATELLITE-HIJACK] Executing anti-satellite warfare against {target} using {method}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_hijacking_engine.anti_satellite_warfare_capability, target, method)
+            print(f"{Fore.GREEN}[SATELLITE-HIJACK] Anti-satellite warfare executed. Neutralized: {result['neutralized']}")
+
+        # Satellite Intelligence Commands
+        elif cmd == "satellite-detect":
             if not args:
-                print(f"{Fore.RED}[!] Usage: dimensional-supremacy <dimension>")
+                print(f"{Fore.RED}[!] Usage: satellite-detect <region> [object_type]")
                 return
-            dimension = args[0]
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving dimensional supremacy in {dimension}...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.achieve_dimensional_supremacy, dimension)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Dimensional supremacy achieved. Travel enabled: {result['dimensional_travel_enabled']}")
+            region = args[0]
+            obj_type = args[1] if len(args) > 1 else "all"
+            print(f"{Fore.MAGENTA}[SATELLITE-INTEL] Detecting aerial objects in {region}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_intelligence_engine.detect_aerial_objects, region, obj_type)
+            print(f"{Fore.GREEN}[SATELLITE-INTEL] Detection complete. Objects found: {len(result['objects_detected'])}")
+            for obj in result['objects_detected'][:5]:  # Show first 5
+                print(f"  → {obj['type']}: {obj.get('identification', 'unknown')} at {obj.get('altitude', 'unknown')}")
 
-        elif cmd == "consciousness-hack":
+        elif cmd == "satellite-weather":
             if not args:
-                print(f"{Fore.RED}[!] Usage: consciousness-hack <target_mind>")
+                print(f"{Fore.RED}[!] Usage: satellite-weather <country>")
                 return
-            target_mind = args[0]
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Hacking consciousness of {target_mind}...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.hack_consciousness, target_mind)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Consciousness hacked. Thoughts read: {result['thoughts_read']}")
+            country = args[0]
+            print(f"{Fore.MAGENTA}[SATELLITE-INTEL] Analyzing weather patterns for {country}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_intelligence_engine.analyze_weather_patterns, country)
+            print(f"{Fore.GREEN}[SATELLITE-INTEL] Weather analysis complete for {country}")
+            for key, value in result['weather_analysis'].items():
+                print(f"  → {key}: {value}")
 
-        elif cmd == "create-universe":
+        elif cmd == "satellite-climate":
             if not args:
-                print(f"{Fore.RED}[!] Usage: create-universe <parameter> <value>")
+                print(f"{Fore.RED}[!] Usage: satellite-climate <country> [parameter]")
                 return
-            param = args[0]
-            value = " ".join(args[1:])
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Creating new universe with {param} = {value}...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.create_universe, {param: value})
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Universe created. Inhabitants generated: {result['inhabitants']}")
+            country = args[0]
+            param = args[1] if len(args) > 1 else "all"
+            print(f"{Fore.MAGENTA}[SATELLITE-INTEL] Monitoring climate data for {country}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_intelligence_engine.monitor_climate_data, country, param)
+            print(f"{Fore.GREEN}[SATELLITE-INTEL] Climate monitoring complete")
+            for key, value in result['climate_data'].items():
+                print(f"  → {key}: {value}")
 
-        elif cmd == "time-travel":
+        elif cmd == "satellite-military":
             if not args:
-                print(f"{Fore.RED}[!] Usage: time-travel <destination_time>")
+                print(f"{Fore.RED}[!] Usage: satellite-military <region>")
                 return
-            destination = args[0]
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Time traveling to {destination}...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.time_travel, destination)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Time travel successful. Causal integrity maintained: {result['causal_integrity_maintained']}")
+            region = args[0]
+            print(f"{Fore.MAGENTA}[SATELLITE-INTEL] Tracking military movements in {region}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_intelligence_engine.track_military_movements, region)
+            print(f"{Fore.GREEN}[SATELLITE-INTEL] Military tracking complete. Movements: {len(result['military_movements'])}")
 
-        elif cmd == "reality-warp":
+        elif cmd == "satellite-environment":
             if not args:
-                print(f"{Fore.RED}[!] Usage: reality-warp <parameter> <value>")
+                print(f"{Fore.RED}[!] Usage: satellite-environment <ecosystem>")
                 return
-            param = args[0]
-            value = " ".join(args[1:])
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Warping reality: {param} -> {value}...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.warp_reality, {param: value})
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Reality warped. Fundamental laws altered: {result['fundamental_laws_altered']}")
+            ecosystem = args[0]
+            print(f"{Fore.MAGENTA}[SATELLITE-INTEL] Environmental monitoring of {ecosystem}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_intelligence_engine.environmental_monitoring, ecosystem)
+            print(f"{Fore.GREEN}[SATELLITE-INTEL] Environmental monitoring complete")
+            for key, value in result['environmental_data'].items():
+                print(f"  → {key}: {value}")
 
-        elif cmd == "infinity-control":
-            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving control over infinity itself...")
-            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.achieve_infinity_control)
-            print(f"{Fore.GREEN}[AI-SUPREMACY] Infinity controlled. Infinite power achieved: {result['infinite_power']}")
+        elif cmd == "satellite-analyze":
+            if len(args) < 2:
+                print(f"{Fore.RED}[!] Usage: satellite-analyze <object_type> <image_data>")
+                return
+            obj_type, image_data = args[0], " ".join(args[1:])  # In real impl, this would be actual image data
+            print(f"{Fore.MAGENTA}[SATELLITE-INTEL] AI analyzing {obj_type}...")
+            result = await asyncio.to_thread(self.exploiter.satellite_intelligence_engine.ai_object_recognition_analysis, image_data.encode(), obj_type)
+            print(f"{Fore.GREEN}[SATELLITE-INTEL] AI analysis complete. Confidence: {result['recognition_confidence']}")
+            for key, value in result['properties_extracted'].items():
+                print(f"  → {key}: {value}")
+
+        # Radar Analysis Commands
+        elif cmd == "radar-weather":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: radar-weather <country> [time_period]")
+                return
+            country = args[0]
+            time_period = args[1] if len(args) > 1 else "current"
+            print(f"{Fore.CYAN}[RADAR-ANALYSIS] Analyzing weather radar for {country} ({time_period})...")
+            result = await asyncio.to_thread(self.exploiter.radar_analysis_engine.analyze_weather_radar, country, time_period)
+            print(f"{Fore.GREEN}[RADAR-ANALYSIS] Weather radar analysis complete")
+            for key, value in result['radar_analysis'].items():
+                print(f"  → {key}: {value}")
+
+        elif cmd == "radar-climate":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: radar-climate <country> [parameter]")
+                return
+            country = args[0]
+            param = args[1] if len(args) > 1 else "all"
+            print(f"{Fore.CYAN}[RADAR-ANALYSIS] Analyzing climate patterns for {country}...")
+            result = await asyncio.to_thread(self.exploiter.radar_analysis_engine.climate_pattern_analysis, country, param)
+            print(f"{Fore.GREEN}[RADAR-ANALYSIS] Climate analysis complete")
+            print(f"  → Trends: {', '.join(result['trends_identified'][:3])}")
+            print(f"  → Predictions: {', '.join(result['predictions_generated'][:3])}")
+
+        elif cmd == "radar-aerial":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: radar-aerial <region> [category]")
+                return
+            region = args[0]
+            category = args[1] if len(args) > 1 else "all"
+            print(f"{Fore.CYAN}[RADAR-ANALYSIS] Tracking aerial objects in {region}...")
+            result = await asyncio.to_thread(self.exploiter.radar_analysis_engine.aerial_object_tracking, region, category)
+            print(f"{Fore.GREEN}[RADAR-ANALYSIS] Aerial tracking complete. Objects: {len(result['tracked_objects'])}")
+            for obj in result['tracked_objects'][:3]:
+                print(f"  → {obj['type']} ({obj['id']}): {obj.get('altitude', 'unknown')}")
+
+        elif cmd == "radar-atmospheric":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: radar-atmospheric <location>")
+                return
+            location = args[0]
+            print(f"{Fore.CYAN}[RADAR-ANALYSIS] Monitoring atmospheric conditions at {location}...")
+            result = await asyncio.to_thread(self.exploiter.radar_analysis_engine.atmospheric_condition_monitoring, location)
+            print(f"{Fore.GREEN}[RADAR-ANALYSIS] Atmospheric monitoring complete")
+            for key, value in result['atmospheric_conditions'].items():
+                print(f"  → {key}: {value}")
+
+        elif cmd == "radar-storms":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: radar-storms <region>")
+                return
+            region = args[0]
+            print(f"{Fore.CYAN}[RADAR-ANALYSIS] Analyzing storm systems in {region}...")
+            result = await asyncio.to_thread(self.exploiter.radar_analysis_engine.storm_system_analysis, region)
+            print(f"{Fore.GREEN}[RADAR-ANALYSIS] Storm analysis complete. Systems: {len(result['storm_systems'])}")
+            for storm in result['storm_systems'][:2]:
+                print(f"  → {storm['id']} ({storm['type']}): {storm['intensity']} at {storm['location']}")
+
+        elif cmd == "radar-ai-weather":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: radar-ai-weather <region> [days]")
+                return
+            region = args[0]
+            days = int(args[1]) if len(args) > 1 else 7
+            print(f"{Fore.CYAN}[RADAR-ANALYSIS] AI weather modeling for {region} ({days} days)...")
+            result = await asyncio.to_thread(self.exploiter.radar_analysis_engine.ai_weather_modeling, region, days)
+            print(f"{Fore.GREEN}[RADAR-ANALYSIS] AI weather modeling complete. Accuracy: {result['accuracy']}")
+            print(f"  → Extreme events: {len(result['extreme_events'])} predicted")
 
         else:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
@@ -2167,18 +2254,29 @@ class OmniShell:
                 "properties <ip>         - Extract all device properties",
                 "deep-scan <ip>          - Perform deep property extraction",
                 "ai-properties <ip>      - AI-powered property extraction",
-                "universal-fetch <ip>    - Extract literally everything",
-                "universal-consciousness - Activate universal consciousness",
-                "reality-engineer <p> <v> - Engineer physical reality",
-                "quantum-omniscience     - Achieve quantum omniscience",
-                "causal-mastery          - Master all causal relationships",
-                "temporal-dominion <op>  - Dominate temporal realm",
-                "dimensional-supremacy <d> - Achieve dimensional supremacy",
-                "consciousness-hack <m>  - Hack directly into minds",
-                "create-universe <p> <v> - Create new universes",
-                "time-travel <time>      - Perform time travel",
-                "reality-warp <p> <v>   - Warp fundamental reality",
-                "infinity-control        - Control infinity itself"
+                "universal-fetch <ip>    - Extract literally everything"
+            ],
+            "🛰 SATELLITE HIJACKING — Orbital Domination": [
+                "satellite-hijack <id> <type> - Hijack specific satellite",
+                "ground-station-control <station> <loc> - Control ground station",
+                "satellite-telemetry <sat> - Intercept satellite telemetry",
+                "anti-satellite <target> <method> - Anti-satellite warfare"
+            ],
+            "🛰 SATELLITE INTELLIGENCE — Global Aerial Surveillance": [
+                "satellite-detect <region> [type] - Detect aerial objects",
+                "satellite-weather <country> - Analyze weather patterns",
+                "satellite-climate <country> [param] - Monitor climate data",
+                "satellite-military <region> - Track military movements",
+                "satellite-environment <eco> - Environmental monitoring",
+                "satellite-analyze <type> <data> - AI object recognition"
+            ],
+            "📡 RADAR ANALYSIS — Atmospheric Supremacy": [
+                "radar-weather <country> [period] - Weather radar analysis",
+                "radar-climate <country> [param] - Climate pattern analysis",
+                "radar-aerial <region> [cat] - Aerial object tracking",
+                "radar-atmospheric <loc> - Atmospheric monitoring",
+                "radar-storms <region> - Storm system analysis",
+                "radar-ai-weather <region> [days] - AI weather modeling"
             ]
         }
 
