@@ -5193,6 +5193,7 @@ class SIEMBreakdownEngine:
             response = requests.get(url, timeout=5, verify=False)
             return response.status_code in [200, 401, 403]  # Accessible but possibly protected
         except:
+            return False
 
     def _analyze_bypass_opportunities(self, ip: str, siem_name: str, fingerprint: Dict) -> List[Dict]:
         """Analyze potential SIEM bypass opportunities."""
