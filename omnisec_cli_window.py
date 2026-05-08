@@ -1999,12 +1999,38 @@ class UltraMaxCLIManager:
             }
             self.stats['credentials'] = len(self.credentials)
     
+    def _device_to_dict(self, device) -> Dict:
+        """Convert Device object to dict."""
+        if hasattr(device, 'to_dict'):
+            return device.to_dict()
+        return {
+            'ip': getattr(device, 'ip', 'unknown'),
+            'hostname': getattr(device, 'hostname', ''),
+            'os': getattr(device, 'os', 'Unknown'),
+            'device_type': getattr(device, 'device_type', 'unknown'),
+            'open_ports': getattr(device, 'open_ports', {}),
+            'is_compromised': getattr(device, 'is_compromised', False),
+            'can_access': getattr(device, 'can_pwn', False)
+        }
+
+    def _udevice_to_dict(self, device) -> Dict:
+        """Convert UniversalDevice object to dict."""
+        return {
+            'ip': getattr(device, 'ip', 'unknown'),
+            'hostname': getattr(device, 'hostname', ''),
+            'os': getattr(device, 'os', 'Unknown'),
+            'device_type': getattr(device, 'device_type', 'unknown'),
+            'open_ports': getattr(device, 'open_ports', {}),
+            'is_compromised': getattr(device, 'is_compromised', False),
+            'can_access': getattr(device, 'can_pwn', False)
+        }
+
     def get_devices(self) -> List[Dict]:
         """Get all discovered devices."""
         devices = []
-        if self.sec_engine:
+        if self.sec_engine and hasattr(self.sec_engine, 'devices'):
             devices = [self._device_to_dict(d) for d in self.sec_engine.devices.values()]
-        elif self.access_engine:
+        elif self.access_engine and hasattr(self.access_engine, 'devices'):
             devices = [self._udevice_to_dict(d) for d in self.access_engine.devices.values()]
         return devices
     

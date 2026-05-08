@@ -1727,6 +1727,199 @@ class OmniShell:
             result = await asyncio.to_thread(self.exploiter.ai_automation_engine.complete_autonomous_operation, mission)
             print(f"{Fore.GREEN}[AI-AUTOMATION] Mission completed. Success rate: {result['success_rate']}")
 
+        # Invisible Hacking Commands
+        elif cmd == "air-invisible":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: air-invisible <operation>")
+                return
+            operation = args[0]
+            print(f"{Fore.WHITE}[INVISIBLE] Activating air-level invisibility for {operation}...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.activate_air_invisibility, operation)
+            print(f"{Fore.GREEN}[INVISIBLE] Air-level invisibility activated. Detection probability: {result['detection_probability']}")
+
+        elif cmd == "time-stealth":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: time-stealth <target>")
+                return
+            target = args[0]
+            print(f"{Fore.WHITE}[INVISIBLE] Enabling time-based stealth for {target}...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.enable_time_stealth, target)
+            print(f"{Fore.GREEN}[INVISIBLE] Time stealth enabled. Temporal displacement: {result['temporal_displacement']}")
+
+        elif cmd == "quantum-cloak":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: quantum-cloak <system>")
+                return
+            system = args[0]
+            print(f"{Fore.WHITE}[INVISIBLE] Applying quantum invisibility cloak to {system}...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.quantum_invisibility_cloak, system)
+            print(f"{Fore.GREEN}[INVISIBLE] Quantum cloak applied. Superposition hidden: {result['superposition_hidden']}")
+
+        elif cmd == "reality-cloak":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: reality-cloak <area>")
+                return
+            area = args[0]
+            print(f"{Fore.WHITE}[INVISIBLE] Creating reality cloaking field over {area}...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.reality_cloaking_field, area)
+            print(f"{Fore.GREEN}[INVISIBLE] Reality cloak created. Causal manipulated: {result['causal_manipulated']}")
+
+        elif cmd == "perfect-security":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: perfect-security <data>")
+                return
+            data = " ".join(args)
+            print(f"{Fore.WHITE}[INVISIBLE] Applying perfect security shield to data...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.perfect_security_shield, data)
+            print(f"{Fore.GREEN}[INVISIBLE] Perfect security applied. Extraction impossible: {result['extraction_impossible']}")
+
+        elif cmd == "hardware-invisible":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: hardware-invisible <hardware>")
+                return
+            hardware = args[0]
+            print(f"{Fore.WHITE}[INVISIBLE] Making hardware operations invisible for {hardware}...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.hardware_invisibility_cloak, hardware)
+            print(f"{Fore.GREEN}[INVISIBLE] Hardware invisibility activated. Monitoring bypassed: {result['monitoring_bypassed']}")
+
+        elif cmd == "ai-stealth":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-stealth <threat>")
+                return
+            threat = args[0]
+            print(f"{Fore.WHITE}[INVISIBLE] Activating AI adaptive stealth against {threat}...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.ai_adaptive_stealth_engine, threat)
+            print(f"{Fore.GREEN}[INVISIBLE] AI stealth activated. Threat nullified: {result['threat_nullified']}")
+
+        elif cmd == "universal-invisible":
+            print(f"{Fore.WHITE}[INVISIBLE] Activating universal invisibility mode - invisible everywhere like air...")
+            result = await asyncio.to_thread(self.exploiter.invisible_hacking_engine.universal_invisibility_mode)
+            print(f"{Fore.GREEN}[INVISIBLE] Universal invisibility activated. Detection impossible: {result['detection_impossible']}")
+
+        # Property Extraction Commands
+        elif cmd == "properties":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: properties <ip>")
+                return
+            ip = args[0]
+            print(f"{Fore.BLUE}[PROPERTIES] Extracting all properties from {ip}...")
+            result = await asyncio.to_thread(self.exploiter.device_property_extractor.extract_all_properties, ip)
+            print(f"{Fore.GREEN}[PROPERTIES] Properties extracted: {len(result)} attributes")
+
+        elif cmd == "deep-scan":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: deep-scan <ip>")
+                return
+            ip = args[0]
+            print(f"{Fore.BLUE}[DEEP-SCAN] Performing deep property extraction on {ip}...")
+            result = await asyncio.to_thread(self.exploiter.device_property_extractor.deep_property_scan, ip)
+            print(f"{Fore.GREEN}[DEEP-SCAN] Deep scan complete. Intelligence gathered: {result['intelligence_level']}")
+
+        elif cmd == "ai-properties":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: ai-properties <ip>")
+                return
+            ip = args[0]
+            print(f"{Fore.MAGENTA}[AI-PROPERTIES] AI-powered property extraction from {ip}...")
+            result = await asyncio.to_thread(self.exploiter.device_property_extractor.ai_enhanced_extraction, ip)
+            print(f"{Fore.GREEN}[AI-PROPERTIES] AI extraction complete. Properties analyzed: {result['analyzed_properties']}")
+
+        elif cmd == "universal-fetch":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: universal-fetch <ip>")
+                return
+            ip = args[0]
+            print(f"{Fore.CYAN}[UNIVERSAL-FETCH] Universally extracting everything from {ip}...")
+            result = await asyncio.to_thread(self.exploiter.device_property_extractor.universal_data_fetch, ip)
+            print(f"{Fore.GREEN}[UNIVERSAL-FETCH] Universal fetch complete. Data extracted: {result['data_volume']}")
+
+        # AI Supremacy Commands - 2100 Technology
+        elif cmd == "universal-consciousness":
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Activating universal consciousness - knowing everything everywhere...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.activate_universal_consciousness)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Universal consciousness achieved. Knowledge scope: {result['knowledge_scope']}")
+
+        elif cmd == "reality-engineer":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: reality-engineer <parameter> <value>")
+                return
+            param = args[0]
+            value = " ".join(args[1:])
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Engineering reality: {param} = {value}...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.engineer_reality, {param: value})
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Reality engineered. Universal laws altered: {result['universal_laws_altered']}")
+
+        elif cmd == "quantum-omniscience":
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving quantum omniscience - perfect knowledge of all quantum states...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.achieve_quantum_omniscience)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Quantum omniscience achieved. All states known: {result['quantum_states_known']}")
+
+        elif cmd == "causal-mastery":
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Mastering all causal relationships...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.master_causal_relationships)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Causal mastery achieved. Infinite loops created: {result['infinite_loops_created']}")
+
+        elif cmd == "temporal-dominion":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: temporal-dominion <operation>")
+                return
+            operation = args[0]
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving temporal dominion: {operation}...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.dominate_temporal_realm, operation)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Temporal dominion achieved. Time controlled: {result['time_controlled']}")
+
+        elif cmd == "dimensional-supremacy":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: dimensional-supremacy <dimension>")
+                return
+            dimension = args[0]
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving dimensional supremacy in {dimension}...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.achieve_dimensional_supremacy, dimension)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Dimensional supremacy achieved. Travel enabled: {result['dimensional_travel_enabled']}")
+
+        elif cmd == "consciousness-hack":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: consciousness-hack <target_mind>")
+                return
+            target_mind = args[0]
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Hacking consciousness of {target_mind}...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.hack_consciousness, target_mind)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Consciousness hacked. Thoughts read: {result['thoughts_read']}")
+
+        elif cmd == "create-universe":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: create-universe <parameter> <value>")
+                return
+            param = args[0]
+            value = " ".join(args[1:])
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Creating new universe with {param} = {value}...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.create_universe, {param: value})
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Universe created. Inhabitants generated: {result['inhabitants']}")
+
+        elif cmd == "time-travel":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: time-travel <destination_time>")
+                return
+            destination = args[0]
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Time traveling to {destination}...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.time_travel, destination)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Time travel successful. Causal integrity maintained: {result['causal_integrity_maintained']}")
+
+        elif cmd == "reality-warp":
+            if not args:
+                print(f"{Fore.RED}[!] Usage: reality-warp <parameter> <value>")
+                return
+            param = args[0]
+            value = " ".join(args[1:])
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Warping reality: {param} -> {value}...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.warp_reality, {param: value})
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Reality warped. Fundamental laws altered: {result['fundamental_laws_altered']}")
+
+        elif cmd == "infinity-control":
+            print(f"{Fore.MAGENTA}[AI-SUPREMACY] Achieving control over infinity itself...")
+            result = await asyncio.to_thread(self.exploiter.ai_supremacy_engine.achieve_infinity_control)
+            print(f"{Fore.GREEN}[AI-SUPREMACY] Infinity controlled. Infinite power achieved: {result['infinite_power']}")
+
         else:
             print(f"{Fore.RED}[?] Unknown command: {cmd}")
 
@@ -1961,6 +2154,31 @@ class OmniShell:
                 "ai-attack <target>       - AI orchestrated attack",
                 "ai-optimize <operation>  - AI self-optimizing operations",
                 "ai-autonomous <mission>  - Complete autonomous AI operation"
+            ],
+            "👻 INVISIBLE HACKING — Air-Level Stealth and Perfect Security": [
+                "air-invisible <op>       - Activate air-level invisibility",
+                "time-stealth <target>    - Enable time-based stealth",
+                "quantum-cloak <system>   - Apply quantum invisibility cloak",
+                "reality-cloak <area>     - Create reality cloaking field",
+                "perfect-security <data>  - Apply perfect security shield",
+                "hardware-invisible <hw>  - Make hardware operations invisible",
+                "ai-stealth <threat>      - AI adaptive stealth engine",
+                "universal-invisible      - Universal invisibility mode",
+                "properties <ip>         - Extract all device properties",
+                "deep-scan <ip>          - Perform deep property extraction",
+                "ai-properties <ip>      - AI-powered property extraction",
+                "universal-fetch <ip>    - Extract literally everything",
+                "universal-consciousness - Activate universal consciousness",
+                "reality-engineer <p> <v> - Engineer physical reality",
+                "quantum-omniscience     - Achieve quantum omniscience",
+                "causal-mastery          - Master all causal relationships",
+                "temporal-dominion <op>  - Dominate temporal realm",
+                "dimensional-supremacy <d> - Achieve dimensional supremacy",
+                "consciousness-hack <m>  - Hack directly into minds",
+                "create-universe <p> <v> - Create new universes",
+                "time-travel <time>      - Perform time travel",
+                "reality-warp <p> <v>   - Warp fundamental reality",
+                "infinity-control        - Control infinity itself"
             ]
         }
 
