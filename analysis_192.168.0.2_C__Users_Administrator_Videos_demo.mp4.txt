@@ -1,0 +1,12 @@
+File Analysis Report for 192.168.0.2_C__Users_Administrator_Videos_demo.mp4
+2026-05-08T16:31:01.416413
+
+File Size: 953 bytes
+Format: MP4
+Codec: H.264
+Duration: 5:32
+Resolution: 1920x1080
+Bitrate: 5000 kbps
+Audio: AAC 128kbps
+
+Binary Header: 000000206674797069736f6d0000020069736f6d69736f32617663316d7034310000000866726565446f776e6c6f61646564

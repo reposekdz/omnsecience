@@ -1,0 +1,10 @@
+File Analysis Report for 192.168.0.2_C__Users_Administrator_Documents_report.pdf
+2026-05-08T16:29:35.392945
+
+Extracted Text: Downloaded PDF from device-2.office) Tj
+
+Metadata:
+File Size: 475 bytes
+PDF Version: 1.4
+Pages: 1
+Creator: OMNISCIENCE Extractor

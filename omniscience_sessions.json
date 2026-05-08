@@ -1,9 +1,9 @@
 {
   "192.168.0.2": {
-    "token": "f9eb4124863671e5",
-    "timestamp": "2026-05-08T15:33:17.304606",
+    "token": "71f519704f2e3ab4",
+    "timestamp": "2026-05-08T16:24:12.443426",
     "hostname": "device-2.office",
-    "os_info": "Windows Server 2022",
+    "os_info": "Unknown IoT",
     "ip": "192.168.0.2"
   },
   "192.168.0.10": {
