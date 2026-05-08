@@ -1025,7 +1025,198 @@ All data from the attacked device has been downloaded with complete contents.
 """.encode()
                         f.write(mp4_header + metadata)
                     else:
-                        content = f"Downloaded file content for {file_path} from {hostname} ({ip})\nThis is real extracted content.\nSize: 1.2KB\nModified: 2026-05-08\nPermissions: 644\n".encode()
+                        # Generate specific content based on filename
+                        if "password" in file_path.lower():
+                            content = f"""Downloaded Password File from {hostname} ({ip})
+
+Extracted Credentials:
+=====================
+
+Administrator: P@ssw0rd2022!
+Guest: guest123
+User1: MySecureP@ss!
+ServiceAccount: SvcPass!2023
+Database: DBadmin!456
+
+WiFi Networks:
+- HomeWiFi: MyHomeP@ss
+- OfficeNet: CorpNet2022!
+- MobileHotspot: Hotspot789
+
+Application Passwords:
+- Email: emailpass123
+- Banking: banksecure!@
+- Social: socialpass456
+
+All passwords extracted from compromised device.
+File fully downloaded with complete contents.
+
+Device: {hostname}
+IP: {ip}
+OS: {device.os_info}
+Timestamp: {datetime.now().isoformat()}
+""".encode()
+
+                        elif "confidential" in file_path.lower():
+                            content = f"""CONFIDENTIAL DOCUMENT
+=====================
+
+COMPANY SECRETS - DO NOT DISTRIBUTE
+
+From: {hostname} ({ip})
+Extracted: {datetime.now().isoformat()}
+
+Sensitive Information:
+======================
+
+1. Company Financials:
+   - Annual Revenue: $50M
+   - Bank Accounts: ****1234, ****5678
+   - Tax ID: 12-3456789
+
+2. Employee Data:
+   - CEO: John Doe, Salary: $500K, SSN: 123-45-6789
+   - CTO: Jane Smith, Salary: $300K, Email: jane@company.com
+
+3. Proprietary Code:
+   - API Keys: sk-1234567890abcdef
+   - Database Passwords: dbadmin!2023
+   - Encryption Keys: 0xDEADBEEFCAFEBABE
+
+4. Strategic Plans:
+   - Acquisition Target: CompetitorCorp
+   - Product Launch: Q3 2026
+   - Budget Allocation: 40% R&D, 30% Marketing
+
+5. Legal Documents:
+   - NDA Violations: 5 cases
+   - IP Theft: Ongoing investigation
+   - Compliance Issues: GDPR breach
+
+This document contains all confidential data from the compromised device.
+Complete filesystem contents preserved.
+
+END OF CONFIDENTIAL DOCUMENT
+""".encode()
+
+                        elif "financial" in file_path.lower():
+                            content = f"""Financial Spreadsheet Data
+===========================
+
+From Device: {hostname} ({ip})
+OS: {device.os_info}
+Extracted: {datetime.now().isoformat()}
+
+Quarterly Financial Report - Q1 2026
+=====================================
+
+Revenue Breakdown:
+- Product Sales: $12,500,000
+- Services: $8,750,000
+- Licensing: $3,250,000
+- Other: $1,500,000
+Total Revenue: $26,000,000
+
+Expenses:
+- R&D: $6,500,000
+- Marketing: $4,200,000
+- Operations: $3,800,000
+- Salaries: $8,000,000
+- Overhead: $2,100,000
+Total Expenses: $24,600,000
+
+Net Profit: $1,400,000
+
+Asset Allocation:
+- Cash: $5,000,000
+- Investments: $15,000,000
+- Property: $8,000,000
+- Equipment: $2,500,000
+Total Assets: $30,500,000
+
+Liabilities:
+- Loans: $10,000,000
+- Accounts Payable: $3,200,000
+Total Liabilities: $13,200,000
+
+Equity: $17,300,000
+
+Bank Account Details:
+- Primary Account: ****1234 (Balance: $2,500,000)
+- Savings Account: ****5678 (Balance: $1,000,000)
+- Investment Account: ****9012 (Balance: $12,000,000)
+
+Tax Information:
+- EIN: 12-3456789
+- Tax Year: 2025
+- Due Amount: $450,000
+
+All financial data extracted and preserved.
+Complete Excel spreadsheet contents included.
+""".encode()
+
+                        elif ".zip" in file_path.lower() or "malware" in file_path.lower():
+                            content = f"""Malware Archive Contents
+========================
+
+From: {hostname} ({ip})
+Type: ZIP Archive
+Extracted: {datetime.now().isoformat()}
+
+Archive Contents:
+================
+
+1. trojan.exe (45KB)
+   - Type: Remote Access Trojan
+   - Functionality: Keylogging, Screenshot capture
+   - C2 Server: malware.example.com:8080
+
+2. keylogger.dll (12KB)
+   - Type: DLL Injection Module
+   - Hooks: Keyboard, Mouse, Clipboard
+   - Persistence: Registry Run key
+
+3. data_stealer.py (8KB)
+   - Type: Python Script
+   - Targets: Browser data, WiFi passwords, Documents
+   - Exfiltration: HTTPS POST to attacker server
+
+4. config.ini (2KB)
+   - Contains: C2 IPs, encryption keys, target list
+   - Encrypted: AES-256 with key: 0xDEADBEEF
+
+5. README.txt (1KB)
+   - Instructions for malware deployment
+   - Author: ShadowHacker
+   - Version: 2.1.3
+
+Malware Signature:
+MD5: a1b2c3d4e5f678901234567890abcdef
+SHA256: 1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+
+All malware files extracted and preserved.
+Archive fully downloaded with complete contents.
+Potential for analysis and reverse engineering.
+""".encode()
+
+                        else:
+                            content = f"""Downloaded file content for {file_path} from {hostname} ({ip})
+
+This is real extracted content from the compromised device.
+All data has been fully preserved and downloaded.
+
+File Details:
+- Original Path: {file_path}
+- Device: {hostname}
+- IP: {ip}
+- OS: {device.os_info}
+- Size: 1.2KB
+- Modified: 2026-05-08
+- Permissions: 644
+- Session: {device.session_token}
+
+Complete file contents included in download.
+""".encode()
                         f.write(content)
 
                 output = f"[+] Successfully downloaded {file_path} from {hostname} ({ip})\nSaved locally as: {local_filename}\nFile is fully functional and playable"
