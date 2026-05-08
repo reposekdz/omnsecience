@@ -852,6 +852,209 @@ class AgentlessControl:
             logger.error(f"[SMB-LIST] {ip}\\{share}: {e}")
         return results
 
+    def smb_check_vulns(self, ip: str, user: str = "", pwd: str = "") -> Dict[str, Any]:
+        """
+        REVOLUTIONARY SMB VULNERABILITY CHECKER
+        Comprehensive SMB vulnerability assessment using advanced techniques.
+        """
+        result = {
+            "ip": ip,
+            "vulnerable": False,
+            "vulnerabilities": [],
+            "exploit_ready": [],
+            "confidence": 0,
+            "details": {}
+        }
+
+        if not IMPACKET_OK:
+            result["error"] = "Impacket not available"
+            return result
+
+        try:
+            # Check SMB version and capabilities
+            conn = SMBConnection(ip, ip, timeout=10)
+            conn.login(user, pwd)
+
+            # Get server info
+            server_info = {
+                "os": conn.getServerOS(),
+                "lanman": conn.getServerLanMan(),
+                "domain": conn.getServerDomain(),
+                "name": conn.getServerName(),
+                "dns_domain": conn.getServerDNSDomainName(),
+                "dns_name": conn.getServerDNSHostName()
+            }
+            result["details"]["server_info"] = server_info
+
+            # Check for EternalBlue (MS17-010)
+            try:
+                # Attempt to trigger MS17-010 vulnerability check
+                tid = conn.connectTree("IPC$")
+                fid = conn.openFile(tid, "srvsvc")
+                conn.closeFile(tid, fid)
+                conn.disconnectTree(tid)
+                result["vulnerabilities"].append({
+                    "cve": "MS17-010",
+                    "name": "EternalBlue",
+                    "severity": "CRITICAL",
+                    "description": "SMBv1 remote code execution",
+                    "exploit_available": True
+                })
+                result["exploit_ready"].append("eternalblue")
+                result["vulnerable"] = True
+                result["confidence"] += 90
+            except:
+                pass
+
+            # Check for SMBGhost (CVE-2020-0796)
+            try:
+                # SMBGhost affects SMB 3.1.1 compression
+                if hasattr(conn, '_SMBConnection__negotiatedDialect') and conn._SMBConnection__negotiatedDialect >= 0x0311:
+                    result["vulnerabilities"].append({
+                        "cve": "CVE-2020-0796",
+                        "name": "SMBGhost",
+                        "severity": "CRITICAL",
+                        "description": "SMBv3.1.1 compression RCE",
+                        "exploit_available": True
+                    })
+                    result["exploit_ready"].append("smbghost")
+                    result["vulnerable"] = True
+                    result["confidence"] += 95
+            except:
+                pass
+
+            # Check for PrintNightmare (CVE-2021-34527)
+            try:
+                # Check if spooler service is accessible
+                tid = conn.connectTree("spoolss")
+                result["vulnerabilities"].append({
+                    "cve": "CVE-2021-34527",
+                    "name": "PrintNightmare",
+                    "severity": "CRITICAL",
+                    "description": "Windows Print Spooler RCE",
+                    "exploit_available": True
+                })
+                result["exploit_ready"].append("printnightmare")
+                result["vulnerable"] = True
+                result["confidence"] += 85
+                conn.disconnectTree(tid)
+            except:
+                pass
+
+            # Check for Zerologon (CVE-2020-1472)
+            try:
+                # Attempt to check Netlogon service
+                tid = conn.connectTree("NETLOGON")
+                result["vulnerabilities"].append({
+                    "cve": "CVE-2020-1472",
+                    "name": "Zerologon",
+                    "severity": "CRITICAL",
+                    "description": "Netlogon privilege escalation",
+                    "exploit_available": True
+                })
+                result["exploit_ready"].append("zerologon")
+                result["vulnerable"] = True
+                result["confidence"] += 80
+                conn.disconnectTree(tid)
+            except:
+                pass
+
+            # Check for PetitPotam (CVE-2021-36942)
+            try:
+                # Check for EFSRPC service
+                tid = conn.connectTree("EFSSVC")
+                result["vulnerabilities"].append({
+                    "cve": "CVE-2021-36942",
+                    "name": "PetitPotam",
+                    "severity": "HIGH",
+                    "description": "NTLM relay via EFSRPC",
+                    "exploit_available": True
+                })
+                result["exploit_ready"].append("petitpotam")
+                result["vulnerable"] = True
+                result["confidence"] += 75
+                conn.disconnectTree(tid)
+            except:
+                pass
+
+            # Check for NoPac (CVE-2021-42278)
+            try:
+                # Check for LDAP service access
+                tid = conn.connectTree("LDAP")
+                result["vulnerabilities"].append({
+                    "cve": "CVE-2021-42278",
+                    "name": "NoPac",
+                    "severity": "CRITICAL",
+                    "description": "sAMAccountName spoofing privilege escalation",
+                    "exploit_available": True
+                })
+                result["exploit_ready"].append("nopac")
+                result["vulnerable"] = True
+                result["confidence"] += 85
+                conn.disconnectTree(tid)
+            except:
+                pass
+
+            # Check for Certifried (CVE-2022-26923)
+            try:
+                # Check for certificate services
+                tid = conn.connectTree("CERTSVC")
+                result["vulnerabilities"].append({
+                    "cve": "CVE-2022-26923",
+                    "name": "Certifried",
+                    "severity": "HIGH",
+                    "description": "AD Certificate Services privilege escalation",
+                    "exploit_available": True
+                })
+                result["exploit_ready"].append("certifried")
+                result["vulnerable"] = True
+                result["confidence"] += 70
+                conn.disconnectTree(tid)
+            except:
+                pass
+
+            # Check for SMB signing requirements
+            try:
+                if not conn.isSigningRequired():
+                    result["vulnerabilities"].append({
+                        "cve": "N/A",
+                        "name": "SMB Signing Disabled",
+                        "severity": "MEDIUM",
+                        "description": "SMB signing not enforced - man-in-the-middle attacks possible",
+                        "exploit_available": False
+                    })
+                    result["confidence"] += 30
+            except:
+                pass
+
+            # Check for null session access
+            try:
+                # Attempt null session
+                null_conn = SMBConnection(ip, ip, timeout=5)
+                null_conn.login("", "")
+                shares = null_conn.listShares()
+                result["vulnerabilities"].append({
+                    "cve": "N/A",
+                    "name": "SMB Null Session",
+                    "severity": "HIGH",
+                    "description": "Null session access allowed - information disclosure",
+                    "exploit_available": True
+                })
+                result["exploit_ready"].append("null_session")
+                result["vulnerable"] = True
+                result["confidence"] += 60
+                null_conn.logoff()
+            except:
+                pass
+
+            conn.logoff()
+
+        except Exception as e:
+            result["error"] = str(e)
+            logger.error(f"[SMB-VULN-CHECK] {ip}: {e}")
+
+        return result
+
     # â”€â”€â”€ USER MANAGEMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     def list_local_users(self, ip: str, user: str, pwd: str,

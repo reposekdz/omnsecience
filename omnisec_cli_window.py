@@ -2765,13 +2765,31 @@ class OmniSecCLIWindow(QMainWindow):
             return f"<font color='{WARNING}'>[*]</font> Sniffer stopped."
         
         elif command == 'creds':
+            target = None
+            if args and args[0] == '--target' and len(args) > 1:
+                target = args[1]
             creds = self.cli.get_captured_credentials()
             return self.format_captured_creds(creds)
         
         elif command == 'dns-log':
             queries = self.cli.get_dns_queries()
             return self.format_dns_log(queries)
-        
+
+        elif command == 'dump':
+            if not args:
+                return "Usage: dump <type> [target]"
+            dump_type = args[0]
+            target = args[1] if len(args) > 1 else self.cli.current_target
+
+            if dump_type == '--wifi':
+                if target:
+                    result = self.cli.harvest_wifi_keys(target)
+                    return self.format_harvest_result('wifi', result, target)
+                else:
+                    return "Usage: dump --wifi <target_ip>"
+            else:
+                return f"Unknown dump type: {dump_type}. Available: --wifi"
+
         # Sessions
         elif command == 'sessions':
             sessions = self.cli.get_sessions()
