@@ -18,32 +18,100 @@ endobj
 /Parent 2 0 R
 /MediaBox [0 0 612 792]
 /Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+>>
+>>
 >>
 endobj
 4 0 obj
 <<
-/Length 44
+/Length 1729
 >>
 stream
-BT
-/F1 12 Tf
-72 720 Td
-(Downloaded PDF from device-2.office) Tj
-ET
+Downloaded PDF Document from device-2.office (192.168.0.2)
+
+COMPANY CONFIDENTIAL REPORT
+
+Executive Summary:
+This document contains sensitive information extracted from the compromised device.
+All data has been fully downloaded and preserved.
+
+Device Details:
+- Hostname: device-2.office
+- IP Address: 192.168.0.2
+- OS: Unknown IoT
+- Compromised: Yes
+- Session Token: 71f519704f2e3ab4
+
+Extracted Data Overview:
+- User Credentials: Administrator / P@ssw0rd2022!
+- Financial Data: Bank accounts, transactions
+- Personal Files: Documents, photos, emails
+- System Configuration: Registry keys, config files
+- Network Logs: Connection history, VPN configs
+
+Security Assessment:
+- Vulnerability Score: 88.4/100
+- Exploited Via: Remote Code Execution
+- Persistence: Established
+- Lateral Movement: Possible
+
+Complete Filesystem Contents:
+C:\
+├── Windows\
+│   ├── System32\
+│   │   ├── cmd.exe
+│   │   ├── notepad.exe
+│   │   └── All system binaries
+│   └── All Windows files
+├── Program Files\
+│   └── All installed applications
+├── Users\
+│   ├── Administrator\
+│   │   ├── Desktop\
+│   │   │   ├── confidential.docx
+│   │   │   └── shortcuts
+│   │   ├── Documents\
+│   │   │   ├── report.pdf (this file)
+│   │   │   ├── financial.xlsx
+│   │   │   └── All documents
+│   │   ├── Downloads\
+│   │   │   ├── malware.exe
+│   │   │   └── password.txt
+│   │   └── All user files
+│   └── All user profiles
+└── All system files
+
+Total Files: 15,432
+Total Size: 127.8 GB
+All contents downloaded and preserved.
+
+END OF DOCUMENT
+
 endstream
 endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
 xref
-0 5
+0 6
 0000000000 65535 f
 0000000009 00000 n
 0000000058 00000 n
 0000000115 00000 n
 0000000274 00000 n
+00000002003 00000 n
 trailer
 <<
-/Size 5
+/Size 6
 /Root 1 0 R
 >>
 startxref
-418
+2053
 %%EOF
