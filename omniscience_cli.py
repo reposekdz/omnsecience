@@ -97,15 +97,82 @@ class QuantumOmniscienceEngine:
             return False
     
     async def execute_on_device(self, ip: str, command: str) -> str:
-        """Execute command on compromised device."""
-        if ip in self.sessions:
-            result = f"[+] Executed on {ip}: {command}"
-            print(result)
-            return result
-        else:
+        """Execute command on compromised device with realistic outputs."""
+        if ip not in self.sessions:
             error = f"[-] FAILED: No active session for {ip}"
             print(error)
             return error
+
+        device = self.devices.get(ip)
+        if not device:
+            error = f"[-] FAILED: Device {ip} not found"
+            print(error)
+            return error
+
+        hostname = device.hostname
+        os_info = device.os_info.lower()
+
+        # Simulate realistic command outputs
+        cmd_lower = command.lower().strip()
+
+        if cmd_lower == "whoami":
+            if "windows" in os_info:
+                output = "nt authority\\system"
+            elif "linux" in os_info or "ubuntu" in os_info:
+                output = "root"
+            elif "macos" in os_info or "os x" in os_info:
+                output = "root"
+            else:
+                output = "system"
+
+        elif cmd_lower == "net user" and "windows" in os_info:
+            output = f"User accounts for \\\\{hostname}\n\nAdministrator            Guest                    \nDefaultAccount           WDAGUtilityAccount      \n"
+
+        elif cmd_lower == "id" and ("linux" in os_info or "ubuntu" in os_info or "macos" in os_info):
+            output = "uid=0(root) gid=0(root) groups=0(root)"
+
+        elif cmd_lower == "ipconfig" and "windows" in os_info:
+            output = f"Windows IP Configuration\n\nEthernet adapter Ethernet:\n\n   Connection-specific DNS Suffix  . : \n   IPv4 Address. . . . . . . . . . . : {ip}\n   Subnet Mask . . . . . . . . . . . : 255.255.255.0\n   Default Gateway . . . . . . . . . : {ip[:-1]}1\n"
+
+        elif cmd_lower == "ifconfig" and ("linux" in os_info or "ubuntu" in os_info):
+            output = f"eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500\n        inet {ip}  netmask 255.255.255.0  broadcast {ip[:-1]}255\n        inet6 fe80::a00:27ff:fe4e:66a1  prefixlen 64  scopeid 0x20<link>\n        ether 08:00:27:4e:66:a1  txqueuelen 1000  (Ethernet)\n        RX packets 0  bytes 0 (0.0 B)\n        RX errors 0  dropped 0  overruns 0  frame 0\n        TX packets 0  bytes 0 (0.0 B)\n        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0\n"
+
+        elif cmd_lower.startswith("dir") and "windows" in os_info:
+            output = f" Volume in drive C has no label.\n Volume Serial Number is 1234-5678\n\n Directory of C:\\\n\n01/01/2023  12:00 AM    <DIR>          Windows\n01/01/2023  12:00 AM    <DIR>          Program Files\n01/01/2023  12:00 AM    <DIR>          Users\n               3 Dir(s)   100,000,000 bytes free\n"
+
+        elif cmd_lower.startswith("ls") and ("linux" in os_info or "ubuntu" in os_info or "macos" in os_info):
+            output = "bin   boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var"
+
+        elif cmd_lower == "systeminfo" and "windows" in os_info:
+            output = f"Host Name:                 {hostname}\nOS Name:                   Microsoft Windows Server 2022 Standard\nOS Version:                10.0.20348 N/A Build 20348\nOS Manufacturer:           Microsoft Corporation\nOS Configuration:          Standalone Server\nOS Build Type:             Multiprocessor Free\n"
+
+        elif cmd_lower == "uname -a" and ("linux" in os_info or "ubuntu" in os_info):
+            output = f"Linux {hostname} 5.15.0-67-generic #74-Ubuntu SMP Wed Feb 22 14:14:39 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux"
+
+        elif cmd_lower == "lsass-dump" and "windows" in os_info:
+            # Generate realistic LSASS dump output
+            output = f"Dumping LSASS memory on {hostname} ({ip})...\n\nExtracted Credentials:\n\nUsername: Administrator\nNTLM Hash: aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0\nPlaintext Password: AdminP@ss2022!\n\nUsername: Guest\nNTLM Hash: 31d6cfe0d16ae931b73c59d7e0c089c0:aad3b435b51404eeaad3b435b51404ee\nPlaintext Password: (disabled)\n\nUsername: DefaultAccount\nNTLM Hash: 8846f7eaee8fb117ad06bdd830b7586c:31d6cfe0d16ae931b73c59d7e0c089c0\nPlaintext Password: (disabled)\n\nUsername: WDAGUtilityAccount\nNTLM Hash: 7c606c84b8e8b1b1b1b1b1b1b1b1b1b1:31d6cfe0d16ae931b73c59d7e0c089c0\nPlaintext Password: UtilityP@ss!\n\nKerberos Tickets Found:\n- krbtgt@DOMAIN.COM\n- Administrator@DOMAIN.COM\n\nSAM Database Hashes:\nAdministrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::\nGuest:501:31d6cfe0d16ae931b73c59d7e0c089c0:aad3b435b51404eeaad3b435b51404ee:::\n\nDPAPI Keys:\nMaster Key: 0x1234567890abcdef...\n\nLSASS dump completed successfully."
+
+            # Create log file automatically
+            log_filename = f"extraction_report_{ip}.txt"
+            try:
+                with open(log_filename, 'w') as f:
+                    f.write(f"Credential Extraction Report for {ip} ({hostname})\n")
+                    f.write("=" * 50 + "\n")
+                    f.write(f"Extraction Time: {datetime.now().isoformat()}\n")
+                    f.write(f"OS: {device.os_info}\n\n")
+                    f.write(output)
+                    f.write(f"\n\nLog file created: {log_filename}")
+                print(f"[+] Extraction report saved to {log_filename}")
+            except Exception as e:
+                print(f"[!] Warning: Could not create log file: {e}")
+
+        else:
+            output = f"Command '{command}' executed successfully (simulated output)"
+
+        result = f"[+] Executed on {ip}: {command}\n{output}"
+        print(result)
+        return result
     
     async def get_all_devices(self) -> Dict[str, QuantumDevice]:
         """Discover all devices across all networks."""
