@@ -1327,17 +1327,6 @@ class SIEMBreakdownEngine:
         # Placeholder for actual DNS tunneling bypass implementation
         return True
 
-            logger.error(f"[LOG4SHELL-BYPASS] {target_ip}: {e}")
-            return False
-
-    def _execute_dns_tunneling_bypass(self, target_ip: str, siem_info: Dict) -> bool:
-        """Execute DNS tunneling to bypass SIEM detection."""
-        # Placeholder for actual DNS tunneling bypass implementation
-        return True
-
-            logger.error(f"[LOG4SHELL-BYPASS] {target_ip}: {e}")
-            return False
-
     def _execute_dns_tunneling_bypass(self, target_ip: str, siem_info: Dict) -> bool:
         """Execute DNS tunneling to bypass SIEM detection."""
         try:
