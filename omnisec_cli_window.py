@@ -2042,7 +2042,9 @@ class UltraMaxCLIManager:
             )
             if result.get('success'):
                 self._create_session_from_detail(target_ip, result)
-        return result
+            return result
+        except Exception as e:
+            return {'success': False, 'error': str(e)}
 
     # ═══ GOD SUPREMACY IMPLEMENTATION METHODS ═════════════════════════════════════
 
