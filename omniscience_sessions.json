@@ -196,9 +196,9 @@
     "ip": "192.168.0.139"
   },
   "192.168.0.143": {
-    "token": "4502e9540431009e",
-    "timestamp": "2026-05-08T15:33:18.669045",
-    "hostname": "device-143.corp",
+    "token": "6d57f21332c31623",
+    "timestamp": "2026-05-08T16:08:32.177135",
+    "hostname": "device-143.home",
     "os_info": "Windows Server 2022",
     "ip": "192.168.0.143"
   },

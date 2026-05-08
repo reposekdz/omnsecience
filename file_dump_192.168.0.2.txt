@@ -1,0 +1,49 @@
+Complete File System Dump for 192.168.0.2 (device-2.office)
+==================================================
+Dump Time: 2026-05-08T15:55:30.094589
+OS: Windows Server 2022
+
+Directory Structure:
+C:\
++-- Windows\
+|   +-- System32\
+|   |   +-- cmd.exe
+|   |   +-- notepad.exe
+|   |   +-- regedit.exe
+|   |   +-- ...
+|   +-- ...
++-- Program Files\
+|   +-- Common Files\
+|   +-- ...
++-- Users\
+|   +-- Administrator\
+|   |   +-- Desktop\
+|   |   |   +-- shortcut.lnk
+|   |   |   +-- document.docx
+|   |   |   +-- secret.txt
+|   |   +-- Documents\
+|   |   |   +-- report.pdf
+|   |   |   +-- financial.xlsx
+|   |   |   +-- confidential.doc
+|   |   +-- Downloads\
+|   |   |   +-- setup.exe
+|   |   |   +-- malware.zip
+|   |   |   +-- password.txt
+|   |   +-- Pictures\
+|   |   +-- Videos\
+|   |   +-- ...
+|   +-- Public\
++-- ProgramData\
++-- ...
+
+File Details:
+- C:\Users\Administrator\Desktop\secret.txt (Size: 1.2KB, Modified: 2026-05-01)
+- C:\Users\Administrator\Documents\confidential.doc (Size: 45KB, Modified: 2026-04-15)
+- C:\Users\Administrator\Downloads\password.txt (Size: 0.5KB, Modified: 2026-05-05)
+- C:\Users\Administrator\Downloads\malware.zip (Size: 2.1MB, Modified: 2026-05-07)
+
+Total files: 15,432
+Total directories: 2,341
+Total size: 127.8 GB
+
+Log file created: file_dump_192.168.0.2.txt

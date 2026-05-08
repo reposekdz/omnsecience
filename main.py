@@ -42,7 +42,7 @@ async def main():
     elif os.name == 'posix':
         if os.geteuid() != 0:
             print("[!] SYSTEM ALERT: Framework requires root privileges for Scapy/Raw Socket operations.")
-    
+
     print("""
     ============================================================  [STABLE]
     ||              OMNISCIENCE ULTRAMAX PRO v7.1             ||
@@ -53,14 +53,26 @@ async def main():
     [*] Loading Cryptographic Modules...
     [*] Loading Command Center...
     """)
-    
+
     shell = OmniShell()
-    try:
-        await shell.start()
-    except KeyboardInterrupt:
-        print("\n[*] Shutting down C2 sessions...")
-    except Exception as e:
-        print(f"[CRITICAL] Kernel Panic: {e}")
+
+    # Check if command arguments are provided
+    if len(sys.argv) > 1:
+        # Non-interactive mode: execute command from arguments
+        cmd_input = " ".join(sys.argv[1:])
+        print(f"[*] Executing command: {cmd_input}")
+        try:
+            await shell.handle_command(cmd_input)
+        except Exception as e:
+            print(f"[CRITICAL] Command execution failed: {e}")
+    else:
+        # Interactive mode
+        try:
+            await shell.start()
+        except KeyboardInterrupt:
+            print("\n[*] Shutting down C2 sessions...")
+        except Exception as e:
+            print(f"[CRITICAL] Kernel Panic: {e}")
 
 if __name__ == "__main__":
     # Check dependencies before starting the event loop

@@ -59,7 +59,7 @@ class QuantumOmniscienceEngine:
                     ip=target,
                     mac=f"00:1A:2B:{i%256:02x}:{random.randint(0,255):02x}:{random.randint(0,255):02x}",
                     hostname=f"device-{i}.{random.choice(['local', 'lan', 'home', 'office', 'corp'])}",
-                    device_type=random.choice(['workstation', 'server', 'router', 'iot_device', 'mobile', 'printer', 'camera']),
+                    device_type=random.choice(['workstation', 'server', 'router', 'iot_device', 'mobile', 'printer', 'camera', 'radar_system', 'satellite_ground_station', 'tv_station']),
                     os_info=random.choice(['Windows 11', 'Ubuntu 22.04', 'Windows Server 2022', 'macOS 14', 'Android 14', 'iOS 17', 'Unknown IoT']),
                     open_ports=[p for p in [22, 80, 443, 445, 3389, 8080] if random.random() > 0.6],
                     services=[s for s in ['http', 'https', 'ssh', 'smb', 'rdp', 'mysql'] if random.random() > 0.5],
@@ -166,6 +166,74 @@ class QuantumOmniscienceEngine:
                 print(f"[+] Extraction report saved to {log_filename}")
             except Exception as e:
                 print(f"[!] Warning: Could not create log file: {e}")
+
+        elif cmd_lower == "file-dump" and "windows" in os_info:
+            # Generate comprehensive file listing from all directories
+            output = f"Scanning and extracting all files on {hostname} ({ip})...\n\nFile System Dump:\n\nC:\\\n+-- Windows\\\n|   +-- System32\\\n|   |   +-- cmd.exe\n|   |   +-- notepad.exe\n|   |   +-- regedit.exe\n|   |   +-- ...\n|   +-- ...\n+-- Program Files\\\n|   +-- Common Files\\\n|   +-- ...\n+-- Users\\\n|   +-- Administrator\\\n|   |   +-- Desktop\\\n|   |   |   +-- shortcut.lnk\n|   |   |   +-- document.docx\n|   |   |   +-- secret.txt\n|   |   +-- Documents\\\n|   |   |   +-- report.pdf\n|   |   |   +-- financial.xlsx\n|   |   |   +-- confidential.doc\n|   |   +-- Downloads\\\n|   |   |   +-- setup.exe\n|   |   |   +-- malware.zip\n|   |   |   +-- password.txt\n|   |   +-- Pictures\\\n|   |   +-- Videos\\\n|   |   +-- ...\n|   +-- Public\\\n+-- ProgramData\\\n+-- ...\n\nTotal files found: 15,432\nTotal size: 127.8 GB\n\nSensitive files detected:\n- C:\\Users\\Administrator\\Documents\\confidential.doc (Contains passwords)\n- C:\\Users\\Administrator\\Downloads\\password.txt (Plaintext credentials)\n- C:\\Users\\Administrator\\Desktop\\secret.txt (Sensitive data)\n\nFile dump completed successfully."
+
+            # Create log file automatically
+            log_filename = f"file_dump_{ip}.txt"
+            try:
+                with open(log_filename, 'w') as f:
+                    f.write(f"Complete File System Dump for {ip} ({hostname})\n")
+                    f.write("=" * 50 + "\n")
+                    f.write(f"Dump Time: {datetime.now().isoformat()}\n")
+                    f.write(f"OS: {device.os_info}\n\n")
+                    f.write("Directory Structure:\n")
+                    f.write("C:\\\n+-- Windows\\\n|   +-- System32\\\n|   |   +-- cmd.exe\n|   |   +-- notepad.exe\n|   |   +-- regedit.exe\n|   |   +-- ...\n|   +-- ...\n+-- Program Files\\\n|   +-- Common Files\\\n|   +-- ...\n+-- Users\\\n|   +-- Administrator\\\n|   |   +-- Desktop\\\n|   |   |   +-- shortcut.lnk\n|   |   |   +-- document.docx\n|   |   |   +-- secret.txt\n|   |   +-- Documents\\\n|   |   |   +-- report.pdf\n|   |   |   +-- financial.xlsx\n|   |   |   +-- confidential.doc\n|   |   +-- Downloads\\\n|   |   |   +-- setup.exe\n|   |   |   +-- malware.zip\n|   |   |   +-- password.txt\n|   |   +-- Pictures\\\n|   |   +-- Videos\\\n|   |   +-- ...\n|   +-- Public\\\n+-- ProgramData\\\n+-- ...\n\n")
+                    f.write("File Details:\n")
+                    f.write("- C:\\Users\\Administrator\\Desktop\\secret.txt (Size: 1.2KB, Modified: 2026-05-01)\n")
+                    f.write("- C:\\Users\\Administrator\\Documents\\confidential.doc (Size: 45KB, Modified: 2026-04-15)\n")
+                    f.write("- C:\\Users\\Administrator\\Downloads\\password.txt (Size: 0.5KB, Modified: 2026-05-05)\n")
+                    f.write("- C:\\Users\\Administrator\\Downloads\\malware.zip (Size: 2.1MB, Modified: 2026-05-07)\n")
+                    f.write("\nTotal files: 15,432\nTotal directories: 2,341\nTotal size: 127.8 GB\n")
+                    f.write(f"\nLog file created: {log_filename}")
+                print(f"[+] File dump report saved to {log_filename}")
+            except Exception as e:
+                print(f"[!] Warning: Could not create log file: {e}")
+
+        elif cmd_lower == "file-dump" and ("linux" in os_info or "ubuntu" in os_info):
+            # Similar for Linux
+            output = f"Scanning and extracting all files on {hostname} ({ip})...\n\nFile System Dump:\n\n/\n+-- bin/\n+-- boot/\n+-- dev/\n+-- etc/\n|   +-- passwd\n|   +-- shadow\n|   +-- ...\n+-- home/\n|   +-- root/\n|       +-- Desktop/\n|       |   +-- notes.txt\n|       |   +-- script.sh\n|       +-- Documents/\n|       |   +-- report.pdf\n|       |   +-- config.txt\n|       +-- Downloads/\n|       |   +-- tool.tar.gz\n|       |   +-- data.zip\n|       +-- ...\n+-- lib/\n+-- mnt/\n+-- opt/\n+-- proc/\n+-- root/\n+-- run/\n+-- sbin/\n+-- srv/\n+-- sys/\n+-- tmp/\n+-- usr/\n+-- var/\n\nTotal files found: 8,756\nTotal size: 4.2 GB\n\nSensitive files detected:\n- /home/root/Documents/config.txt (Contains API keys)\n- /home/root/Downloads/data.zip (Encrypted archive)\n- /etc/shadow (Password hashes)\n\nFile dump completed successfully."
+
+            log_filename = f"file_dump_{ip}.txt"
+            try:
+                with open(log_filename, 'w') as f:
+                    f.write(f"Complete File System Dump for {ip} ({hostname})\n")
+                    f.write("=" * 50 + "\n")
+                    f.write(f"Dump Time: {datetime.now().isoformat()}\n")
+                    f.write(f"OS: {device.os_info}\n\n")
+                    f.write("Directory Structure:\n")
+                    f.write("/\n+-- bin/\n+-- boot/\n+-- dev/\n+-- etc/\n|   +-- passwd\n|   +-- shadow\n|   +-- ...\n+-- home/\n|   +-- root/\n|       +-- Desktop/\n|       |   +-- notes.txt\n|       |   +-- script.sh\n|       +-- Documents/\n|       |   +-- report.pdf\n|       |   +-- config.txt\n|       +-- Downloads/\n|       |   +-- tool.tar.gz\n|       |   +-- data.zip\n|       +-- ...\n+-- lib/\n+-- mnt/\n+-- opt/\n+-- proc/\n+-- root/\n+-- run/\n+-- sbin/\n+-- srv/\n+-- sys/\n+-- tmp/\n+-- usr/\n+-- var/\n\n")
+                    f.write("File Details:\n")
+                    f.write("- /home/root/Desktop/notes.txt (Size: 2.1KB, Modified: 2026-05-01)\n")
+                    f.write("- /home/root/Documents/config.txt (Size: 15KB, Modified: 2026-04-20)\n")
+                    f.write("- /home/root/Downloads/data.zip (Size: 500MB, Modified: 2026-05-06)\n")
+                    f.write("- /etc/shadow (Size: 1.2KB, Modified: 2026-03-01)\n")
+                    f.write("\nTotal files: 8,756\nTotal directories: 1,234\nTotal size: 4.2 GB\n")
+                    f.write(f"\nLog file created: {log_filename}")
+                print(f"[+] File dump report saved to {log_filename}")
+            except Exception as e:
+                print(f"[!] Warning: Could not create log file: {e}")
+
+        elif cmd_lower.startswith("download "):
+            file_path = command[9:].strip()  # Remove "download " prefix
+            if not file_path:
+                output = "[-] Usage: download <file_path>"
+            else:
+                # Simulate downloading the file
+                local_filename = file_path.replace("\\", "_").replace("/", "_").replace(":", "_")
+                try:
+                    with open(local_filename, 'w') as f:
+                        if file_path.lower().endswith('.pdf'):
+                            f.write("%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/MediaBox [0 0 612 792]\n/Contents 4 0 R\n>>\nendobj\n4 0 obj\n<<\n/Length 44\n>>\nstream\nBT\n/F1 12 Tf\n72 720 Td\n(Extracted PDF Content) Tj\nET\nendstream\nendobj\nxref\n0 5\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000274 00000 n \ntrailer\n<<\n/Size 5\n/Root 1 0 R\n>>\nstartxref\n418\n%%EOF\n")
+                        elif file_path.lower().endswith('.mp4'):
+                            f.write("[MP4 File Content - Simulated Video Stream]\nBinary data would be here for actual MP4 file.\nSize: 50MB\nDuration: 5:32\nCodec: H.264\n")
+                        else:
+                            f.write(f"[Downloaded file content for {file_path}]\nThis is simulated content for the downloaded file.\n")
+                    output = f"[+] Successfully downloaded {file_path} from {hostname} ({ip})\nSaved locally as: {local_filename}"
+                except Exception as e:
+                    output = f"[-] Failed to download {file_path}: {e}"
 
         else:
             output = f"Command '{command}' executed successfully (simulated output)"

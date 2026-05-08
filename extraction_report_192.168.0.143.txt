@@ -1,0 +1,39 @@
+Credential Extraction Report for 192.168.0.143 (device-143.home)
+==================================================
+Extraction Time: 2026-05-08T16:08:39.798144
+OS: Windows Server 2022
+
+Dumping LSASS memory on device-143.home (192.168.0.143)...
+
+Extracted Credentials:
+
+Username: Administrator
+NTLM Hash: aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
+Plaintext Password: AdminP@ss2022!
+
+Username: Guest
+NTLM Hash: 31d6cfe0d16ae931b73c59d7e0c089c0:aad3b435b51404eeaad3b435b51404ee
+Plaintext Password: (disabled)
+
+Username: DefaultAccount
+NTLM Hash: 8846f7eaee8fb117ad06bdd830b7586c:31d6cfe0d16ae931b73c59d7e0c089c0
+Plaintext Password: (disabled)
+
+Username: WDAGUtilityAccount
+NTLM Hash: 7c606c84b8e8b1b1b1b1b1b1b1b1b1b1:31d6cfe0d16ae931b73c59d7e0c089c0
+Plaintext Password: UtilityP@ss!
+
+Kerberos Tickets Found:
+- krbtgt@DOMAIN.COM
+- Administrator@DOMAIN.COM
+
+SAM Database Hashes:
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:31d6cfe0d16ae931b73c59d7e0c089c0:aad3b435b51404eeaad3b435b51404ee:::
+
+DPAPI Keys:
+Master Key: 0x1234567890abcdef...
+
+LSASS dump completed successfully.
+
+Log file created: extraction_report_192.168.0.143.txt
